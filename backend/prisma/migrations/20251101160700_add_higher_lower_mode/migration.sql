@@ -1,0 +1,2 @@
+-- AlterEnum
+ALTER TYPE "GameModeType" ADD VALUE 'HIGHER_LOWER';

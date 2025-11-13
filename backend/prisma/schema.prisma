@@ -1,0 +1,217 @@
+// Prisma schema for GeoFlags
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
+  BANNED
+}
+
+enum GameModeType {
+  GUESS_FLAG
+  TIME_TRIAL
+  FIND_CAPITAL
+  HIGHER_LOWER
+  // Battle-specific modes
+  BATTLE_FLAG_SPEED
+  BATTLE_CAPITAL_RUSH
+  BATTLE_GEOGRAPHY_DUEL
+  BATTLE_EXPERT_SHOWDOWN
+}
+
+enum FriendshipStatus {
+  PENDING
+  ACCEPTED
+  BLOCKED
+}
+
+enum BattleStatus {
+  WAITING      // Waiting for opponent to join
+  IN_PROGRESS  // Battle is ongoing
+  COMPLETED    // Battle finished
+  CANCELLED    // Battle was cancelled
+}
+
+model User {
+  id            String     @id @default(uuid())
+  username      String     @unique
+  email         String     @unique
+  password_hash String
+  role          UserRole   @default(USER)
+  status        UserStatus @default(ACTIVE)
+  bannedUntil   DateTime? // Optional expiration date for bans/suspensions
+  banReason     String? // Reason for ban/suspension
+  avatarUrl     String? // Profile picture URL
+  lastActive    DateTime   @default(now()) // Last activity timestamp
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  // Relations
+  gameSessions       GameSession[]
+  leaderboardEntries LeaderboardEntry[]
+  adminAudits        AdminAudit[]           @relation("AdminActions")
+  tokenVersion       Int                    @default(0) // For token invalidation
+
+  // Friends relations
+  friendships        Friendship[]           @relation("UserFriendships")
+  friendOf           Friendship[]           @relation("FriendOf")
+
+  // Battle relations
+  challengerBattles  Battle[]               @relation("ChallengerBattles")
+  opponentBattles    Battle[]               @relation("OpponentBattles")
+  wonBattles         Battle[]               @relation("WonBattles")
+  battleParticipants BattleParticipant[]    @relation("BattleParticipants")
+
+  @@index([email])
+  @@index([username])
+  @@map("users")
+}
+
+model GameSession {
+  id          String       @id @default(uuid())
+  userId      String
+  mode        GameModeType
+  score       Int
+  data        Json? // Additional game data (questions answered, time taken, etc.)
+  completedAt DateTime     @default(now())
+  createdAt   DateTime     @default(now())
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([mode])
+  @@index([completedAt])
+  @@index([createdAt])
+  @@map("game_sessions")
+}
+
+model LeaderboardEntry {
+  id        String       @id @default(uuid())
+  userId    String
+  mode      GameModeType
+  score     Int
+  createdAt DateTime     @default(now())
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([mode, score])
+  @@index([userId])
+  @@map("leaderboard_entries")
+}
+
+model GameMode {
+  id          GameModeType @id
+  name        String       @unique
+  description String?
+  enabled     Boolean      @default(true)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@map("game_modes")
+}
+
+model AdminAudit {
+  id        String   @id @default(uuid())
+  adminId   String
+  action    String // e.g., "ROLE_CHANGE", "USER_DELETE", "LEADERBOARD_EDIT"
+  targetId  String? // ID of the affected resource
+  details   Json? // Additional context
+  ip        String?
+  createdAt DateTime @default(now())
+
+  // Relations
+  admin User @relation("AdminActions", fields: [adminId], references: [id], onDelete: Cascade)
+
+  @@index([adminId])
+  @@index([createdAt])
+  @@map("admin_audits")
+}
+
+model SystemSettings {
+  id                     String   @id @default(uuid())
+  requireRegistration    Boolean  @default(false) // If true, users must register to play games
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+
+  @@map("system_settings")
+}
+
+model Friendship {
+  id        String           @id @default(uuid())
+  userId    String
+  friendId  String
+  status    FriendshipStatus @default(PENDING)
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  // Relations
+  user   User @relation("UserFriendships", fields: [userId], references: [id], onDelete: Cascade)
+  friend User @relation("FriendOf", fields: [friendId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, friendId])
+  @@index([userId])
+  @@index([friendId])
+  @@index([status])
+  @@map("friendships")
+}
+
+model Battle {
+  id           String       @id @default(uuid())
+  mode         GameModeType
+  status       BattleStatus @default(WAITING)
+  challengerId String // Player who initiated the battle
+  opponentId   String? // Player who accepted the challenge
+  winnerId     String? // Winner of the battle
+  currentRound Int          @default(0)
+  totalRounds  Int          @default(10)
+  questions    Json // Array of questions for the battle
+  createdAt    DateTime     @default(now())
+  startedAt    DateTime?
+  completedAt  DateTime?
+
+  // Relations
+  challenger   User                @relation("ChallengerBattles", fields: [challengerId], references: [id], onDelete: Cascade)
+  opponent     User?               @relation("OpponentBattles", fields: [opponentId], references: [id], onDelete: Cascade)
+  winner       User?               @relation("WonBattles", fields: [winnerId], references: [id], onDelete: Cascade)
+  participants BattleParticipant[]
+
+  @@index([challengerId])
+  @@index([opponentId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("battles")
+}
+
+model BattleParticipant {
+  id          String    @id @default(uuid())
+  battleId    String
+  userId      String
+  score       Int       @default(0)
+  answers     Json // Array of answers with timestamps
+  isReady     Boolean   @default(false)
+  joinedAt    DateTime  @default(now())
+  completedAt DateTime?
+
+  // Relations
+  battle Battle @relation(fields: [battleId], references: [id], onDelete: Cascade)
+  user   User   @relation("BattleParticipants", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([battleId, userId])
+  @@index([battleId])
+  @@index([userId])
+  @@map("battle_participants")
+}
