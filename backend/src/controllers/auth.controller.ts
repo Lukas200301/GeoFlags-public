@@ -87,16 +87,16 @@ export async function register(req: AuthRequest, res: Response) {
     res.cookie('accessToken', accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax', // Changed from 'strict' to 'lax' to allow Socket.io cross-origin connections
-      domain: process.env.NODE_ENV === 'production' ? '.geoflags.org' : undefined,
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      path: '/',
       maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
     });
 
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax', // Changed from 'strict' to 'lax' to allow Socket.io cross-origin connections
-      domain: process.env.NODE_ENV === 'production' ? '.geoflags.org' : undefined,
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      path: '/',
       maxAge: 90 * 24 * 60 * 60 * 1000, // 90 days
     });
 
@@ -164,16 +164,16 @@ export async function login(req: AuthRequest, res: Response) {
     res.cookie('accessToken', accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax', // Changed from 'strict' to 'lax' to allow Socket.io cross-origin connections
-      domain: process.env.NODE_ENV === 'production' ? '.geoflags.org' : undefined,
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      path: '/',
       maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
     });
 
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax', // Changed from 'strict' to 'lax' to allow Socket.io cross-origin connections
-      domain: process.env.NODE_ENV === 'production' ? '.geoflags.org' : undefined,
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      path: '/',
       maxAge: 90 * 24 * 60 * 60 * 1000, // 90 days
     });
 
@@ -245,9 +245,9 @@ export async function refresh(req: AuthRequest, res: Response) {
     res.cookie('accessToken', newAccessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax', // Changed from 'strict' to 'lax' to allow Socket.io cross-origin connections
-      domain: process.env.NODE_ENV === 'production' ? '.geoflags.org' : undefined,
-      maxAge: 15 * 60 * 1000, // 15 minutes
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      path: '/',
+      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
     });
 
     return res.json({
@@ -266,9 +266,19 @@ export async function refresh(req: AuthRequest, res: Response) {
  */
 export async function logout(_req: AuthRequest, res: Response) {
   try {
-    // Clear authentication cookies
-    res.clearCookie('accessToken');
-    res.clearCookie('refreshToken');
+    // Clear authentication cookies with the same options used when setting them
+    res.clearCookie('accessToken', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      path: '/',
+    });
+    res.clearCookie('refreshToken', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      path: '/',
+    });
 
     return res.json({ message: 'Logout successful' });
   } catch (error) {
