@@ -3,6 +3,7 @@
  * Admin Dashboard - Main Overview Page
  *
  * Features:
+ * - Maintenance mode toggle
  * - System health monitoring
  * - Recent activity feed
  */
@@ -57,6 +58,80 @@ const recentActivity = ref<RecentActivity[]>([])
 const loading = ref(true)
 const healthLoading = ref(false)
 
+// Maintenance mode state
+const maintenanceEnabled = ref(false)
+const maintenanceMsg = ref('')
+const maintenanceSaving = ref(false)
+const maintenanceLoading = ref(true)
+
+// Fetch maintenance settings
+const fetchMaintenanceSettings = async () => {
+  try {
+    maintenanceLoading.value = true
+    const response = await apiRequest<{
+      requireRegistration: boolean
+      maintenanceMode: boolean
+      maintenanceMessage: string | null
+    }>(
+      '/api/admin/system/settings',
+      { requiresAuth: true }
+    )
+    maintenanceEnabled.value = response.maintenanceMode
+    maintenanceMsg.value = response.maintenanceMessage || ''
+  } catch (error: any) {
+    toast.error(error.message || 'Failed to load maintenance settings')
+  } finally {
+    maintenanceLoading.value = false
+  }
+}
+
+// Toggle maintenance mode
+const toggleMaintenance = async () => {
+  try {
+    maintenanceSaving.value = true
+    const newState = !maintenanceEnabled.value
+    await apiRequest(
+      '/api/admin/system/settings',
+      {
+        requiresAuth: true,
+        method: 'PUT',
+        body: {
+          maintenanceMode: newState,
+          maintenanceMessage: maintenanceMsg.value || null,
+        },
+      }
+    )
+    maintenanceEnabled.value = newState
+    toast.success(newState ? 'Maintenance mode activated' : 'Maintenance mode deactivated')
+  } catch (error: any) {
+    toast.error(error.message || 'Failed to update maintenance mode')
+  } finally {
+    maintenanceSaving.value = false
+  }
+}
+
+// Save maintenance message (without toggling)
+const saveMaintenanceMessage = async () => {
+  try {
+    maintenanceSaving.value = true
+    await apiRequest(
+      '/api/admin/system/settings',
+      {
+        requiresAuth: true,
+        method: 'PUT',
+        body: {
+          maintenanceMessage: maintenanceMsg.value || null,
+        },
+      }
+    )
+    toast.success('Maintenance message updated')
+  } catch (error: any) {
+    toast.error(error.message || 'Failed to update maintenance message')
+  } finally {
+    maintenanceSaving.value = false
+  }
+}
+
 // Fetch dashboard data
 const fetchDashboardData = async () => {
   try {
@@ -99,6 +174,7 @@ const refreshInterval = ref<NodeJS.Timeout | null>(null)
 onMounted(() => {
   fetchDashboardData()
   fetchSystemHealth()
+  fetchMaintenanceSettings()
   // Refresh every 30 seconds
   refreshInterval.value = setInterval(() => {
     fetchDashboardData()
@@ -188,7 +264,84 @@ const getMetricColor = (percentage: number, inverted = false) => {
     <!-- Header -->
     <div class="mb-8">
       <h1 class="text-4xl font-bold gradient-text mb-2">Admin Dashboard</h1>
-      <p class="text-gray-400">System health monitoring and recent activity</p>
+      <p class="text-gray-400">System health monitoring, maintenance controls, and recent activity</p>
+    </div>
+
+    <!-- Maintenance Mode Section -->
+    <div class="mb-8">
+      <h2 class="text-2xl font-bold text-gray-100 mb-4">Maintenance Mode</h2>
+      <div
+        class="glass-card p-6 border-l-4 transition-all duration-300"
+        :class="maintenanceEnabled ? 'border-amber-500' : 'border-green-500'"
+      >
+        <!-- Loading -->
+        <div v-if="maintenanceLoading" class="flex items-center gap-3">
+          <Icon name="mdi:loading" class="w-6 h-6 text-gray-400 animate-spin" />
+          <span class="text-gray-400">Loading maintenance settings...</span>
+        </div>
+
+        <div v-else>
+          <!-- Toggle Row -->
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-4">
+              <div
+                class="w-12 h-12 rounded-lg flex items-center justify-center"
+                :class="maintenanceEnabled ? 'bg-amber-500/20' : 'bg-green-500/20'"
+              >
+                <Icon
+                  :name="maintenanceEnabled ? 'mdi:wrench' : 'mdi:check-circle'"
+                  class="w-6 h-6"
+                  :class="maintenanceEnabled ? 'text-amber-400' : 'text-green-400'"
+                />
+              </div>
+              <div>
+                <h3 class="text-lg font-semibold text-gray-100">
+                  {{ maintenanceEnabled ? 'Maintenance Mode Active' : 'Site is Live' }}
+                </h3>
+                <p class="text-sm text-gray-400">
+                  {{ maintenanceEnabled ? 'Non-admin users cannot access the site' : 'All users can access the site normally' }}
+                </p>
+              </div>
+            </div>
+
+            <button
+              @click="toggleMaintenance"
+              :disabled="maintenanceSaving"
+              class="relative inline-flex h-7 w-14 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none"
+              :class="maintenanceEnabled ? 'bg-amber-500' : 'bg-gray-600'"
+            >
+              <span
+                class="pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
+                :class="maintenanceEnabled ? 'translate-x-7' : 'translate-x-0'"
+              />
+            </button>
+          </div>
+
+          <!-- Message Editor -->
+          <div class="mt-4 pt-4 border-t border-gray-800">
+            <label class="block text-sm font-medium text-gray-300 mb-2">
+              Custom Maintenance Message (optional)
+            </label>
+            <textarea
+              v-model="maintenanceMsg"
+              rows="2"
+              placeholder="We're currently performing scheduled maintenance..."
+              class="w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg text-gray-100 placeholder-gray-500 focus:outline-none focus:border-amber-500/50 resize-none transition-colors"
+            />
+            <div class="flex justify-end mt-2">
+              <button
+                @click="saveMaintenanceMessage"
+                :disabled="maintenanceSaving"
+                class="px-4 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-gray-200 text-sm font-medium transition-colors flex items-center gap-2"
+              >
+                <Icon v-if="maintenanceSaving" name="mdi:loading" class="w-4 h-4 animate-spin" />
+                <Icon v-else name="mdi:content-save" class="w-4 h-4" />
+                Save Message
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- System Health Section -->

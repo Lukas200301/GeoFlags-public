@@ -24,7 +24,7 @@ async function main() {
     const gameModes = [
       {
         id: 'GUESS_FLAG',
-        name: 'Guess the Flag - Infinite Mode',
+        name: 'Guess the Flag',
         description: 'Guess country flags infinitely until you make a mistake',
         enabled: true,
       },
@@ -44,6 +44,12 @@ async function main() {
         id: 'HIGHER_LOWER',
         name: 'Higher/Lower',
         description: 'Compare country sizes and guess if the next country is larger or smaller. Build your streak!',
+        enabled: true,
+      },
+      {
+        id: 'SILHOUETTE',
+        name: 'Country Silhouette',
+        description: 'Guess the country from its outline shape. How well do you know your borders?',
         enabled: true,
       },
       // Battle modes

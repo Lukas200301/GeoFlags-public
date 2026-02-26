@@ -54,7 +54,7 @@
             class="glass-card p-6 hover:scale-[1.02] transition-transform duration-300"
           >
             <div class="flex items-center justify-between">
-              <div class="flex items-center gap-4">
+              <NuxtLink :to="`/users/${friendship.friend.id}`" class="flex items-center gap-4 hover:opacity-80 transition-opacity cursor-pointer">
                 <div class="w-16 h-16 rounded-full bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center text-2xl font-bold">
                   {{ friendship.friend.username[0].toUpperCase() }}
                 </div>
@@ -63,7 +63,7 @@
                   <p class="text-sm text-gray-400">Friends since {{ formatDate(friendship.since) }}</p>
                   <p class="text-xs text-gray-500">Last active: {{ formatRelativeTime(friendship.friend.lastActive) }}</p>
                 </div>
-              </div>
+              </NuxtLink>
               <button
                 @click="removeFriend(friendship.friendshipId)"
                 class="px-4 py-2 bg-red-500/20 text-red-400 rounded-lg font-semibold hover:bg-red-500/30 transition-all"
@@ -91,7 +91,7 @@
               class="glass-card p-6"
             >
               <div class="flex items-center justify-between">
-                <div class="flex items-center gap-4">
+                <NuxtLink :to="`/users/${request.from.id}`" class="flex items-center gap-4 hover:opacity-80 transition-opacity cursor-pointer">
                   <div class="w-12 h-12 rounded-full bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center text-xl font-bold">
                     {{ request.from.username[0].toUpperCase() }}
                   </div>
@@ -99,7 +99,7 @@
                     <h3 class="text-lg font-semibold">{{ request.from.username }}</h3>
                     <p class="text-sm text-gray-400">{{ formatRelativeTime(request.createdAt) }}</p>
                   </div>
-                </div>
+                </NuxtLink>
                 <div class="flex gap-3">
                   <button
                     @click="acceptRequest(request.friendshipId)"
@@ -132,7 +132,7 @@
               class="glass-card p-6"
             >
               <div class="flex items-center justify-between">
-                <div class="flex items-center gap-4">
+                <NuxtLink :to="`/users/${request.to.id}`" class="flex items-center gap-4 hover:opacity-80 transition-opacity cursor-pointer">
                   <div class="w-12 h-12 rounded-full bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center text-xl font-bold">
                     {{ request.to.username[0].toUpperCase() }}
                   </div>
@@ -140,7 +140,7 @@
                     <h3 class="text-lg font-semibold">{{ request.to.username }}</h3>
                     <p class="text-sm text-gray-400">Sent {{ formatRelativeTime(request.createdAt) }}</p>
                   </div>
-                </div>
+                </NuxtLink>
                 <button
                   @click="cancelRequest(request.friendshipId)"
                   class="px-4 py-2 bg-red-500/20 text-red-400 rounded-lg font-semibold hover:bg-red-500/30 transition-all"
@@ -170,7 +170,7 @@
             class="glass-card p-6"
           >
             <div class="flex items-center justify-between">
-              <div class="flex items-center gap-4">
+              <NuxtLink :to="`/users/${user.id}`" class="flex items-center gap-4 hover:opacity-80 transition-opacity cursor-pointer">
                 <div class="w-12 h-12 rounded-full bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center text-xl font-bold">
                   {{ user.username[0].toUpperCase() }}
                 </div>
@@ -178,7 +178,7 @@
                   <h3 class="text-lg font-semibold">{{ user.username }}</h3>
                   <p class="text-sm text-gray-400">Last active: {{ formatRelativeTime(user.lastActive) }}</p>
                 </div>
-              </div>
+              </NuxtLink>
               <button
                 @click="sendFriendRequest(user.id)"
                 class="px-4 py-2 bg-sky-500 rounded-lg font-semibold hover:bg-sky-600 transition-all"
@@ -271,6 +271,7 @@ interface SearchResponse {
 
 const showAddFriend = ref(false)
 const toast = useToast()
+const api = useApi()
 const activeTab = ref('friends')
 const loading = ref(false)
 const searchQuery = ref('')
@@ -298,8 +299,8 @@ onMounted(async () => {
 async function loadFriends() {
   try {
     loading.value = true
-    const data = await $fetch<FriendsResponse>('/api/friends', {
-      credentials: 'include'
+    const data = await api.apiRequest<FriendsResponse>('/api/friends', {
+      method: 'GET'
     })
     friends.value = data.friends
   } catch (error) {
@@ -311,8 +312,8 @@ async function loadFriends() {
 
 async function loadFriendRequests() {
   try {
-    const data = await $fetch<FriendRequestsResponse>('/api/friends/requests', {
-      credentials: 'include'
+    const data = await api.apiRequest<FriendRequestsResponse>('/api/friends/requests', {
+      method: 'GET'
     })
     receivedRequests.value = data.received
     sentRequests.value = data.sent
@@ -323,8 +324,8 @@ async function loadFriendRequests() {
 
 async function loadSuggestions() {
   try {
-    const data = await $fetch<SuggestionsResponse>('/api/friends/suggestions', {
-      credentials: 'include'
+    const data = await api.apiRequest<SuggestionsResponse>('/api/friends/suggestions', {
+      method: 'GET'
     })
     suggestions.value = data.suggestions
   } catch (error) {
@@ -340,8 +341,8 @@ async function searchUsers() {
   }
 
   try {
-    const data = await $fetch<SearchResponse>(`/api/friends/search?q=${searchQuery.value}`, {
-      credentials: 'include'
+    const data = await api.apiRequest<SearchResponse>(`/api/friends/search?q=${searchQuery.value}`, {
+      method: 'GET'
     })
     searchResults.value = data.users
   } catch (error) {
@@ -351,9 +352,8 @@ async function searchUsers() {
 
 async function sendFriendRequest(userId: string) {
   try {
-    await $fetch(`/api/friends/request/${userId}`, {
-      method: 'POST',
-      credentials: 'include'
+    await api.apiRequest(`/api/friends/request/${userId}`, {
+      method: 'POST'
     })
     toast.success('Friend request sent successfully!')
     showAddFriend.value = false
@@ -367,9 +367,8 @@ async function sendFriendRequest(userId: string) {
 
 async function acceptRequest(friendshipId: string) {
   try {
-    await $fetch(`/api/friends/accept/${friendshipId}`, {
-      method: 'POST',
-      credentials: 'include'
+    await api.apiRequest(`/api/friends/accept/${friendshipId}`, {
+      method: 'POST'
     })
     toast.success('Friend request accepted! You are now friends.')
     await Promise.all([loadFriends(), loadFriendRequests()])
@@ -380,9 +379,8 @@ async function acceptRequest(friendshipId: string) {
 
 async function rejectRequest(friendshipId: string) {
   try {
-    await $fetch(`/api/friends/reject/${friendshipId}`, {
-      method: 'POST',
-      credentials: 'include'
+    await api.apiRequest(`/api/friends/reject/${friendshipId}`, {
+      method: 'POST'
     })
     toast.success('Friend request rejected')
     await loadFriendRequests()
@@ -393,9 +391,8 @@ async function rejectRequest(friendshipId: string) {
 
 async function cancelRequest(friendshipId: string) {
   try {
-    await $fetch(`/api/friends/${friendshipId}`, {
-      method: 'DELETE',
-      credentials: 'include'
+    await api.apiRequest(`/api/friends/${friendshipId}`, {
+      method: 'DELETE'
     })
     toast.success('Friend request cancelled')
     await loadFriendRequests()
@@ -408,9 +405,8 @@ async function removeFriend(friendshipId: string) {
   if (!confirm('Are you sure you want to remove this friend?')) return
 
   try {
-    await $fetch(`/api/friends/${friendshipId}`, {
-      method: 'DELETE',
-      credentials: 'include'
+    await api.apiRequest(`/api/friends/${friendshipId}`, {
+      method: 'DELETE'
     })
     toast.success('Friend removed successfully')
     await loadFriends()

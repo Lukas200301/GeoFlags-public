@@ -55,7 +55,7 @@ export async function submitScore(req: AuthRequest, res: Response) {
 
     // Verify game mode exists and is enabled
     const gameMode = await prisma.gameMode.findUnique({
-      where: { id: mode },
+      where: { id: mode as GameModeType },
     });
 
     if (!gameMode) {
@@ -72,7 +72,7 @@ export async function submitScore(req: AuthRequest, res: Response) {
         userId: req.user.id,
         mode: mode as GameModeType,
         score,
-        data: data || {},
+        data: (data || {}) as any,
       },
     });
 
@@ -145,7 +145,7 @@ export async function getLeaderboard(req: AuthRequest, res: Response) {
     const limit = parseInt(req.query.limit as string) || 100;
 
     // Validate mode if provided
-    if (mode && !['FLAGS', 'CAPITALS', 'MAPS', 'MIXED', 'GUESS_FLAG', 'TIME_TRIAL', 'FIND_CAPITAL', 'HIGHER_LOWER'].includes(mode)) {
+    if (mode && !['FLAGS', 'CAPITALS', 'MAPS', 'MIXED', 'GUESS_FLAG', 'TIME_TRIAL', 'FIND_CAPITAL', 'HIGHER_LOWER', 'SILHOUETTE'].includes(mode)) {
       return res.status(400).json({ message: 'Invalid game mode' });
     }
 
@@ -312,13 +312,6 @@ export async function getUserStats(req: AuthRequest, res: Response) {
       }),
       prisma.leaderboardEntry.findMany({
         where: { userId: req.user.id },
-        include: {
-          _count: {
-            select: {
-              user: true,
-            },
-          },
-        },
       }),
       prisma.gameSession.groupBy({
         by: ['mode'],
@@ -376,18 +369,22 @@ export async function getGameModes(_req: AuthRequest, res: Response) {
  * Get public system settings
  * GET /api/game/settings
  */
-export async function getPublicSettings(req: AuthRequest, res: Response) {
+export async function getPublicSettings(_req: AuthRequest, res: Response) {
   try {
     const settings = await getSystemSettings();
 
     return res.json({
       requireRegistration: settings.requireRegistration,
+      maintenanceMode: settings.maintenanceMode,
+      maintenanceMessage: settings.maintenanceMessage,
     });
   } catch (error) {
     console.error('Get public settings error:', error);
     // Return default settings if table doesn't exist yet (before migration)
     return res.json({
       requireRegistration: false,
+      maintenanceMode: false,
+      maintenanceMessage: null,
     });
   }
 }

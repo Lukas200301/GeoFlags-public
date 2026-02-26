@@ -2,43 +2,50 @@
  * System Settings Composable
  *
  * Provides access to public system settings like registration requirements
+ * and maintenance mode status
  */
 
 export function useSystemSettings() {
   const { apiRequest } = useApi()
 
   const requireRegistration = useState<boolean>('require-registration', () => false)
+  const maintenanceMode = useState<boolean>('maintenance-mode', () => false)
+  const maintenanceMessage = useState<string | null>('maintenance-message', () => null)
   const settingsLoaded = useState<boolean>('settings-loaded', () => false)
   const isLoading = useState<boolean>('settings-loading', () => false)
 
-  const fetchSystemSettings = async () => {
+  const fetchSystemSettings = async (force = false) => {
     // Prevent multiple simultaneous fetches
     if (isLoading.value) {
       return
     }
 
-    // Don't fetch if already loaded
-    if (settingsLoaded.value) {
+    // Don't fetch if already loaded (unless forced)
+    if (settingsLoaded.value && !force) {
       return
     }
 
     try {
       isLoading.value = true
-      console.log('[useSystemSettings] Fetching from /api/game/settings...')
-      const response = await apiRequest<{ requireRegistration: boolean }>(
+      const response = await apiRequest<{
+        requireRegistration: boolean
+        maintenanceMode: boolean
+        maintenanceMessage: string | null
+      }>(
         '/api/game/settings',
         { requiresAuth: false }
       )
-      console.log('[useSystemSettings] Response:', response)
       requireRegistration.value = response.requireRegistration
+      maintenanceMode.value = response.maintenanceMode
+      maintenanceMessage.value = response.maintenanceMessage
       settingsLoaded.value = true
-      console.log('[useSystemSettings] Settings loaded:', { requireRegistration: requireRegistration.value })
     } catch (error) {
       console.error('[useSystemSettings] Failed to fetch system settings:', error)
-      // Default to false if fetch fails (allow guest play on error)
+      // Default to safe values if fetch fails
       requireRegistration.value = false
+      maintenanceMode.value = false
+      maintenanceMessage.value = null
       settingsLoaded.value = true
-      console.warn('[useSystemSettings] Defaulting to allow guest play due to error')
     } finally {
       isLoading.value = false
     }
@@ -46,6 +53,8 @@ export function useSystemSettings() {
 
   return {
     requireRegistration,
+    maintenanceMode,
+    maintenanceMessage,
     settingsLoaded,
     fetchSystemSettings,
   }

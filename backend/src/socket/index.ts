@@ -361,7 +361,7 @@ export function setupSocketIO(httpServer: HTTPServer): SocketIOServer {
     /**
      * Error handler
      */
-    socket.on('error', (error) => {
+    socket.on('error', (_error) => {
       // Handle error
     });
   });

@@ -202,10 +202,10 @@ export async function getBattleDetails(req: AuthRequest, res: Response) {
       return res.status(403).json({ error: 'Not authorized to view this battle' });
     }
 
-    res.json({ battle });
+    return res.json({ battle });
   } catch (error) {
     console.error('Error fetching battle details:', error);
-    res.status(500).json({ error: 'Failed to fetch battle details' });
+    return res.status(500).json({ error: 'Failed to fetch battle details' });
   }
 }
 
@@ -301,7 +301,7 @@ export async function challengeFriend(req: AuthRequest, res: Response) {
     //   mode: mode,
     // });
 
-    res.status(201).json({
+    return res.status(201).json({
       message: 'Challenge sent',
       battle: {
         id: battle.id,
@@ -312,7 +312,7 @@ export async function challengeFriend(req: AuthRequest, res: Response) {
     });
   } catch (error) {
     console.error('Error challenging friend:', error);
-    res.status(500).json({ error: 'Failed to send challenge' });
+    return res.status(500).json({ error: 'Failed to send challenge' });
   }
 }
 
@@ -391,13 +391,13 @@ export async function acceptChallenge(req: AuthRequest, res: Response) {
     //   opponent: req.user,
     // });
 
-    res.json({
+    return res.json({
       message: 'Challenge accepted',
       battle: updatedBattle,
     });
   } catch (error) {
     console.error('Error accepting challenge:', error);
-    res.status(500).json({ error: 'Failed to accept challenge' });
+    return res.status(500).json({ error: 'Failed to accept challenge' });
   }
 }
 
@@ -440,10 +440,10 @@ export async function declineChallenge(req: AuthRequest, res: Response) {
     //   declinedBy: req.user,
     // });
 
-    res.json({ message: 'Challenge declined' });
+    return res.json({ message: 'Challenge declined' });
   } catch (error) {
     console.error('Error declining challenge:', error);
-    res.status(500).json({ error: 'Failed to decline challenge' });
+    return res.status(500).json({ error: 'Failed to decline challenge' });
   }
 }
 
@@ -472,10 +472,10 @@ export async function markReady(req: AuthRequest, res: Response) {
       data: { isReady: true },
     });
 
-    res.json({ message: 'Marked as ready' });
+    return res.json({ message: 'Marked as ready' });
   } catch (error) {
     console.error('Error marking ready:', error);
-    res.status(500).json({ error: 'Failed to mark as ready' });
+    return res.status(500).json({ error: 'Failed to mark as ready' });
   }
 }
 
@@ -544,14 +544,14 @@ export async function submitAnswer(req: AuthRequest, res: Response) {
       },
     });
 
-    res.json({
+    return res.json({
       isCorrect,
       points,
       totalScore: updatedParticipant.score,
     });
   } catch (error) {
     console.error('Error submitting answer:', error);
-    res.status(500).json({ error: 'Failed to submit answer' });
+    return res.status(500).json({ error: 'Failed to submit answer' });
   }
 }
 
@@ -636,10 +636,10 @@ export async function forfeitBattle(req: AuthRequest, res: Response) {
       },
     });
 
-    res.json({ message: 'Battle forfeited', winnerId, participants });
+    return res.json({ message: 'Battle forfeited', winnerId, participants });
   } catch (error) {
     console.error('Error forfeiting battle:', error);
-    res.status(500).json({ error: 'Failed to forfeit battle' });
+    return res.status(500).json({ error: 'Failed to forfeit battle' });
   }
 }
 
@@ -649,7 +649,6 @@ export async function forfeitBattle(req: AuthRequest, res: Response) {
  */
 export async function joinMatchmaking(req: AuthRequest, res: Response) {
   try {
-    const userId = req.user!.id;
     const { mode } = req.body;
 
     if (!mode) {
@@ -667,10 +666,10 @@ export async function joinMatchmaking(req: AuthRequest, res: Response) {
 
     // TODO: Implement matchmaking queue logic with Socket.io
     // For now, return a message that matchmaking is not yet implemented
-    res.status(501).json({ message: 'Matchmaking coming soon! Challenge your friends for now.' });
+    return res.status(501).json({ message: 'Matchmaking coming soon! Challenge your friends for now.' });
   } catch (error) {
     console.error('Error joining matchmaking:', error);
-    res.status(500).json({ error: 'Failed to join matchmaking' });
+    return res.status(500).json({ error: 'Failed to join matchmaking' });
   }
 }
 
@@ -678,9 +677,8 @@ export async function joinMatchmaking(req: AuthRequest, res: Response) {
  * Leave matchmaking queue
  * POST /api/battles/matchmaking/leave
  */
-export async function leaveMatchmaking(req: AuthRequest, res: Response) {
+export async function leaveMatchmaking(_req: AuthRequest, res: Response) {
   try {
-    const userId = req.user!.id;
 
     // TODO: Implement matchmaking queue logic with Socket.io
     res.json({ message: 'Left matchmaking queue' });
@@ -748,10 +746,10 @@ export async function createPublicRoom(req: AuthRequest, res: Response) {
       },
     });
 
-    res.json({ battle });
+    return res.json({ battle });
   } catch (error) {
     console.error('Error creating public room:', error);
-    res.status(500).json({ error: 'Failed to create battle room' });
+    return res.status(500).json({ error: 'Failed to create battle room' });
   }
 }
 
@@ -759,7 +757,7 @@ export async function createPublicRoom(req: AuthRequest, res: Response) {
  * Get all available public rooms
  * GET /api/battles/rooms
  */
-export async function getPublicRooms(req: AuthRequest, res: Response) {
+export async function getPublicRooms(_req: AuthRequest, res: Response) {
   try {
     const battles = await prisma.battle.findMany({
       where: {
@@ -876,9 +874,9 @@ export async function joinPublicRoom(req: AuthRequest, res: Response) {
     // TODO: Emit socket event to notify host that someone joined
     // socket.to(battleId).emit('battle:opponent:joined', { opponent: updatedBattle.opponent });
 
-    res.json({ battle: updatedBattle });
+    return res.json({ battle: updatedBattle });
   } catch (error) {
     console.error('Error joining public room:', error);
-    res.status(500).json({ error: 'Failed to join battle room' });
+    return res.status(500).json({ error: 'Failed to join battle room' });
   }
 }

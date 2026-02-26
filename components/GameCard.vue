@@ -142,6 +142,15 @@ const colorSchemes: Record<string, {
     button: 'bg-purple-500/20 text-purple-300 hover:bg-purple-500/30 border border-purple-500/30',
     cornerAccent: 'bg-gradient-to-br from-purple-500/30 to-transparent rounded-bl-full',
   },
+  SILHOUETTE: {
+    gradient: 'bg-gradient-to-br from-rose-500/10 via-pink-500/10 to-fuchsia-600/10',
+    glow: 'bg-rose-500',
+    iconBg: 'bg-gradient-to-br from-rose-500 to-pink-600',
+    accent: 'bg-pink-400',
+    textGradient: 'from-rose-400 to-pink-400',
+    button: 'bg-rose-500/20 text-rose-300 hover:bg-rose-500/30 border border-rose-500/30',
+    cornerAccent: 'bg-gradient-to-br from-rose-500/30 to-transparent rounded-bl-full',
+  },
   MAPS: {
     gradient: 'bg-gradient-to-br from-amber-500/10 via-yellow-500/10 to-orange-600/10',
     glow: 'bg-amber-500',

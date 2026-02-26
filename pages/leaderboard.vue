@@ -51,10 +51,11 @@
           <label class="block text-sm font-medium text-gray-300 mb-2">Game Mode</label>
           <select v-model="filters.mode" class="input-field">
             <option :value="undefined">All Modes</option>
-            <option value="GUESS_FLAG">Guess the Flag - Infinite Mode</option>
+            <option value="GUESS_FLAG">Guess the Flag </option>
             <option value="TIME_TRIAL">Time Trial</option>
             <option value="FIND_CAPITAL">Find the Capital</option>
             <option value="HIGHER_LOWER">Higher/Lower</option>
+            <option value="SILHOUETTE">Country Silhouette</option>
           </select>
         </div>
       </div>
@@ -378,6 +379,7 @@ const formatModeName = (mode: string) => {
     'TIME_TRIAL': 'Time Trial',
     'FIND_CAPITAL': 'Find the Capital',
     'HIGHER_LOWER': 'Higher/Lower',
+    'SILHOUETTE': 'Country Silhouette',
   }
   return modeNames[mode] || mode
 }

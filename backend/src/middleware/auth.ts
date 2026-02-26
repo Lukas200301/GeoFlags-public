@@ -83,7 +83,7 @@ export async function requireAuth(req: AuthRequest, res: Response, next: NextFun
 
     // Attach user to request
     req.user = user;
-    next();
+    return next();
   } catch (error) {
     return res.status(401).json({ message: 'Invalid or expired token' });
   }
@@ -106,7 +106,7 @@ export function requireAdmin(req: AuthRequest, res: Response, next: NextFunction
     return res.status(403).json({ message: 'Admin access required' });
   }
 
-  next();
+  return next();
 }
 
 /**
@@ -135,7 +135,7 @@ export function requireReAuth(req: AuthRequest, res: Response, next: NextFunctio
       return res.status(403).json({ message: 'Re-authentication failed' });
     }
 
-    next();
+    return next();
   } catch (error) {
     return res.status(403).json({
       message: 'Re-authentication token expired or invalid',

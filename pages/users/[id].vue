@@ -218,6 +218,18 @@
             <p class="text-xs text-gray-400 mt-1">25+ Find Capital games</p>
           </div>
 
+          <div :class="['text-center p-4 rounded-xl border transition-all', (publicProfile?.stats.gamesPerMode?.HIGHER_LOWER || 0) >= 25 ? 'glass-card-dark border-purple-500/50' : 'glass-card-dark opacity-50']">
+            <Icon name="mdi:chevron-triple-up" class="w-12 h-12 mx-auto mb-2" :class="(publicProfile?.stats.gamesPerMode?.HIGHER_LOWER || 0) >= 25 ? 'text-purple-400' : 'text-gray-600'" />
+            <p class="text-sm font-medium text-gray-100">Comparison Champion</p>
+            <p class="text-xs text-gray-400 mt-1">25+ Higher/Lower games</p>
+          </div>
+
+          <div :class="['text-center p-4 rounded-xl border transition-all', (publicProfile?.stats.gamesPerMode?.SILHOUETTE || 0) >= 25 ? 'glass-card-dark border-rose-500/50' : 'glass-card-dark opacity-50']">
+            <Icon name="mdi:shape-outline" class="w-12 h-12 mx-auto mb-2" :class="(publicProfile?.stats.gamesPerMode?.SILHOUETTE || 0) >= 25 ? 'text-rose-400' : 'text-gray-600'" />
+            <p class="text-sm font-medium text-gray-100">Silhouette Specialist</p>
+            <p class="text-xs text-gray-400 mt-1">25+ Country Silhouette games</p>
+          </div>
+
           <div :class="['text-center p-4 rounded-xl border transition-all', (publicProfile?.stats.highScores?.GUESS_FLAG || 0) >= 50 ? 'glass-card-dark border-rose-500/50' : 'glass-card-dark opacity-50']">
             <Icon name="mdi:flag-variant" class="w-12 h-12 mx-auto mb-2" :class="(publicProfile?.stats.highScores?.GUESS_FLAG || 0) >= 50 ? 'text-rose-400' : 'text-gray-600'" />
             <p class="text-sm font-medium text-gray-100">Flag Virtuoso</p>
@@ -395,6 +407,7 @@ const formatModeName = (mode: string) => {
     'TIME_TRIAL': 'Time Trial',
     'FIND_CAPITAL': 'Find the Capital',
     'HIGHER_LOWER': 'Higher/Lower',
+    'SILHOUETTE': 'Country Silhouette',
     'FLAGS': 'Flags',
     'CAPITALS': 'Capitals',
     'MAPS': 'Maps'
@@ -407,6 +420,7 @@ const getGameModeIcon = (mode: string) => {
     'TIME_TRIAL': 'mdi:timer',
     'FIND_CAPITAL': 'mdi:map-marker',
     'HIGHER_LOWER': 'mdi:chevron-triple-up',
+    'SILHOUETTE': 'mdi:shape-outline',
     'FLAGS': 'mdi:flag',
     'CAPITALS': 'mdi:city',
     'MAPS': 'mdi:map'

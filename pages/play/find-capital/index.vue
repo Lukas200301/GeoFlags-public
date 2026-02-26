@@ -31,7 +31,7 @@
             </li>
             <li class="flex items-start gap-3">
               <Icon name="mdi:target" class="w-5 h-5 text-sky-500 mt-0.5 flex-shrink-0" />
-              <span>Get within 100km of the correct location to score a point</span>
+              <span>Get within 250km of the correct location to score a point</span>
             </li>
             <li class="flex items-start gap-3">
               <Icon name="mdi:infinity" class="w-5 h-5 text-sky-500 mt-0.5 flex-shrink-0" />

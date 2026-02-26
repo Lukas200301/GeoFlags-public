@@ -1,7 +1,7 @@
 import { Response } from 'express';
 import { AuthRequest } from '../types';
 import prisma from '../utils/prisma';
-import { z } from 'zod';
+
 
 /**
  * Friends Controller
@@ -206,7 +206,7 @@ export async function sendFriendRequest(req: AuthRequest, res: Response) {
     // TODO: Emit socket event to notify the target user
     // req.app.get('io')?.to(targetUserId).emit('friend:request', { from: req.user });
 
-    res.status(201).json({
+    return res.status(201).json({
       message: 'Friend request sent',
       friendship: {
         id: friendship.id,
@@ -216,7 +216,7 @@ export async function sendFriendRequest(req: AuthRequest, res: Response) {
     });
   } catch (error) {
     console.error('Error sending friend request:', error);
-    res.status(500).json({ error: 'Failed to send friend request' });
+    return res.status(500).json({ error: 'Failed to send friend request' });
   }
 }
 
@@ -258,7 +258,7 @@ export async function acceptFriendRequest(req: AuthRequest, res: Response) {
     }
 
     // Update status to accepted
-    const updatedFriendship = await prisma.friendship.update({
+    await prisma.friendship.update({
       where: { id: friendshipId },
       data: { status: 'ACCEPTED' },
     });
@@ -266,13 +266,13 @@ export async function acceptFriendRequest(req: AuthRequest, res: Response) {
     // TODO: Emit socket event to notify the requester
     // req.app.get('io')?.to(friendship.userId).emit('friend:accepted', { by: req.user });
 
-    res.json({
+    return res.json({
       message: 'Friend request accepted',
       friend: friendship.user,
     });
   } catch (error) {
     console.error('Error accepting friend request:', error);
-    res.status(500).json({ error: 'Failed to accept friend request' });
+    return res.status(500).json({ error: 'Failed to accept friend request' });
   }
 }
 
@@ -309,10 +309,10 @@ export async function rejectFriendRequest(req: AuthRequest, res: Response) {
       where: { id: friendshipId },
     });
 
-    res.json({ message: 'Friend request rejected' });
+    return res.json({ message: 'Friend request rejected' });
   } catch (error) {
     console.error('Error rejecting friend request:', error);
-    res.status(500).json({ error: 'Failed to reject friend request' });
+    return res.status(500).json({ error: 'Failed to reject friend request' });
   }
 }
 
@@ -344,10 +344,10 @@ export async function removeFriend(req: AuthRequest, res: Response) {
       where: { id: friendshipId },
     });
 
-    res.json({ message: 'Friendship removed' });
+    return res.json({ message: 'Friendship removed' });
   } catch (error) {
     console.error('Error removing friend:', error);
-    res.status(500).json({ error: 'Failed to remove friend' });
+    return res.status(500).json({ error: 'Failed to remove friend' });
   }
 }
 
@@ -404,10 +404,10 @@ export async function blockUser(req: AuthRequest, res: Response) {
       });
     }
 
-    res.json({ message: 'User blocked' });
+    return res.json({ message: 'User blocked' });
   } catch (error) {
     console.error('Error blocking user:', error);
-    res.status(500).json({ error: 'Failed to block user' });
+    return res.status(500).json({ error: 'Failed to block user' });
   }
 }
 
@@ -530,9 +530,9 @@ export async function searchFriends(req: AuthRequest, res: Response) {
       relationshipStatus: relationshipMap.get(user.id) || 'NONE',
     }));
 
-    res.json({ users: usersWithStatus });
+    return res.json({ users: usersWithStatus });
   } catch (error) {
     console.error('Error searching friends:', error);
-    res.status(500).json({ error: 'Failed to search friends' });
+    return res.status(500).json({ error: 'Failed to search friends' });
   }
 }

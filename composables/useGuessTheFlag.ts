@@ -112,7 +112,7 @@ export const useGuessTheFlag = () => {
           mode: 'GUESS_FLAG',
           score,
           data: {
-            gameMode: 'Guess the Flag - Infinite Mode',
+            gameMode: 'Guess the Flag',
           },
         },
       })

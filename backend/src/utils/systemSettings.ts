@@ -8,6 +8,8 @@ import prisma from './prisma';
 
 let settingsCache: {
   requireRegistration: boolean;
+  maintenanceMode: boolean;
+  maintenanceMessage: string | null;
   lastFetch: number;
 } | null = null;
 
@@ -32,6 +34,7 @@ export async function getSystemSettings() {
     settings = await prisma.systemSettings.create({
       data: {
         requireRegistration: false,
+        maintenanceMode: false,
       },
     });
   }
@@ -39,6 +42,8 @@ export async function getSystemSettings() {
   // Update cache
   settingsCache = {
     requireRegistration: settings.requireRegistration,
+    maintenanceMode: settings.maintenanceMode,
+    maintenanceMessage: settings.maintenanceMessage,
     lastFetch: now,
   };
 
@@ -54,8 +59,17 @@ export async function isRegistrationRequired(): Promise<boolean> {
 }
 
 /**
+ * Check if maintenance mode is active
+ */
+export async function isMaintenanceMode(): Promise<boolean> {
+  const settings = await getSystemSettings();
+  return settings.maintenanceMode;
+}
+
+/**
  * Clear the settings cache (call this after updating settings)
  */
 export function clearSettingsCache() {
   settingsCache = null;
 }
+

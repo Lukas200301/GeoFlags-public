@@ -183,7 +183,7 @@ export async function getCountryData(req: Request, res: Response): Promise<void>
  * @route DELETE /api/countries/cache
  * @access Admin only
  */
-export async function clearCache(req: Request, res: Response): Promise<void> {
+export async function clearCache(_req: Request, res: Response): Promise<void> {
   try {
     await ensureCacheDir();
     const files = await fs.readdir(CACHE_DIR);
@@ -211,7 +211,7 @@ export async function clearCache(req: Request, res: Response): Promise<void> {
  * @route GET /api/countries/cache/stats
  * @access Admin only
  */
-export async function getCacheStats(req: Request, res: Response): Promise<void> {
+export async function getCacheStats(_req: Request, res: Response): Promise<void> {
   try {
     await ensureCacheDir();
     const files = await fs.readdir(CACHE_DIR);

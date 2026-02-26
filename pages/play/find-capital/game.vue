@@ -98,14 +98,22 @@
                   <Icon name="mdi:arrow-right" class="w-6 h-6" />
                   <span>Next Country</span>
                 </button>
-                <button
-                  v-else
-                  @click="handleGameOver"
-                  class="btn-secondary px-8 py-3 text-lg"
-                >
-                  <Icon name="mdi:flag-checkered" class="w-6 h-6" />
-                  <span>View Results</span>
-                </button>
+                <div v-else class="flex flex-col sm:flex-row gap-4">
+                  <button
+                    @click="handlePlayAgain"
+                    class="btn-primary px-8 py-3 text-lg"
+                  >
+                    <Icon name="mdi:refresh" class="w-6 h-6" />
+                    <span>Play Again</span>
+                  </button>
+                  <button
+                    @click="handleGameOver"
+                    class="btn-secondary px-8 py-3 text-lg"
+                  >
+                    <Icon name="mdi:flag-checkered" class="w-6 h-6" />
+                    <span>View Results</span>
+                  </button>
+                </div>
               </div>
             </div>
           </transition>
@@ -217,6 +225,18 @@ const continueToNext = async () => {
  */
 const handleGameOver = () => {
   router.push('/play/find-capital/results')
+}
+
+/**
+ * Handle play again (restart from beginning)
+ */
+const handlePlayAgain = () => {
+  if (map) {
+    map.remove()
+    map = null
+  }
+  resetGame()
+  router.push('/play/find-capital')
 }
 
 /**

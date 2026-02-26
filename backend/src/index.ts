@@ -30,6 +30,9 @@ import profileRoutes from './routes/profile.routes';
 import userRoutes from './routes/user.routes';
 import friendsRoutes from './routes/friends.routes';
 import battleRoutes from './routes/battle.routes';
+import mapRoutes from './routes/map.routes';
+import * as statusController from './controllers/status.controller';
+import { startUptimeTracker } from './services/uptime.service';
 
 /**
  * Main Express Application
@@ -76,7 +79,7 @@ app.use(
   })
 );
 
-app.use((req: Request, res: Response, next: NextFunction) => {
+app.use((_req: Request, res: Response, next: NextFunction) => {
   res.header('Access-Control-Allow-Origin', FRONTEND_URL);
   res.header('Access-Control-Allow-Credentials', 'true');
   next();
@@ -142,6 +145,7 @@ app.use('/api/profile', profileRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/friends', friendsRoutes);
 app.use('/api/battles', battleRoutes);
+app.use('/api/map', mapRoutes);
 
 /**
  * Public Stats Endpoint
@@ -167,7 +171,7 @@ app.get('/api/stats', async (_req: Request, res: Response) => {
 });
 
 /**
- * Health Check
+ * Root Status Page / Health Check
  */
 app.get('/api/health', (_req: Request, res: Response) => {
   res.json({
@@ -176,6 +180,8 @@ app.get('/api/health', (_req: Request, res: Response) => {
     uptime: process.uptime(),
   });
 });
+
+app.get('/', statusController.getStatusPage);
 
 /**
  * 404 Handler
@@ -201,6 +207,9 @@ app.set('io', io);
  * Start Server
  */
 httpServer.listen(PORT, () => {
+  // Start the background uptime monitor
+  startUptimeTracker();
+
   console.log(`
 ╔════════════════════════════════════════╗
 ║        GeoFlags Backend Server         ║

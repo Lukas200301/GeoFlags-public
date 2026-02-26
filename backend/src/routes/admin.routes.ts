@@ -68,6 +68,7 @@ router.patch('/users/:userId/role', auditLogger('ROLE_CHANGE'), adminController.
 /**
  * Database Viewer
  */
+router.get('/database/tables', adminController.getDatabaseTables);
 router.get('/database', adminController.getDatabaseTable);
 
 /**

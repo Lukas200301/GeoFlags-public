@@ -139,3 +139,5 @@ temp
 
 # Ignore the backend cache directory
 backend/cache/
+
+backups/

@@ -118,15 +118,13 @@
       <div v-if="error" class="card p-6 text-center">
         <Icon name="mdi:alert-circle" class="w-12 h-12 text-red-500 mx-auto mb-4" />
         <p class="text-gray-300 mb-4">{{ error }}</p>
-        <button @click="fetchGameModes" class="btn-primary">Try Again</button>
+        <button @click="fetchModes(true)" class="btn-primary">Try Again</button>
       </div>
     </template>
   </div>
 </template>
 
 <script setup lang="ts">
-import type { GameModeConfig } from '~/types'
-
 /**
  * Game mode selection page
  * Displays all available game modes
@@ -135,14 +133,9 @@ definePageMeta({
   layout: 'default',
 })
 
-const router = useRouter()
-const { getGameModes } = useApi()
 const { user } = useAuth()
 const { requireRegistration, fetchSystemSettings } = useSystemSettings()
-
-const gameModes = ref<GameModeConfig[]>([])
-const loading = ref(true)
-const error = ref<string | null>(null)
+const { gameModes, loading, error, fetchModes, navigateToMode } = useGameModes()
 
 // Format date helper
 const formatDate = (dateString: string) => {
@@ -156,57 +149,13 @@ const formatDate = (dateString: string) => {
   })
 }
 
-// Icon mapping for game modes
-const iconMap: Record<string, string> = {
-  FLAGS: 'mdi:flag',
-  CAPITALS: 'mdi:city',
-  MAPS: 'mdi:map',
-  MIXED: 'mdi:shuffle-variant',
-  GUESS_FLAG: 'mdi:flag-checkered',
-  TIME_TRIAL: 'mdi:timer-sand',
-  FIND_CAPITAL: 'mdi:map-marker',
-  HIGHER_LOWER: 'mdi:chevron-triple-up',
-}
-
-// Fetch game modes on mount
-const fetchGameModes = async () => {
-  try {
-    loading.value = true
-    error.value = null
-
-    const modes = await getGameModes()
-    // Add icon property to each mode
-    gameModes.value = modes
-      .filter((mode) => mode.enabled)
-      .map((mode) => ({
-        ...mode,
-        icon: iconMap[mode.id] || 'mdi:gamepad-variant',
-      }))
-  } catch (err: any) {
-    error.value = err.data?.message || 'Failed to load game modes'
-  } finally {
-    loading.value = false
-  }
-}
 const selectMode = (modeId: string) => {
-  // Route based on game mode
-  if (modeId === 'GUESS_FLAG') {
-    router.push('/play/guess-the-flag')
-  } else if (modeId === 'TIME_TRIAL') {
-    router.push('/play/time-trial')
-  } else if (modeId === 'FIND_CAPITAL') {
-    router.push('/play/find-capital')
-  } else if (modeId === 'HIGHER_LOWER') {
-    router.push('/play/higher-lower')
-  } else {
-    // For other modes, use the [mode] folder
-    router.push(`/play/${modeId.toLowerCase()}`)
-  }
+  navigateToMode(modeId)
 }
 
 onMounted(() => {
   fetchSystemSettings()
-  fetchGameModes()
+  fetchModes()
 })
 </script>
 

@@ -27,7 +27,7 @@ export const reAuthSchema = z.object({
 
 // Game validation
 export const gameSubmissionSchema = z.object({
-  mode: z.enum(['FLAGS', 'CAPITALS', 'MAPS', 'MIXED', 'GUESS_FLAG', 'TIME_TRIAL', 'FIND_CAPITAL', 'HIGHER_LOWER']),
+  mode: z.enum(['FLAGS', 'CAPITALS', 'MAPS', 'MIXED', 'GUESS_FLAG', 'TIME_TRIAL', 'FIND_CAPITAL', 'HIGHER_LOWER', 'SILHOUETTE']),
   score: z.number().int().min(0).max(100000),
   data: z.record(z.unknown()).optional(),
 });

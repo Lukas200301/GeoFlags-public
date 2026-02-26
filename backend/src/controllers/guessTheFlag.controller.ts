@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import { AuthRequest } from '../types';
-import prisma from '../utils/prisma';
+
 import countriesData from 'world-countries';
 import type { Country as WorldCountry } from 'world-countries';
 

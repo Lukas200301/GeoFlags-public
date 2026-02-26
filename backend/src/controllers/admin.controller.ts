@@ -1,6 +1,6 @@
 import { Response } from 'express';
-import path from 'path';
 import fs from 'fs';
+import path from 'path';
 import { AuthRequest } from '../types';
 import prisma from '../utils/prisma';
 import { UserRole } from '@prisma/client';
@@ -372,7 +372,7 @@ export async function deleteUserAvatar(req: AuthRequest, res: Response) {
  * Get all game modes
  * GET /api/admin/game-modes
  */
-export async function getGameModes(req: AuthRequest, res: Response) {
+export async function getGameModes(_req: AuthRequest, res: Response) {
   try {
     const gameModes = await prisma.gameMode.findMany({
       orderBy: { name: 'asc' },
@@ -420,7 +420,7 @@ export async function updateGameMode(req: AuthRequest, res: Response) {
     const { name, description, enabled } = req.body;
 
     const gameMode = await prisma.gameMode.update({
-      where: { id },
+      where: { id: id as any },
       data: {
         ...(name && { name }),
         ...(description !== undefined && { description }),
@@ -578,7 +578,7 @@ export async function bulkDeleteLeaderboardEntries(req: AuthRequest, res: Respon
  * Get comprehensive statistics
  * GET /api/admin/stats
  */
-export async function getStats(req: AuthRequest, res: Response) {
+export async function getStats(_req: AuthRequest, res: Response) {
   try {
     // Overview Stats
     const totalUsers = await prisma.user.count();
@@ -874,7 +874,7 @@ export async function getStats(req: AuthRequest, res: Response) {
  * Get dashboard overview
  * GET /api/admin/dashboard
  */
-export async function getDashboard(req: AuthRequest, res: Response) {
+export async function getDashboard(_req: AuthRequest, res: Response) {
   try {
     // Get user stats
     const [totalUsers, newUsers] = await Promise.all([
@@ -1014,7 +1014,7 @@ export async function getDashboard(req: AuthRequest, res: Response) {
  * Get system health metrics
  * GET /api/admin/system/health
  */
-export async function getSystemHealth(req: AuthRequest, res: Response) {
+export async function getSystemHealth(_req: AuthRequest, res: Response) {
   try {
     const os = require('os')
 
@@ -1027,8 +1027,9 @@ export async function getSystemHealth(req: AuthRequest, res: Response) {
     // CPU usage (simplified)
     const cpus = os.cpus()
     const cpuUsage = cpus.reduce((acc: number, cpu: any) => {
-      const total = Object.values(cpu.times).reduce((a: number, b: number) => a + b, 0)
-      const idle = cpu.times.idle
+      const times = cpu.times as Record<string, number>
+      const total = Object.values(times).reduce((a, b) => a + b, 0)
+      const idle = times.idle
       return acc + ((total - idle) / total) * 100
     }, 0) / cpus.length
 
@@ -1172,6 +1173,73 @@ export async function getAuditLogs(req: AuthRequest, res: Response) {
 }
 
 /**
+ * Get all database tables
+ * GET /api/admin/database/tables
+ */
+export async function getDatabaseTables(_req: AuthRequest, res: Response) {
+  try {
+    // Get all Prisma model names from the schema
+    const tables = [
+      { name: 'users', label: 'Users', icon: 'mdi:account-group' },
+      { name: 'game_sessions', label: 'Game Sessions', icon: 'mdi:gamepad-variant' },
+      { name: 'leaderboard_entries', label: 'Leaderboard Entries', icon: 'mdi:trophy' },
+      { name: 'game_modes', label: 'Game Modes', icon: 'mdi:puzzle' },
+      { name: 'admin_audits', label: 'Admin Audits', icon: 'mdi:file-document-outline' },
+      { name: 'system_settings', label: 'System Settings', icon: 'mdi:cog' },
+      { name: 'friendships', label: 'Friendships', icon: 'mdi:account-heart' },
+      { name: 'battles', label: 'Battles', icon: 'mdi:sword-cross' },
+      { name: 'battle_participants', label: 'Battle Participants', icon: 'mdi:account-multiple' },
+    ];
+
+    // Get row counts for each table
+    const tableCounts = await Promise.all(
+      tables.map(async (table) => {
+        let count = 0;
+        try {
+          switch (table.name) {
+            case 'users':
+              count = await prisma.user.count();
+              break;
+            case 'game_sessions':
+              count = await prisma.gameSession.count();
+              break;
+            case 'leaderboard_entries':
+              count = await prisma.leaderboardEntry.count();
+              break;
+            case 'game_modes':
+              count = await prisma.gameMode.count();
+              break;
+            case 'admin_audits':
+              count = await prisma.adminAudit.count();
+              break;
+            case 'system_settings':
+              count = await prisma.systemSettings.count();
+              break;
+            case 'friendships':
+              count = await prisma.friendship.count();
+              break;
+            case 'battles':
+              count = await prisma.battle.count();
+              break;
+            case 'battle_participants':
+              count = await prisma.battleParticipant.count();
+              break;
+          }
+        } catch (err) {
+          console.error(`Error counting ${table.name}:`, err);
+        }
+        return { ...table, count };
+      })
+    );
+
+    return res.json({ tables: tableCounts });
+  } catch (error) {
+    console.error('Get database tables error:', error);
+    return res.status(500).json({ message: 'Failed to fetch database tables' });
+  }
+}
+
+/**
  * Get database table data
  * GET /api/admin/database
  */
@@ -1185,17 +1253,17 @@ export async function getDatabaseTable(req: AuthRequest, res: Response) {
     const skip = (page - 1) * limit;
 
     // Validate table name
-    const allowedTables = ['users', 'game_sessions', 'leaderboard_entries', 'game_modes', 'admin_audits'];
+    const allowedTables = ['users', 'game_sessions', 'leaderboard_entries', 'game_modes', 'admin_audits', 'system_settings', 'friendships', 'battles', 'battle_participants'];
     if (!allowedTables.includes(table)) {
       return res.status(400).json({ message: 'Invalid table name' });
     }
 
     let data: any[] = [];
-    let total = 0;
+    let total: number = 0;
 
     switch (table) {
       case 'users':
-        const userWhere = search ? {
+        const userWhere: any = search ? {
           OR: [
             { username: { contains: search, mode: 'insensitive' } },
             { email: { contains: search, mode: 'insensitive' } },
@@ -1224,7 +1292,7 @@ export async function getDatabaseTable(req: AuthRequest, res: Response) {
         break;
 
       case 'game_sessions':
-        const sessionWhere = search ? {
+        const sessionWhere: any = search ? {
           user: {
             username: { contains: search, mode: 'insensitive' }
           }
@@ -1246,7 +1314,7 @@ export async function getDatabaseTable(req: AuthRequest, res: Response) {
         break;
 
       case 'leaderboard_entries':
-        const leaderboardWhere = search ? {
+        const leaderboardWhere: any = search ? {
           user: {
             username: { contains: search, mode: 'insensitive' }
           }
@@ -1268,7 +1336,7 @@ export async function getDatabaseTable(req: AuthRequest, res: Response) {
         break;
 
       case 'game_modes':
-        const modeWhere = search ? {
+        const modeWhere: any = search ? {
           name: { contains: search, mode: 'insensitive' }
         } : {};
         [data, total] = await Promise.all([
@@ -1283,7 +1351,7 @@ export async function getDatabaseTable(req: AuthRequest, res: Response) {
         break;
 
       case 'admin_audits':
-        const auditWhere = search ? {
+        const auditWhere: any = search ? {
           OR: [
             { action: { contains: search, mode: 'insensitive' } },
             { admin: { username: { contains: search, mode: 'insensitive' } } }
@@ -1304,6 +1372,81 @@ export async function getDatabaseTable(req: AuthRequest, res: Response) {
           prisma.adminAudit.count({ where: auditWhere })
         ]);
         break;
+
+      case 'system_settings':
+        [data, total] = await Promise.all([
+          prisma.systemSettings.findMany({
+            skip,
+            take: limit,
+            orderBy: { updatedAt: 'desc' }
+          }),
+          prisma.systemSettings.count()
+        ]);
+        break;
+
+      case 'friendships':
+        const friendshipWhere: any = search ? {
+          OR: [
+            { user: { username: { contains: search, mode: 'insensitive' } } },
+            { friend: { username: { contains: search, mode: 'insensitive' } } }
+          ]
+        } : {};
+        [data, total] = await Promise.all([
+          prisma.friendship.findMany({
+            where: friendshipWhere,
+            skip,
+            take: limit,
+            orderBy: { createdAt: 'desc' },
+            include: {
+              user: { select: { username: true } },
+              friend: { select: { username: true } }
+            }
+          }),
+          prisma.friendship.count({ where: friendshipWhere })
+        ]);
+        break;
+
+      case 'battles':
+        const battleWhere: any = search ? {
+          OR: [
+            { challenger: { username: { contains: search, mode: 'insensitive' } } },
+            { opponent: { username: { contains: search, mode: 'insensitive' } } }
+          ]
+        } : {};
+        [data, total] = await Promise.all([
+          prisma.battle.findMany({
+            where: battleWhere,
+            skip,
+            take: limit,
+            orderBy: { createdAt: 'desc' },
+            include: {
+              challenger: { select: { username: true } },
+              opponent: { select: { username: true } },
+              winner: { select: { username: true } }
+            }
+          }),
+          prisma.battle.count({ where: battleWhere })
+        ]);
+        break;
+
+      case 'battle_participants':
+        const participantWhere: any = search ? {
+          user: { username: { contains: search, mode: 'insensitive' } }
+        } : {};
+        [data, total] = await Promise.all([
+          prisma.battleParticipant.findMany({
+            where: participantWhere,
+            skip,
+            take: limit,
+            orderBy: { joinedAt: 'desc' },
+            include: {
+              user: { select: { username: true } },
+              battle: { select: { id: true, status: true } }
+            }
+          }),
+          prisma.battleParticipant.count({ where: participantWhere })
+        ]);
+        break;
     }
 
     return res.json({ data, total });
@@ -1317,7 +1460,7 @@ export async function getDatabaseTable(req: AuthRequest, res: Response) {
  * Get system settings
  * GET /api/admin/system/settings
  */
-export async function getSystemSettings(req: AuthRequest, res: Response) {
+export async function getSystemSettings(_req: AuthRequest, res: Response) {
   try {
     // Get or create system settings (single row)
     let settings = await prisma.systemSettings.findFirst();
@@ -1327,18 +1470,23 @@ export async function getSystemSettings(req: AuthRequest, res: Response) {
       settings = await prisma.systemSettings.create({
         data: {
           requireRegistration: false,
+          maintenanceMode: false,
         },
       });
     }
 
     return res.json({
       requireRegistration: settings.requireRegistration,
+      maintenanceMode: settings.maintenanceMode,
+      maintenanceMessage: settings.maintenanceMessage,
     });
   } catch (error) {
     console.error('Get system settings error:', error);
     // Return default settings if table doesn't exist yet (before migration)
     return res.json({
       requireRegistration: false,
+      maintenanceMode: false,
+      maintenanceMessage: null,
     });
   }
 }
@@ -1349,11 +1497,24 @@ export async function getSystemSettings(req: AuthRequest, res: Response) {
  */
 export async function updateSystemSettings(req: AuthRequest, res: Response) {
   try {
-    const { requireRegistration } = req.body;
+    const { requireRegistration, maintenanceMode, maintenanceMessage } = req.body;
 
-    // Validate input
-    if (typeof requireRegistration !== 'boolean') {
-      return res.status(400).json({ message: 'Invalid requireRegistration value' });
+    // Build update data - only include fields that are provided
+    const updateData: Record<string, any> = {};
+
+    if (typeof requireRegistration === 'boolean') {
+      updateData.requireRegistration = requireRegistration;
+    }
+    if (typeof maintenanceMode === 'boolean') {
+      updateData.maintenanceMode = maintenanceMode;
+    }
+    if (maintenanceMessage !== undefined) {
+      updateData.maintenanceMessage = maintenanceMessage || null;
+    }
+
+    // Require at least one valid field
+    if (Object.keys(updateData).length === 0) {
+      return res.status(400).json({ message: 'No valid settings fields provided' });
     }
 
     // Get or create settings
@@ -1363,14 +1524,16 @@ export async function updateSystemSettings(req: AuthRequest, res: Response) {
       // Create if doesn't exist
       settings = await prisma.systemSettings.create({
         data: {
-          requireRegistration,
+          requireRegistration: updateData.requireRegistration ?? false,
+          maintenanceMode: updateData.maintenanceMode ?? false,
+          maintenanceMessage: updateData.maintenanceMessage ?? null,
         },
       });
     } else {
       // Update existing
       settings = await prisma.systemSettings.update({
         where: { id: settings.id },
-        data: { requireRegistration },
+        data: updateData,
       });
     }
 
@@ -1379,9 +1542,7 @@ export async function updateSystemSettings(req: AuthRequest, res: Response) {
       data: {
         adminId: req.user!.id,
         action: 'SYSTEM_SETTINGS_UPDATE',
-        details: {
-          requireRegistration,
-        },
+        details: updateData,
         ip: req.ip,
       },
     });
@@ -1392,6 +1553,8 @@ export async function updateSystemSettings(req: AuthRequest, res: Response) {
     return res.json({
       message: 'System settings updated successfully',
       requireRegistration: settings.requireRegistration,
+      maintenanceMode: settings.maintenanceMode,
+      maintenanceMessage: settings.maintenanceMessage,
     });
   } catch (error) {
     console.error('Update system settings error:', error);
@@ -1405,3 +1568,4 @@ export async function updateSystemSettings(req: AuthRequest, res: Response) {
     return res.status(500).json({ message: 'Failed to update system settings' });
   }
 }
+

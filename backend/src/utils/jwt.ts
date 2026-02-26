@@ -31,18 +31,18 @@ const REFRESH_EXPIRES_IN = process.env.JWT_REFRESH_EXPIRES_IN || '90d'; // Exten
  * Generate access token (short-lived)
  */
 export function generateAccessToken(payload: JWTPayload): string {
-  return jwt.sign(payload, ACCESS_SECRET, {
+  return jwt.sign({ ...payload } as object, ACCESS_SECRET, {
     expiresIn: ACCESS_EXPIRES_IN,
-  });
+  } as jwt.SignOptions);
 }
 
 /**
  * Generate refresh token (long-lived)
  */
 export function generateRefreshToken(payload: JWTPayload): string {
-  return jwt.sign(payload, REFRESH_SECRET, {
+  return jwt.sign({ ...payload } as object, REFRESH_SECRET, {
     expiresIn: REFRESH_EXPIRES_IN,
-  });
+  } as jwt.SignOptions);
 }
 
 /**

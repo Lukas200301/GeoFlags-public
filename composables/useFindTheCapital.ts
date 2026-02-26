@@ -4,6 +4,7 @@
  */
 
 import countries from 'world-countries'
+import capitalsData from '~/data/capitals-coordinates.json'
 
 type CountryData = typeof countries[0]
 
@@ -39,9 +40,9 @@ export const useFindTheCapital = () => {
   const gameOver = ref(false)
   const lastDistance = ref<number>(0)
 
-  // Get countries with capitals
+  // Get countries with capitals that exist in our capitals database
   const countriesWithCapitals = countries.filter(
-    (c) => c.capital && c.capital.length > 0 && c.latlng && c.latlng.length === 2
+    (c) => c.capital && c.capital.length > 0 && capitalsData[c.cca3 as keyof typeof capitalsData]
   )
 
   // Track used countries
@@ -76,11 +77,14 @@ export const useFindTheCapital = () => {
       const country = getRandomCountry()
       if (!country) throw new Error('No countries available')
 
+      const capitalInfo = capitalsData[country.cca3 as keyof typeof capitalsData]
+      if (!capitalInfo) throw new Error('Capital coordinates not found')
+
       gameState.value = {
         countryName: country.name.common,
         capitalName: country.capital![0],
-        capitalLat: country.latlng[0],
-        capitalLng: country.latlng[1],
+        capitalLat: capitalInfo.lat,
+        capitalLng: capitalInfo.lng,
         flagImage: getFlagUrl(country.cca2),
         score: 0,
       }
@@ -170,11 +174,14 @@ export const useFindTheCapital = () => {
       const country = getRandomCountry()
       if (!country) throw new Error('No countries available')
 
+      const capitalInfo = capitalsData[country.cca3 as keyof typeof capitalsData]
+      if (!capitalInfo) throw new Error('Capital coordinates not found')
+
       gameState.value = {
         countryName: country.name.common,
         capitalName: country.capital![0],
-        capitalLat: country.latlng[0],
-        capitalLng: country.latlng[1],
+        capitalLat: capitalInfo.lat,
+        capitalLng: capitalInfo.lng,
         flagImage: getFlagUrl(country.cca2),
         score: gameState.value.score + 1,
       }

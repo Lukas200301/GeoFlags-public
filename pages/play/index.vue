@@ -1,7 +1,3 @@
-<template>
-  <div></div>
-</template>
-
 <script setup lang="ts">
 /**
  * Redirect to Solo Play page
@@ -11,6 +7,11 @@ definePageMeta({
   layout: 'default',
 })
 
-// Redirect to /play/solo
-navigateTo('/play/solo', { replace: true })
+// Immediate server-side redirect to /play/solo
+await navigateTo('/play/solo', { replace: true, redirectCode: 301 })
 </script>
+
+<template>
+  <!-- Template not rendered due to immediate redirect -->
+  <div></div>
+</template>

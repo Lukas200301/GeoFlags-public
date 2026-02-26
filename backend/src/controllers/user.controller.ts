@@ -201,7 +201,7 @@ let publicStatsCache: {
 
 const CACHE_DURATION = 10 * 60 * 1000; // 10 minutes in milliseconds
 
-export async function getPublicStats(req: Request, res: Response) {
+export async function getPublicStats(_req: Request, res: Response) {
   try {
     const now = Date.now();
 

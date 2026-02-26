@@ -410,6 +410,20 @@
             <p class="text-xs text-gray-400 mt-1">25+ Higher/Lower games</p>
           </div>
 
+          <!-- Silhouette Specialist Achievement -->
+          <div
+            :class="[
+              'text-center p-4 rounded-xl border transition-all',
+              (stats?.gamesPerMode?.SILHOUETTE || 0) >= 25
+                ? 'glass-card-dark border-rose-500/50'
+                : 'glass-card-dark opacity-50'
+            ]"
+          >
+            <Icon name="mdi:shape-outline" class="w-12 h-12 mx-auto mb-2" :class="(stats?.gamesPerMode?.SILHOUETTE || 0) >= 25 ? 'text-rose-400' : 'text-gray-600'" />
+            <p class="text-sm font-medium text-gray-100">Silhouette Specialist</p>
+            <p class="text-xs text-gray-400 mt-1">25+ Country Silhouette games</p>
+          </div>
+
           <!-- High Score in Flags Achievement -->
           <div
             :class="[
@@ -691,6 +705,7 @@ const formatGameMode = (mode: string) => {
     TIME_TRIAL: 'Time Trial',
     FIND_CAPITAL: 'Find the Capital',
     HIGHER_LOWER: 'Higher/Lower',
+    SILHOUETTE: 'Country Silhouette',
   }
   return modeNames[mode] || mode.replace(/_/g, ' ')
 }
@@ -705,6 +720,7 @@ const getGameModeIcon = (mode: string) => {
     TIME_TRIAL: 'mdi:timer',
     FIND_CAPITAL: 'mdi:map-marker',
     HIGHER_LOWER: 'mdi:chevron-triple-up',
+    SILHOUETTE: 'mdi:shape-outline',
   }
   return icons[mode] || 'mdi:gamepad-variant'
 }

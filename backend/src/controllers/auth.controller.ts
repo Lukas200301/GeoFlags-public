@@ -73,12 +73,16 @@ export async function register(req: AuthRequest, res: Response) {
     // Generate tokens
     const accessToken = generateAccessToken({
       userId: user.id,
+      email: user.email,
+      username: user.username,
       role: user.role,
       tokenVersion: 0,
     });
 
     const refreshToken = generateRefreshToken({
       userId: user.id,
+      email: user.email,
+      username: user.username,
       role: user.role,
       tokenVersion: 0,
     });
@@ -150,12 +154,16 @@ export async function login(req: AuthRequest, res: Response) {
     // Generate tokens
     const accessToken = generateAccessToken({
       userId: user.id,
+      email: user.email,
+      username: user.username,
       role: user.role,
       tokenVersion: user.tokenVersion,
     });
 
     const refreshToken = generateRefreshToken({
       userId: user.id,
+      email: user.email,
+      username: user.username,
       role: user.role,
       tokenVersion: user.tokenVersion,
     });
@@ -237,6 +245,8 @@ export async function refresh(req: AuthRequest, res: Response) {
     // Generate new access token
     const newAccessToken = generateAccessToken({
       userId: user.id,
+      email: user.email,
+      username: user.username,
       role: user.role,
       tokenVersion: user.tokenVersion,
     });
@@ -375,6 +385,8 @@ export async function reAuth(req: AuthRequest, res: Response) {
     // Generate short-lived re-auth token (5 minutes)
     const reAuthToken = generateAccessToken({
       userId: user.id,
+      email: user.email,
+      username: user.username,
       role: user.role,
       tokenVersion: user.tokenVersion,
     });

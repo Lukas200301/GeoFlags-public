@@ -57,13 +57,13 @@
 
         <div class="relative grid grid-cols-1 lg:grid-cols-[3fr,2fr] gap-0">
           <!-- Flag Visual -->
-          <div class="relative h-80 lg:h-[32rem] bg-gray-800/30 overflow-hidden">
+          <div class="relative h-80 lg:h-[32rem] bg-gray-800/30 flex items-center justify-center p-6 lg:p-12 overflow-hidden">
             <img
               :src="country.flag"
               :alt="`Flag of ${country.name}`"
-              class="w-full h-full object-cover"
+              class="w-full h-full object-contain drop-shadow-2xl"
             />
-            <div class="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-gray-900/20 to-transparent"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-gray-900/20 to-transparent pointer-events-none"></div>
           </div>
 
           <!-- Identity Info -->

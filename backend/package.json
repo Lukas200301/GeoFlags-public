@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "dev": "tsx watch --env-file=.env src/index.ts",
-    "build": "tsc",
+    "build": "tsc && copyfiles -u 1 \"src/**/*.geo.json\" dist && echo Build successful!",
     "start": "node dist/index.js",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
@@ -34,6 +34,7 @@
     "express": "^4.21.2",
     "express-rate-limit": "^7.4.1",
     "helmet": "^8.0.0",
+    "http-proxy-middleware": "^3.0.5",
     "jsonwebtoken": "^9.0.2",
     "multer": "^2.0.2",
     "socket.io": "^4.8.1",
@@ -50,11 +51,13 @@
     "@types/node": "^22.10.2",
     "@typescript-eslint/eslint-plugin": "^8.18.2",
     "@typescript-eslint/parser": "^8.18.2",
+    "copyfiles": "^2.4.1",
     "eslint": "^9.16.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
     "prettier": "^3.4.2",
     "prisma": "^6.18.0",
+    "ts-node": "^10.9.2",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2"
   }

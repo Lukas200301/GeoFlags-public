@@ -20,6 +20,7 @@ Test your knowledge of world flags, capitals, countries, and geography through e
 ## ✨ Features
 
 ### 🎮 **Multiple Game Modes**
+
 - **🚩 Guess the Flag** - Identify countries by their national flags
 - **🏙️ Find the Capital** - Match countries with their capital cities
 - **📊 Higher or Lower** - Guess country statistics (population, area, GDP)
@@ -29,12 +30,14 @@ Test your knowledge of world flags, capitals, countries, and geography through e
 - **📖 Learn Mode** - Explore detailed country information with interactive maps
 
 ### 🌐 **Interactive Visualizations**
+
 - **3D Globe** - Beautiful interactive globe using Globe.gl and Three.js
 - **Country Maps** - Detailed maps powered by MapLibre GL
 - **Statistics Charts** - Visual analytics with Chart.js
 - **Country Details** - Comprehensive data from REST Countries API
 
 ### 🏆 **Competitive Features**
+
 - **Global Leaderboards** - Compete with players worldwide in each game mode
 - **Real-time Updates** - Live leaderboard changes via Socket.io
 - **Friends System** - Add friends and track their progress
@@ -42,12 +45,14 @@ Test your knowledge of world flags, capitals, countries, and geography through e
 - **Battle System** - Challenge friends in head-to-head matches
 
 ### 👥 **Social & Community**
+
 - **Friends Management** - Add, remove, and view friend profiles
 - **Battle Invitations** - Challenge friends or random opponents
 - **Live Battles** - Real-time multiplayer with instant feedback
 - **Leaderboard Rankings** - See where you stand globally
 
 ### 🔐 **Security & Authentication**
+
 - **JWT Authentication** - Secure token-based auth with HttpOnly cookies
 - **CSRF Protection** - All mutating requests protected with CSRF tokens
 - **Role-based Access** - User and Admin roles with middleware protection
@@ -55,6 +60,7 @@ Test your knowledge of world flags, capitals, countries, and geography through e
 - **Secure Headers** - XSS, clickjacking, and MIME-type sniffing protection
 
 ### 👨‍💼 **Admin Panel**
+
 - **Dashboard** - Real-time statistics and platform analytics
 - **User Management** - View, edit, suspend, and manage users
 - **Game Configuration** - Enable/disable game modes and adjust settings
@@ -62,6 +68,7 @@ Test your knowledge of world flags, capitals, countries, and geography through e
 - **Audit Logs** - Track all administrative actions
 
 ### 🎨 **Modern UI/UX**
+
 - **Responsive Design** - Seamless experience on desktop, tablet, and mobile
 - **Dark Mode** - Eye-friendly dark theme (coming soon)
 - **Smooth Animations** - Page transitions powered by @vueuse/motion
@@ -73,31 +80,37 @@ Test your knowledge of world flags, capitals, countries, and geography through e
 ## 🛠️ Tech Stack
 
 ### **Core Framework**
+
 - **[Nuxt 3](https://nuxt.com)** - Vue.js meta-framework with SSR/SSG
 - **[Vue 3](https://vuejs.org)** - Progressive JavaScript framework
 - **[TypeScript](https://www.typescriptlang.org)** - Typed superset of JavaScript
 
 ### **Styling & UI**
+
 - **[Tailwind CSS 3](https://tailwindcss.com)** - Utility-first CSS framework
 - **[@nuxt/icon](https://nuxt.com/modules/icon)** - Icon management with 200k+ icons
 - **[@vueuse/motion](https://motion.vueuse.org)** - Smooth animations and transitions
 
 ### **Data Visualization**
+
 - **[Globe.gl](https://globe.gl)** - Interactive 3D globe with Three.js
 - **[MapLibre GL](https://maplibre.org)** - Open-source maps library
 - **[Chart.js 4](https://www.chartjs.org)** - Flexible charting library
 - **[Three.js](https://threejs.org)** - 3D graphics library
 
 ### **Real-time & State**
+
 - **[Socket.io Client](https://socket.io)** - Real-time bidirectional communication
 - **[@vueuse/core](https://vueuse.org)** - Essential Vue composition utilities
 - **Nuxt State** - Built-in reactive state management
 
 ### **Data Sources**
+
 - **[World Countries](https://www.npmjs.com/package/world-countries)** - Comprehensive country data
 - **REST Countries API** - Additional country information and flags
 
 ### **Development Tools**
+
 - **ESLint** - JavaScript/TypeScript linter
 - **Prettier** - Opinionated code formatter
 - **Vue TSC** - TypeScript type checking for Vue
@@ -107,54 +120,66 @@ Test your knowledge of world flags, capitals, countries, and geography through e
 ## 🎮 Game Modes
 
 ### 🚩 Guess the Flag
+
 Test your knowledge of world flags! Each round shows you a flag, and you must identify which country it belongs to.
 
 **Features:**
+
 - Multiple difficulty levels
 - Timed or untimed modes
 - Streak tracking
 - Detailed feedback with country information
 
 ### 🏙️ Find the Capital
+
 Match countries with their capital cities in this educational and challenging game mode.
 
 **Features:**
+
 - World coverage with 190+ countries
 - Progressive difficulty
 - Learn mode with hints
 - Geography insights for each answer
 
 ### 📊 Higher or Lower
+
 Guess whether a country has a higher or lower value for various statistics like population, area, or GDP.
 
 **Features:**
+
 - Multiple stat categories
 - Educational facts
 - Streak-based scoring
 - Compare countries side-by-side
 
 ### ⏱️ Time Trial
+
 Race against the clock to answer as many questions as possible before time runs out!
 
 **Features:**
+
 - Rapid-fire questions
 - Bonus points for speed
 - Global time-based leaderboard
 - Various time limits (30s, 60s, 120s)
 
 ### 🎯 Solo Challenges
+
 Practice mode for learning and improving your geography skills without the pressure of competition.
 
 **Features:**
+
 - No time limits
 - Detailed explanations
 - Progress tracking
 - Unlimited retries
 
 ### ⚔️ Battle Mode
+
 Challenge other players in real-time head-to-head geography battles!
 
 **Features:**
+
 - Real-time multiplayer
 - Friend or random matchmaking
 - Live scoring
@@ -162,9 +187,11 @@ Challenge other players in real-time head-to-head geography battles!
 - Battle history and statistics
 
 ### 📖 Learn Mode
+
 Explore the world through an educational lens with detailed country profiles and interactive maps.
 
 **Features:**
+
 - 250+ country profiles
 - Interactive 3D globe
 - Detailed statistics (population, area, languages, currencies)
@@ -346,6 +373,11 @@ npm run generate
 npm run lint              # Lint code with ESLint
 npm run lint:fix          # Auto-fix linting issues
 npm run format            # Format code with Prettier
+
+# Database Maintenance
+npm run db:backup         # Create a new database backup dump in backups/
+npm run db:restore        # Restore the database from a backup dump
+npm run db:update         # Push schema changes to the database and generate Prisma client
 ```
 
 ### Code Quality
@@ -358,6 +390,7 @@ This project maintains high code quality standards:
 - **Vue TSC** - Type checking for Vue components
 
 **Pre-commit checklist:**
+
 ```bash
 npm run lint:fix    # Fix linting issues
 npm run format      # Format all files
@@ -367,6 +400,7 @@ npm run build       # Ensure production build works
 ### Development Workflow
 
 1. **Create a feature branch**
+
    ```bash
    git checkout -b feature/your-feature-name
    ```
@@ -376,12 +410,14 @@ npm run build       # Ensure production build works
 3. **Test thoroughly** in development mode
 
 4. **Lint and format**
+
    ```bash
    npm run lint:fix
    npm run format
    ```
 
 5. **Commit with descriptive messages**
+
    ```bash
    git commit -m "feat: add new game mode"
    ```
@@ -397,6 +433,7 @@ GeoFlags implements comprehensive security measures including JWT authentication
 **📖 For detailed security documentation, see [SECURITY.md](./SECURITY.md)**
 
 Key security features:
+
 - ✅ HttpOnly Secure cookies for session management
 - ✅ CSRF protection for all mutating requests
 - ✅ Role-based access control with server-side verification
@@ -412,6 +449,7 @@ This frontend requires the GeoFlags backend API. See the [Backend README](./back
 ### Required Endpoints
 
 **Authentication:**
+
 - `POST /api/auth/register` - User registration
 - `POST /api/auth/login` - User login
 - `POST /api/auth/logout` - Logout and clear cookies
@@ -420,21 +458,25 @@ This frontend requires the GeoFlags backend API. See the [Backend README](./back
 - `GET /api/csrf-token` - Get CSRF token
 
 **Game:**
+
 - `GET /api/game/modes` - Get available game modes
 - `POST /api/game/submit` - Submit game score
 - `GET /api/game/history` - Get user game history
 - `GET /api/game/stats` - Get user statistics
 
 **Leaderboard:**
+
 - `GET /api/game/leaderboard?mode=FLAGS` - Get leaderboard for mode
 
 **Admin:**
+
 - `GET /api/admin/users` - User management
 - `GET /api/admin/stats` - Platform statistics
 - `PUT /api/admin/users/:id/role` - Update user role
 - `DELETE /api/admin/users/:id` - Delete user
 
 **Battles:**
+
 - `POST /api/battles/create` - Create new battle
 - `POST /api/battles/:id/join` - Join battle
 - `GET /api/battles/:id` - Get battle details
@@ -442,12 +484,14 @@ This frontend requires the GeoFlags backend API. See the [Backend README](./back
 ### Socket.io Events
 
 **Client → Server:**
+
 - `game:join` - Join game mode room
 - `game:leave` - Leave game mode room
 - `battle:join` - Join battle room
 - `battle:answer` - Submit battle answer
 
 **Server → Client:**
+
 - `leaderboard:update` - Leaderboard updated
 - `battle:start` - Battle started
 - `battle:question` - New battle question
@@ -488,33 +532,65 @@ NODE_ENV=production
 This Nuxt 3 application can be deployed to various platforms:
 
 #### **Vercel** (Recommended)
+
 ```bash
 npm i -g vercel
 vercel --prod
 ```
 
 #### **Netlify**
+
 ```bash
 npm run build
 # Deploy .output/public directory
 ```
 
 #### **Cloudflare Pages**
+
 ```bash
 npm run build
 # Deploy with Cloudflare Pages
 ```
 
-#### **Node.js Server**
+#### **Node.js Server with PM2 (Recommended for Production)**
+
+We've included built-in NPM scripts for managing the application with PM2, which will run both the frontend and backend concurrently, and can be configured to start automatically on system reboot.
+
 ```bash
-# Build
-npm run build
+# First, install PM2 globally if you haven't already
+npm install -g pm2
 
-# Start with PM2
-pm2 start .output/server/index.mjs --name geoflags-frontend
+# Build both applications
+npm run build:all
 
-# Or with Node.js directly
-node .output/server/index.mjs
+# Start both frontend and backend
+npm run pm2:start
+
+# Check the status of the servers
+npm run pm2:status
+
+# View live logs
+npm run pm2:logs
+```
+
+**Auto-start on System Reboot:**
+To make PM2 automatically start the GeoFlags servers when the machine reboots:
+
+```bash
+# 1. Generate the startup script for your OS
+npm run pm2:startup
+# (Follow the instructions printed in the console if it asks you to run a command)
+
+# 2. Save the current PM2 list to spawn on reboot
+npm run pm2:save
+```
+
+**Other PM2 Commands:**
+
+```bash
+npm run pm2:restart    # Restart both servers
+npm run pm2:stop       # Stop both servers
+npm run pm2:unstartup  # Disable auto-start on reboot
 ```
 
 ### Performance Optimization
@@ -532,6 +608,7 @@ node .output/server/index.mjs
 ### Key Composables
 
 #### `useAuth()`
+
 Handles authentication state and operations.
 
 ```typescript
@@ -541,6 +618,7 @@ await login({ username: 'testuser', password: 'password' })
 ```
 
 #### `useApi()`
+
 Provides typed API client with automatic CSRF protection.
 
 ```typescript
@@ -551,6 +629,7 @@ const leaderboard = await getLeaderboard('FLAGS')
 ```
 
 #### `useSocket()`
+
 Manages Socket.io connection and events.
 
 ```typescript
@@ -563,6 +642,7 @@ socket.on('leaderboard:update', (data) => {
 ```
 
 #### `useCountries()`
+
 Access country data and utilities.
 
 ```typescript

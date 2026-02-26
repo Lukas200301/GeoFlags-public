@@ -23,10 +23,10 @@ if (!fs.existsSync(uploadDir)) {
 
 // Set up storage for uploaded files
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
+  destination: (_req, _file, cb) => {
     cb(null, uploadDir);
   },
-  filename: (req, file, cb) => {
+  filename: (_req, _file, cb) => {
     // SECURITY: Generate cryptographically secure random filename
     // This prevents:
     // 1. Path traversal attacks
@@ -40,7 +40,7 @@ const storage = multer.diskStorage({
 // Create the multer instance
 const upload = multer({
   storage: storage,
-  fileFilter: (req, file, cb) => {
+  fileFilter: (_req, file, cb) => {
     // SECURITY: Strict file type validation
     // Check both MIME type and extension
     const allowedMimeTypes = ['image/jpeg', 'image/jpg'];

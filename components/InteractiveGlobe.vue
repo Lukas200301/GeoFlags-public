@@ -89,7 +89,6 @@ const hoveredCountry = ref<Country | null>(null)
 let map: maplibregl.Map | null = null
 let countryByName: Map<string, Country> | null = null
 
-
 const initMap = async () => {
   if (!mapContainer.value) return
 
@@ -104,13 +103,16 @@ const initMap = async () => {
       if (country.name) countryByName!.set(country.name.toLowerCase(), country)
     })
 
+    const config = useRuntimeConfig()
+    const apiBaseUrl = config.public.apiBase || 'http://localhost:3001'
+
     // Initialize map with satellite imagery and globe projection
     map = new maplibregl.Map({
       container: mapContainer.value,
       style: {
         version: 8,
         sources: {
-          'satellite': {
+          'basemap': {
             type: 'raster',
             tiles: [
               'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
@@ -118,16 +120,31 @@ const initMap = async () => {
             tileSize: 256,
             attribution: '© Esri'
           },
+          'basemap-labels': {
+            type: 'raster',
+            tiles: [
+              'https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}'
+            ],
+            tileSize: 256
+          },
           'countries': {
             type: 'geojson',
-            data: 'https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_50m_admin_0_countries.geojson'
+            data: `${apiBaseUrl}/api/map`,
+            promoteId: 'ISO_A2' // Uses ISO_A2 property as the feature.id for setFeatureState
           }
         },
         layers: [
           {
-            id: 'satellite-layer',
+            id: 'basemap-layer',
             type: 'raster',
-            source: 'satellite',
+            source: 'basemap',
+            minzoom: 0,
+            maxzoom: 22
+          },
+          {
+            id: 'basemap-labels-layer',
+            type: 'raster',
+            source: 'basemap-labels',
             minzoom: 0,
             maxzoom: 22
           },
@@ -136,12 +153,12 @@ const initMap = async () => {
             type: 'fill',
             source: 'countries',
             paint: {
-              'fill-color': 'rgba(59, 130, 246, 0.15)',
+              'fill-color': 'rgba(34, 211, 238, 0.2)', // Cyan glow
               'fill-opacity': [
                 'case',
                 ['boolean', ['feature-state', 'hover'], false],
-                0.4,
-                0.15
+                0.6,
+                0.0
               ]
             }
           },
@@ -150,8 +167,18 @@ const initMap = async () => {
             type: 'line',
             source: 'countries',
             paint: {
-              'line-color': 'rgba(59, 130, 246, 0.6)',
-              'line-width': 1.5,
+              'line-color': [
+                'case',
+                ['boolean', ['feature-state', 'hover'], false],
+                'rgba(34, 211, 238, 1)',   // Bright cyan on hover
+                'rgba(34, 211, 238, 0.4)'  // Dim cyan normally
+              ],
+              'line-width': [
+                'case',
+                ['boolean', ['feature-state', 'hover'], false],
+                2.5,
+                1.5
+              ],
               'line-opacity': 0.8
             }
           }
@@ -167,28 +194,42 @@ const initMap = async () => {
     })
 
     // Add navigation controls
-    map.addControl(new maplibregl.NavigationControl(), 'top-left')
+    map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-left')
 
     let hoveredFeatureId: string | number | null = null
 
     // Mouse move handler for hover effect
     map.on('mousemove', 'countries-fill', (e) => {
       if (e.features && e.features.length > 0) {
-        if (hoveredFeatureId !== null) {
+        const featureId = e.features[0].id;
+        
+        // Only attempt to set state if the feature actually has an ID
+        if (featureId !== undefined && featureId !== null) {
+          if (hoveredFeatureId !== null && hoveredFeatureId !== featureId) {
+            map!.setFeatureState(
+              { source: 'countries', id: hoveredFeatureId },
+              { hover: false }
+            )
+          }
+          
+          hoveredFeatureId = featureId
           map!.setFeatureState(
             { source: 'countries', id: hoveredFeatureId },
-            { hover: false }
+            { hover: true }
           )
         }
-        
-        hoveredFeatureId = e.features[0].id!
-        map!.setFeatureState(
-          { source: 'countries', id: hoveredFeatureId },
-          { hover: true }
-        )
 
-        const countryName = e.features[0].properties?.NAME || e.features[0].properties?.ADMIN
-        const country = countryByName!.get(countryName?.toLowerCase())
+        const featProps = e.features[0].properties;
+        const countryCode = featProps?.ISO_A2;
+        const countryName = featProps?.NAME || featProps?.ADMIN;
+        
+        let country = null;
+        if (countryCode) {
+           country = props.countries.find((c: any) => c.code === countryCode);
+        }
+        if (!country && countryName) {
+           country = countryByName!.get(countryName?.toLowerCase());
+        }
         hoveredCountry.value = country || null
         
         map!.getCanvas().style.cursor = country ? 'pointer' : 'default'
@@ -210,8 +251,17 @@ const initMap = async () => {
     // Click handler
     map.on('click', 'countries-fill', (e) => {
       if (e.features && e.features.length > 0) {
-        const countryName = e.features[0].properties?.NAME || e.features[0].properties?.ADMIN
-        const country = countryByName!.get(countryName?.toLowerCase())
+        const featProps = e.features[0].properties;
+        const countryCode = featProps?.ISO_A2;
+        const countryName = featProps?.NAME || featProps?.ADMIN;
+        
+        let country = null;
+        if (countryCode) {
+           country = props.countries.find((c: any) => c.code === countryCode);
+        }
+        if (!country && countryName) {
+           country = countryByName!.get(countryName?.toLowerCase());
+        }
         
         if (country) {
           emit('countryClick', country)

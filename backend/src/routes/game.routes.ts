@@ -2,6 +2,7 @@ import { Router } from 'express';
 import * as gameController from '../controllers/game.controller';
 import * as guessTheFlagController from '../controllers/guessTheFlag.controller';
 import * as higherLowerController from '../controllers/higherLower.controller';
+import * as silhouetteController from '../controllers/silhouette.controller';
 import { requireAuth, optionalAuth } from '../middleware/auth';
 import { apiRateLimiter } from '../middleware/security';
 
@@ -45,5 +46,11 @@ router.post('/guess-the-flag/answer', optionalAuth, guessTheFlagController.submi
  */
 router.post('/higher-lower/start', optionalAuth, higherLowerController.startGame);
 router.post('/higher-lower/answer', optionalAuth, higherLowerController.submitAnswer);
+
+/**
+ * Country Silhouette game routes (optional authentication - guests can play)
+ */
+router.post('/silhouette/start', optionalAuth, silhouetteController.startGame);
+router.post('/silhouette/answer', optionalAuth, silhouetteController.submitAnswer);
 
 export default router;

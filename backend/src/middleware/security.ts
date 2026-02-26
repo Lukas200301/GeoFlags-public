@@ -52,7 +52,7 @@ export const apiRateLimiter = rateLimit({
  * Logs admin actions for security auditing
  */
 export function auditLogger(action: string) {
-  return (req: Request, res: Response, next: NextFunction) => {
+  return (req: Request, _res: Response, next: NextFunction) => {
     // Store action info on request for use in controller
     (req as any).auditAction = action;
     (req as any).auditIp = req.ip || req.socket.remoteAddress;

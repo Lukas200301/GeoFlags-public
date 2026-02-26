@@ -20,6 +20,7 @@ npm install
 ```
 
 This installs all required packages:
+
 - Nuxt 4
 - TypeScript
 - TailwindCSS v4
@@ -52,6 +53,7 @@ node verify-setup.js
 ```
 
 This validates:
+
 - ✅ Node.js version compatibility
 - ✅ Dependencies installed
 - ✅ Environment configuration
@@ -77,6 +79,11 @@ npm run preview          # Preview production build locally
 npm run lint             # Check code for issues
 npm run lint:fix         # Auto-fix linting issues
 npm run format           # Format code with Prettier
+
+# Database Maintenance
+npm run db:backup        # Create a new database backup dump in backups/
+npm run db:restore       # Restore the database from a backup dump
+npm run db:update        # Push schema changes to the database and generate Prisma client
 ```
 
 ## Project Structure
@@ -124,23 +131,27 @@ geoflags-frontend/
 ## Testing the Application
 
 ### 1. Authentication Flow
+
 1. Navigate to http://localhost:3000/auth/register
 2. Create a test account
 3. Log in with credentials
 4. Verify redirection to home page
 
 ### 2. Game Features
+
 1. Click "Play Now" on home page
 2. Select a game mode (Flags, Capitals, Maps, Mixed)
 3. Choose difficulty level
 4. Play the game and view results
 
 ### 3. Leaderboard
+
 1. Navigate to "Leaderboard" in sidebar
 2. View rankings and filters
 3. Play games to submit scores
 
 ### 4. Admin Panel (Optional)
+
 1. Promote user to admin in backend database
 2. Log out and log back in
 3. Access admin menu in sidebar
@@ -165,6 +176,7 @@ The frontend implements enterprise-grade security:
 **Symptoms**: API requests fail, cannot login/register
 
 **Solutions**:
+
 1. Verify backend is running at URL in `.env`
 2. Check CORS settings on backend allow credentials
 3. Restart dev server after changing `.env`
@@ -175,6 +187,7 @@ The frontend implements enterprise-grade security:
 **Symptoms**: Requests blocked with CSRF validation errors
 
 **Solutions**:
+
 1. Ensure backend implements `/api/auth/csrf-token` endpoint
 2. Verify CSRF token validation in backend
 3. Clear browser cookies and retry
@@ -185,6 +198,7 @@ The frontend implements enterprise-grade security:
 **Symptoms**: Cannot access `/admin` routes
 
 **Solutions**:
+
 1. Verify user has admin role in backend database
 2. Log out and log back in to refresh session
 3. Check backend `/api/auth/me` returns `role: 'admin'`
@@ -195,6 +209,7 @@ The frontend implements enterprise-grade security:
 **Symptoms**: Real-time updates not working
 
 **Solutions**:
+
 1. Check `NUXT_PUBLIC_WS_URL` in `.env`
 2. Verify backend Socket.io server is running
 3. Confirm CORS allows WebSocket credentials
@@ -205,6 +220,7 @@ The frontend implements enterprise-grade security:
 **Symptoms**: Red squiggles in code editor
 
 **Solutions**:
+
 1. Restart TypeScript server in VS Code
 2. Run `npm run dev` to generate `.nuxt` types
 3. Ensure `node_modules` is installed
@@ -231,28 +247,33 @@ NUXT_PUBLIC_WS_URL=https://api.yourdomain.com
 ### Recommended Platforms
 
 **Vercel** (Easiest):
+
 ```bash
 npm i -g vercel
 vercel --prod
 ```
 
 **Netlify**:
+
 - Connect GitHub repository
 - Build command: `npm run build`
 - Publish directory: `.output/public`
 
 **Cloudflare Pages**:
+
 - Connect GitHub repository
 - Framework: Nuxt.js
 - Build command: `npm run build`
 
 **Self-hosted** (Node.js):
+
 ```bash
 npm run build
 node .output/server/index.mjs
 ```
 
 **Docker**:
+
 ```dockerfile
 FROM node:18-alpine
 WORKDIR /app
@@ -276,18 +297,21 @@ CMD ["node", ".output/server/index.mjs"]
 ## Development Best Practices
 
 ### Code Organization
+
 - Keep components small and focused (single responsibility)
 - Use composables for reusable logic
 - Store types in `types/index.ts`
 - Follow existing naming conventions
 
 ### TypeScript
+
 - Enable strict mode for type safety
 - Define interfaces for all data structures
 - Avoid `any` type - use proper types
 - Leverage IDE autocomplete
 
 ### Security
+
 - **Never** store tokens in localStorage
 - **Always** use CSRF tokens for mutations
 - **Verify** roles server-side (client checks are UX only)
@@ -295,6 +319,7 @@ CMD ["node", ".output/server/index.mjs"]
 - **Use** HTTPS in production
 
 ### Performance
+
 - Use `v-if` for conditional rendering
 - Lazy load heavy components with `defineAsyncComponent`
 - Use `v-once` for static content
@@ -338,6 +363,7 @@ If you encounter issues:
 ### When Creating an Issue
 
 Include:
+
 - Node.js version (`node --version`)
 - npm/yarn version
 - Operating system and version
