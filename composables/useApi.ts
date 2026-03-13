@@ -23,10 +23,10 @@ import type {
  */
 const convertModeToBackend = (mode: string): string => {
   const modeMap: Record<string, string> = {
-    'flags': 'FLAGS',
-    'capitals': 'CAPITALS',
-    'maps': 'MAPS',
-    'mixed': 'MIXED',
+    flags: 'FLAGS',
+    capitals: 'CAPITALS',
+    maps: 'MAPS',
+    mixed: 'MIXED',
     'guess-the-flag': 'GUESS_FLAG',
   }
   return modeMap[mode] || mode.toUpperCase().replace(/-/g, '_')
@@ -101,7 +101,9 @@ export const useApi = () => {
    * Get all available game modes
    */
   const getGameModes = async (): Promise<GameModeConfig[]> => {
-    const response = await apiRequest<{ modes: GameModeConfig[] }>('/api/game/modes', { requiresAuth: false })
+    const response = await apiRequest<{ modes: GameModeConfig[] }>('/api/game/modes', {
+      requiresAuth: false,
+    })
     return response.modes
   }
 
@@ -133,7 +135,12 @@ export const useApi = () => {
     const queryString = query.toString()
     const endpoint = `/api/game/leaderboard${queryString ? `?${queryString}` : ''}`
 
-    const response = await apiRequest<{ leaderboard: LeaderboardEntry[]; userRank: any; mode: string; total: number }>(endpoint, { requiresAuth: false })
+    const response = await apiRequest<{
+      leaderboard: LeaderboardEntry[]
+      userRank: any
+      mode: string
+      total: number
+    }>(endpoint, { requiresAuth: false })
     return response.leaderboard
   }
 
@@ -152,9 +159,12 @@ export const useApi = () => {
    * SECURITY: Requires admin role verification on backend
    */
   const getAdminUsers = async (): Promise<AdminUser[]> => {
-    const response = await apiRequest<{ users: AdminUser[]; pagination: any }>('/api/admin/users?limit=10000', {
-      requiresAuth: true,
-    })
+    const response = await apiRequest<{ users: AdminUser[]; pagination: any }>(
+      '/api/admin/users?limit=10000',
+      {
+        requiresAuth: true,
+      }
+    )
     return response.users
   }
 

@@ -6,7 +6,7 @@
 import countries from 'world-countries'
 import capitalsData from '~/data/capitals-coordinates.json'
 
-type CountryData = typeof countries[0]
+type CountryData = (typeof countries)[0]
 
 /**
  * Get flag URL from backend cache

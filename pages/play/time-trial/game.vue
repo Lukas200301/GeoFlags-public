@@ -6,7 +6,10 @@
         <div class="flex items-center justify-between mb-2">
           <div class="flex items-center gap-3">
             <Icon name="mdi:timer" class="w-6 h-6 text-primary-400" />
-            <span class="text-2xl font-bold" :class="timeLeft <= 10 ? 'text-red-400' : 'text-gray-100'">
+            <span
+              class="text-2xl font-bold"
+              :class="timeLeft <= 10 ? 'text-red-400' : 'text-gray-100'"
+            >
               {{ timeLeft }}s
             </span>
           </div>
@@ -19,10 +22,7 @@
               <div class="text-sm text-gray-400">Streak</div>
               <div class="text-2xl font-bold text-amber-400">{{ streak }}</div>
             </div>
-            <button
-              @click="showQuitDialog = true"
-              class="btn-secondary px-3 py-2 text-sm"
-            >
+            <button @click="showQuitDialog = true" class="btn-secondary px-3 py-2 text-sm">
               <Icon name="mdi:close" class="w-5 h-5" />
             </button>
           </div>
@@ -30,7 +30,9 @@
         <div class="w-full bg-gray-800 rounded-full h-3 overflow-hidden">
           <div
             class="h-full transition-all duration-1000 ease-linear rounded-full"
-            :class="timeLeft <= 10 ? 'bg-red-500' : 'bg-gradient-to-r from-primary-500 to-primary-600'"
+            :class="
+              timeLeft <= 10 ? 'bg-red-500' : 'bg-gradient-to-r from-primary-500 to-primary-600'
+            "
             :style="{ width: `${(timeLeft / 60) * 100}%` }"
           ></div>
         </div>
@@ -95,11 +97,16 @@
     </Teleport>
 
     <!-- Quit Confirmation Dialog -->
-    <div v-if="showQuitDialog" class="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+    <div
+      v-if="showQuitDialog"
+      class="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4"
+    >
       <div class="card max-w-md w-full p-6">
         <h3 class="text-2xl font-bold text-gray-100 mb-4">Quit Game?</h3>
         <p class="text-gray-300 mb-6">
-          Are you sure you want to quit? Your current progress (Score: <strong class="text-primary-400">{{ score }}</strong>, Time: <strong class="text-amber-400">{{ timeLeft }}s</strong>) will be lost.
+          Are you sure you want to quit? Your current progress (Score:
+          <strong class="text-primary-400">{{ score }}</strong
+          >, Time: <strong class="text-amber-400">{{ timeLeft }}s</strong>) will be lost.
         </p>
         <div class="flex gap-4">
           <button @click="showQuitDialog = false" class="btn-secondary flex-1">
@@ -158,10 +165,10 @@ const getButtonClass = (_code: string) => {
 const loadCountries = async () => {
   try {
     const countries = getAllCountries()
-    allCountries.value = countries.map(c => ({
+    allCountries.value = countries.map((c) => ({
       code: c.code,
       name: c.name,
-      flagUrl: c.flag
+      flagUrl: c.flag,
     }))
     nextQuestion()
     startTimer()
@@ -184,7 +191,7 @@ const startTimer = () => {
 
 // Generate next question
 const nextQuestion = () => {
-  const availableCountries = allCountries.value.filter(c => !usedFlags.value.has(c.code))
+  const availableCountries = allCountries.value.filter((c) => !usedFlags.value.has(c.code))
 
   // Reset used flags if all have been shown
   if (availableCountries.length < 4) {
@@ -201,7 +208,7 @@ const nextQuestion = () => {
 
   // Pick 3 random wrong answers
   const wrongOptions = availableCountries
-    .filter(c => c.code !== correct.code)
+    .filter((c) => c.code !== correct.code)
     .sort(() => Math.random() - 0.5)
     .slice(0, 3)
 
@@ -237,7 +244,7 @@ const handleAnswer = async (selectedCode: string) => {
   }
 
   // Small delay before next question
-  await new Promise(resolve => setTimeout(resolve, 600))
+  await new Promise((resolve) => setTimeout(resolve, 600))
 
   nextQuestion()
   isAnswering.value = false
@@ -294,7 +301,8 @@ onMounted(() => {
 }
 
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {

@@ -37,10 +37,7 @@ export async function getActiveBattles(req: AuthRequest, res: Response) {
 
     const battles = await prisma.battle.findMany({
       where: {
-        OR: [
-          { challengerId: userId },
-          { opponentId: userId },
-        ],
+        OR: [{ challengerId: userId }, { opponentId: userId }],
         status: {
           in: ['WAITING', 'IN_PROGRESS'],
         },
@@ -94,10 +91,7 @@ export async function getBattleHistory(req: AuthRequest, res: Response) {
 
     const battles = await prisma.battle.findMany({
       where: {
-        OR: [
-          { challengerId: userId },
-          { opponentId: userId },
-        ],
+        OR: [{ challengerId: userId }, { opponentId: userId }],
         status: 'COMPLETED',
       },
       include: {
@@ -666,7 +660,9 @@ export async function joinMatchmaking(req: AuthRequest, res: Response) {
 
     // TODO: Implement matchmaking queue logic with Socket.io
     // For now, return a message that matchmaking is not yet implemented
-    return res.status(501).json({ message: 'Matchmaking coming soon! Challenge your friends for now.' });
+    return res
+      .status(501)
+      .json({ message: 'Matchmaking coming soon! Challenge your friends for now.' });
   } catch (error) {
     console.error('Error joining matchmaking:', error);
     return res.status(500).json({ error: 'Failed to join matchmaking' });
@@ -679,7 +675,6 @@ export async function joinMatchmaking(req: AuthRequest, res: Response) {
  */
 export async function leaveMatchmaking(_req: AuthRequest, res: Response) {
   try {
-
     // TODO: Implement matchmaking queue logic with Socket.io
     res.json({ message: 'Left matchmaking queue' });
   } catch (error) {
@@ -702,7 +697,12 @@ export async function createPublicRoom(req: AuthRequest, res: Response) {
     }
 
     // Validate battle-specific mode
-    const validModes = ['BATTLE_FLAG_SPEED', 'BATTLE_CAPITAL_RUSH', 'BATTLE_GEOGRAPHY_DUEL', 'BATTLE_EXPERT_SHOWDOWN'];
+    const validModes = [
+      'BATTLE_FLAG_SPEED',
+      'BATTLE_CAPITAL_RUSH',
+      'BATTLE_GEOGRAPHY_DUEL',
+      'BATTLE_EXPERT_SHOWDOWN',
+    ];
     if (!validModes.includes(mode)) {
       return res.status(400).json({ error: 'Invalid battle mode' });
     }

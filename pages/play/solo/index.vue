@@ -6,9 +6,14 @@
     </div>
 
     <!-- Registration Required Warning (for guests) -->
-    <div v-if="!user && requireRegistration" class="registration-card relative overflow-hidden mb-8">
+    <div
+      v-if="!user && requireRegistration"
+      class="registration-card relative overflow-hidden mb-8"
+    >
       <!-- Animated Background -->
-      <div class="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-cyan-500/10 to-indigo-600/10"></div>
+      <div
+        class="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-cyan-500/10 to-indigo-600/10"
+      ></div>
       <div class="absolute inset-0 bg-blue-500/5 backdrop-blur-sm"></div>
 
       <!-- Decorative Elements -->
@@ -21,7 +26,9 @@
           <!-- Icon with animated glow -->
           <div class="relative flex-shrink-0">
             <div class="absolute inset-0 bg-blue-500 blur-xl opacity-30 animate-pulse"></div>
-            <div class="relative w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-600 flex items-center justify-center shadow-lg">
+            <div
+              class="relative w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-600 flex items-center justify-center shadow-lg"
+            >
               <Icon name="mdi:account-alert" class="w-12 h-12 text-white" />
             </div>
           </div>
@@ -29,20 +36,29 @@
           <!-- Text Content -->
           <div class="flex-1">
             <h3 class="text-2xl md:text-3xl font-bold mb-3">
-              <span class="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+              <span
+                class="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent"
+              >
                 Registration Required
               </span>
             </h3>
             <p class="text-gray-300 text-lg mb-6 leading-relaxed">
-              Create your free account to start playing! Join our community and track your progress, compete on leaderboards, and master geography.
+              Create your free account to start playing! Join our community and track your progress,
+              compete on leaderboards, and master geography.
             </p>
 
             <!-- Action Buttons -->
             <div class="flex flex-col sm:flex-row gap-4">
               <NuxtLink to="/auth/register" class="registration-btn registration-btn-primary group">
-                <Icon name="mdi:account-plus" class="w-5 h-5 transition-transform group-hover:scale-110" />
+                <Icon
+                  name="mdi:account-plus"
+                  class="w-5 h-5 transition-transform group-hover:scale-110"
+                />
                 <span>Create Account</span>
-                <Icon name="mdi:arrow-right" class="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                <Icon
+                  name="mdi:arrow-right"
+                  class="w-4 h-4 transition-transform group-hover:translate-x-1"
+                />
               </NuxtLink>
               <NuxtLink to="/auth/login" class="registration-btn registration-btn-secondary group">
                 <Icon name="mdi:login" class="w-5 h-5 transition-transform group-hover:scale-110" />
@@ -52,7 +68,9 @@
           </div>
 
           <!-- Decorative Corner Accent -->
-          <div class="hidden lg:block absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-cyan-500/20 to-transparent rounded-bl-full"></div>
+          <div
+            class="hidden lg:block absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-cyan-500/20 to-transparent rounded-bl-full"
+          ></div>
         </div>
       </div>
 
@@ -61,34 +79,40 @@
     </div>
 
     <!-- Ban/Suspend Warning -->
-    <div v-if="user?.status === 'BANNED'" class="card bg-red-900/20 border border-red-500/50 p-6 mb-8">
+    <div
+      v-if="user?.status === 'BANNED'"
+      class="card bg-red-900/20 border border-red-500/50 p-6 mb-8"
+    >
       <div class="flex items-start gap-4">
         <Icon name="mdi:alert-octagon" class="w-8 h-8 text-red-500 flex-shrink-0" />
         <div class="flex-1">
           <h3 class="text-xl font-bold text-red-400 mb-2">Account Banned - Cannot Play</h3>
-          <p class="text-red-300 mb-2">{{ user.banReason || 'Your account has been banned by an administrator.' }}</p>
+          <p class="text-red-300 mb-2">
+            {{ user.banReason || 'Your account has been banned by an administrator.' }}
+          </p>
           <p v-if="user.bannedUntil" class="text-sm text-red-400">
             Ban expires: {{ formatDate(user.bannedUntil) }}
           </p>
-          <p v-else class="text-sm text-red-400">
-            This is a permanent ban.
-          </p>
+          <p v-else class="text-sm text-red-400">This is a permanent ban.</p>
         </div>
       </div>
     </div>
 
-    <div v-else-if="user?.status === 'SUSPENDED'" class="card bg-yellow-900/20 border border-yellow-500/50 p-6 mb-8">
+    <div
+      v-else-if="user?.status === 'SUSPENDED'"
+      class="card bg-yellow-900/20 border border-yellow-500/50 p-6 mb-8"
+    >
       <div class="flex items-start gap-4">
         <Icon name="mdi:alert" class="w-8 h-8 text-yellow-500 flex-shrink-0" />
         <div class="flex-1">
           <h3 class="text-xl font-bold text-yellow-400 mb-2">Account Suspended - Cannot Play</h3>
-          <p class="text-yellow-300 mb-2">{{ user.banReason || 'Your account has been suspended by an administrator.' }}</p>
+          <p class="text-yellow-300 mb-2">
+            {{ user.banReason || 'Your account has been suspended by an administrator.' }}
+          </p>
           <p v-if="user.bannedUntil" class="text-sm text-yellow-400">
             Suspension expires: {{ formatDate(user.bannedUntil) }}
           </p>
-          <p v-else class="text-sm text-yellow-400">
-            This is an indefinite suspension.
-          </p>
+          <p v-else class="text-sm text-yellow-400">This is an indefinite suspension.</p>
         </div>
       </div>
     </div>
@@ -145,7 +169,7 @@ const formatDate = (dateString: string) => {
     month: 'long',
     day: 'numeric',
     hour: '2-digit',
-    minute: '2-digit'
+    minute: '2-digit',
   })
 }
 

@@ -57,7 +57,7 @@ export async function getUsers(req: AuthRequest, res: Response) {
           createdAt: true,
           lastActive: true,
           gameSessions: {
-            select: { score: true }
+            select: { score: true },
           },
           _count: {
             select: {
@@ -71,7 +71,7 @@ export async function getUsers(req: AuthRequest, res: Response) {
     ]);
 
     // Transform users to include status and stats
-    const users = rawUsers.map(user => ({
+    const users = rawUsers.map((user) => ({
       id: user.id,
       username: user.username,
       email: user.email,
@@ -210,14 +210,16 @@ export async function updateUserStatus(req: AuthRequest, res: Response) {
 
     // Validate status
     if (!status || !['active', 'banned', 'suspended'].includes(status)) {
-      return res.status(400).json({ message: 'Invalid status. Must be active, banned, or suspended.' });
+      return res
+        .status(400)
+        .json({ message: 'Invalid status. Must be active, banned, or suspended.' });
     }
 
     // Map frontend status to Prisma enum
     const statusMap: Record<string, any> = {
       active: 'ACTIVE',
       banned: 'BANNED',
-      suspended: 'SUSPENDED'
+      suspended: 'SUSPENDED',
     };
 
     // SECURITY: Cannot change your own status
@@ -589,9 +591,9 @@ export async function getStats(_req: AuthRequest, res: Response) {
     const activeToday = await prisma.user.count({
       where: {
         lastActive: {
-          gte: todayStart
-        }
-      }
+          gte: todayStart,
+        },
+      },
     });
 
     // Get yesterday's active users for trend
@@ -601,13 +603,14 @@ export async function getStats(_req: AuthRequest, res: Response) {
       where: {
         lastActive: {
           gte: yesterdayStart,
-          lt: todayStart
-        }
-      }
+          lt: todayStart,
+        },
+      },
     });
-    const activeTodayTrend = activeYesterday > 0
-      ? Math.round(((activeToday - activeYesterday) / activeYesterday) * 100)
-      : 0;
+    const activeTodayTrend =
+      activeYesterday > 0
+        ? Math.round(((activeToday - activeYesterday) / activeYesterday) * 100)
+        : 0;
 
     // User growth trend (last month vs previous month)
     const lastMonthStart = new Date();
@@ -615,9 +618,9 @@ export async function getStats(_req: AuthRequest, res: Response) {
     const newUsersLastMonth = await prisma.user.count({
       where: {
         createdAt: {
-          gte: lastMonthStart
-        }
-      }
+          gte: lastMonthStart,
+        },
+      },
     });
     const prevMonthStart = new Date(lastMonthStart);
     prevMonthStart.setMonth(prevMonthStart.getMonth() - 1);
@@ -625,13 +628,14 @@ export async function getStats(_req: AuthRequest, res: Response) {
       where: {
         createdAt: {
           gte: prevMonthStart,
-          lt: lastMonthStart
-        }
-      }
+          lt: lastMonthStart,
+        },
+      },
     });
-    const userGrowthTrend = newUsersPrevMonth > 0
-      ? Math.round(((newUsersLastMonth - newUsersPrevMonth) / newUsersPrevMonth) * 100)
-      : 0;
+    const userGrowthTrend =
+      newUsersPrevMonth > 0
+        ? Math.round(((newUsersLastMonth - newUsersPrevMonth) / newUsersPrevMonth) * 100)
+        : 0;
 
     // Games trend (this week vs last week)
     const weekStart = new Date();
@@ -639,9 +643,9 @@ export async function getStats(_req: AuthRequest, res: Response) {
     const gamesThisWeek = await prisma.gameSession.count({
       where: {
         completedAt: {
-          gte: weekStart
-        }
-      }
+          gte: weekStart,
+        },
+      },
     });
     const lastWeekStart = new Date(weekStart);
     lastWeekStart.setDate(lastWeekStart.getDate() - 7);
@@ -649,34 +653,35 @@ export async function getStats(_req: AuthRequest, res: Response) {
       where: {
         completedAt: {
           gte: lastWeekStart,
-          lt: weekStart
-        }
-      }
+          lt: weekStart,
+        },
+      },
     });
-    const gamesTrend = gamesLastWeek > 0
-      ? Math.round(((gamesThisWeek - gamesLastWeek) / gamesLastWeek) * 100)
-      : 0;
+    const gamesTrend =
+      gamesLastWeek > 0 ? Math.round(((gamesThisWeek - gamesLastWeek) / gamesLastWeek) * 100) : 0;
 
     // Calculate average session length
     const allSessions = await prisma.gameSession.findMany({
       select: {
         data: true,
         createdAt: true,
-        completedAt: true
-      }
+        completedAt: true,
+      },
     });
 
     let totalDuration = 0;
     let validSessions = 0;
-    allSessions.forEach(session => {
+    allSessions.forEach((session) => {
       const data = session.data as any;
       if (data && typeof data === 'object' && data.timeElapsed) {
         totalDuration += data.timeElapsed;
         validSessions++;
       } else {
         // Fallback: calculate from timestamps
-        const duration = new Date(session.completedAt).getTime() - new Date(session.createdAt).getTime();
-        if (duration > 0 && duration < 3600000) { // Less than 1 hour
+        const duration =
+          new Date(session.completedAt).getTime() - new Date(session.createdAt).getTime();
+        if (duration > 0 && duration < 3600000) {
+          // Less than 1 hour
           totalDuration += duration;
           validSessions++;
         }
@@ -693,25 +698,26 @@ export async function getStats(_req: AuthRequest, res: Response) {
       where: {
         completedAt: {
           gte: lastWeekStart,
-          lt: weekStart
-        }
+          lt: weekStart,
+        },
       },
       select: {
         data: true,
         createdAt: true,
-        completedAt: true
-      }
+        completedAt: true,
+      },
     });
 
     let lastWeekDuration = 0;
     let lastWeekValidSessions = 0;
-    lastWeekSessions.forEach(session => {
+    lastWeekSessions.forEach((session) => {
       const data = session.data as any;
       if (data && typeof data === 'object' && data.timeElapsed) {
         lastWeekDuration += data.timeElapsed;
         lastWeekValidSessions++;
       } else {
-        const duration = new Date(session.completedAt).getTime() - new Date(session.createdAt).getTime();
+        const duration =
+          new Date(session.completedAt).getTime() - new Date(session.createdAt).getTime();
         if (duration > 0 && duration < 3600000) {
           lastWeekDuration += duration;
           lastWeekValidSessions++;
@@ -720,16 +726,15 @@ export async function getStats(_req: AuthRequest, res: Response) {
     });
 
     const lastWeekAvgMs = lastWeekValidSessions > 0 ? lastWeekDuration / lastWeekValidSessions : 0;
-    const sessionTrend = lastWeekAvgMs > 0
-      ? Math.round(((avgSessionMs - lastWeekAvgMs) / lastWeekAvgMs) * 100)
-      : 0;
+    const sessionTrend =
+      lastWeekAvgMs > 0 ? Math.round(((avgSessionMs - lastWeekAvgMs) / lastWeekAvgMs) * 100) : 0;
 
     // Game Modes Distribution
     const gameModeStats = await prisma.gameSession.groupBy({
       by: ['mode'],
       _count: {
-        mode: true
-      }
+        mode: true,
+      },
     });
 
     // User Activity (Last 7 Days)
@@ -746,24 +751,24 @@ export async function getStats(_req: AuthRequest, res: Response) {
           where: {
             lastActive: {
               gte: date,
-              lt: nextDate
-            }
-          }
+              lt: nextDate,
+            },
+          },
         }),
         prisma.gameSession.count({
           where: {
             completedAt: {
               gte: date,
-              lt: nextDate
-            }
-          }
-        })
+              lt: nextDate,
+            },
+          },
+        }),
       ]);
 
       last7Days.push({
         date: date.toISOString().split('T')[0],
         users: userCount,
-        games: gameCount
+        games: gameCount,
       });
     }
 
@@ -776,18 +781,18 @@ export async function getStats(_req: AuthRequest, res: Response) {
         email: true,
         gameSessions: {
           select: {
-            score: true
-          }
-        }
-      }
+            score: true,
+          },
+        },
+      },
     });
 
     const topScorePlayers = topPlayersByScore
-      .map(user => ({
+      .map((user) => ({
         id: user.id,
         username: user.username,
         email: user.email,
-        totalScore: user.gameSessions.reduce((sum, session) => sum + session.score, 0)
+        totalScore: user.gameSessions.reduce((sum, session) => sum + session.score, 0),
       }))
       .sort((a, b) => b.totalScore - a.totalScore)
       .slice(0, 5);
@@ -801,22 +806,22 @@ export async function getStats(_req: AuthRequest, res: Response) {
         email: true,
         _count: {
           select: {
-            gameSessions: true
-          }
-        }
+            gameSessions: true,
+          },
+        },
       },
       orderBy: {
         gameSessions: {
-          _count: 'desc'
-        }
-      }
+          _count: 'desc',
+        },
+      },
     });
 
-    const mostActivePlayers = topPlayersByGames.map(user => ({
+    const mostActivePlayers = topPlayersByGames.map((user) => ({
       id: user.id,
       username: user.username,
       email: user.email,
-      gamesPlayed: user._count.gameSessions
+      gamesPlayed: user._count.gameSessions,
     }));
 
     return res.json({
@@ -826,43 +831,43 @@ export async function getStats(_req: AuthRequest, res: Response) {
           trend: {
             direction: userGrowthTrend >= 0 ? 'up' : 'down',
             value: Math.abs(userGrowthTrend),
-            label: 'vs last month'
-          }
+            label: 'vs last month',
+          },
         },
         activeToday: {
           value: activeToday,
           trend: {
             direction: activeTodayTrend >= 0 ? 'up' : 'down',
             value: Math.abs(activeTodayTrend),
-            label: 'vs yesterday'
-          }
+            label: 'vs yesterday',
+          },
         },
         gamesPlayed: {
           value: totalGames,
           trend: {
             direction: gamesTrend >= 0 ? 'up' : 'down',
             value: Math.abs(gamesTrend),
-            label: 'vs last week'
-          }
+            label: 'vs last week',
+          },
         },
         avgSession: {
           value: avgSessionFormatted,
           trend: {
             direction: sessionTrend >= 0 ? 'up' : 'down',
             value: Math.abs(sessionTrend),
-            label: 'vs last week'
-          }
-        }
+            label: 'vs last week',
+          },
+        },
       },
-      gameModes: gameModeStats.map(stat => ({
+      gameModes: gameModeStats.map((stat) => ({
         mode: stat.mode,
-        count: stat._count.mode
+        count: stat._count.mode,
       })),
       userActivity: last7Days,
       topPlayers: {
         byScore: topScorePlayers,
-        byGames: mostActivePlayers
-      }
+        byGames: mostActivePlayers,
+      },
     });
   } catch (error) {
     console.error('Get stats error:', error);
@@ -882,31 +887,31 @@ export async function getDashboard(_req: AuthRequest, res: Response) {
       prisma.user.count({
         where: {
           createdAt: {
-            gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) // Last 30 days
-          }
-        }
-      })
-    ])
+            gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // Last 30 days
+          },
+        },
+      }),
+    ]);
 
     // Get active users count (users with activity in last 30 days)
     const activeUsers = await prisma.user.count({
       where: {
         lastActive: {
-          gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) // Last 30 days
-        }
-      }
-    })
+          gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // Last 30 days
+        },
+      },
+    });
 
     // Get previous month stats for trend
     const prevMonthUsers = await prisma.user.count({
       where: {
         createdAt: {
           gte: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000),
-          lt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
-        }
-      }
-    })
-    const userTrend = prevMonthUsers > 0 ? ((newUsers - prevMonthUsers) / prevMonthUsers) * 100 : 0
+          lt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+        },
+      },
+    });
+    const userTrend = prevMonthUsers > 0 ? ((newUsers - prevMonthUsers) / prevMonthUsers) * 100 : 0;
 
     // Get game stats
     const [totalGames, todayGames] = await Promise.all([
@@ -914,29 +919,30 @@ export async function getDashboard(_req: AuthRequest, res: Response) {
       prisma.gameSession.count({
         where: {
           completedAt: {
-            gte: new Date(new Date().setHours(0, 0, 0, 0))
-          }
-        }
-      })
-    ])
+            gte: new Date(new Date().setHours(0, 0, 0, 0)),
+          },
+        },
+      }),
+    ]);
 
     // Get last week games for trend
     const lastWeekGames = await prisma.gameSession.count({
       where: {
         completedAt: {
           gte: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000),
-          lt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
-        }
-      }
-    })
+          lt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+        },
+      },
+    });
     const thisWeekGames = await prisma.gameSession.count({
       where: {
         completedAt: {
-          gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
-        }
-      }
-    })
-    const gamesTrend = lastWeekGames > 0 ? ((thisWeekGames - lastWeekGames) / lastWeekGames) * 100 : 0
+          gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+        },
+      },
+    });
+    const gamesTrend =
+      lastWeekGames > 0 ? ((thisWeekGames - lastWeekGames) / lastWeekGames) * 100 : 0;
 
     // Get recent activity
     const recentGames = await prisma.gameSession.findMany({
@@ -944,69 +950,74 @@ export async function getDashboard(_req: AuthRequest, res: Response) {
       orderBy: { completedAt: 'desc' },
       include: {
         user: {
-          select: { id: true, username: true }
-        }
-      }
-    })
+          select: { id: true, username: true },
+        },
+      },
+    });
 
     const recentUsers = await prisma.user.findMany({
       take: 5,
       orderBy: { createdAt: 'desc' },
-      select: { id: true, username: true, createdAt: true }
-    })
+      select: { id: true, username: true, createdAt: true },
+    });
 
     const recentActivity = [
-      ...recentUsers.map(user => ({
+      ...recentUsers.map((user) => ({
         id: `user-${user.id}`,
         type: 'user_registered' as const,
         message: `New user registered: ${user.username}`,
         timestamp: user.createdAt.toISOString(),
-        user: { username: user.username, id: user.id }
+        user: { username: user.username, id: user.id },
       })),
-      ...recentGames.map(game => ({
+      ...recentGames.map((game) => ({
         id: `game-${game.id}`,
         type: 'game_played' as const,
         message: `${game.user.username} completed a game with score ${game.score}`,
         timestamp: game.completedAt?.toISOString() || game.createdAt.toISOString(),
-        user: { username: game.user.username, id: game.userId }
-      }))
-    ].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()).slice(0, 10)
+        user: { username: game.user.username, id: game.userId },
+      })),
+    ]
+      .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+      .slice(0, 10);
 
     // Calculate uptime
-    const uptimeSeconds = Math.floor(process.uptime())
-    const days = Math.floor(uptimeSeconds / 86400)
-    const hours = Math.floor((uptimeSeconds % 86400) / 3600)
-    const minutes = Math.floor((uptimeSeconds % 3600) / 60)
-    const uptimeFormatted = `${days}d ${hours}h ${minutes}m`
+    const uptimeSeconds = Math.floor(process.uptime());
+    const days = Math.floor(uptimeSeconds / 86400);
+    const hours = Math.floor((uptimeSeconds % 86400) / 3600);
+    const minutes = Math.floor((uptimeSeconds % 3600) / 60);
+    const uptimeFormatted = `${days}d ${hours}h ${minutes}m`;
 
     const stats = {
       users: {
         total: totalUsers,
         active: activeUsers,
         new: newUsers,
-        trend: Math.round(userTrend)
+        trend: Math.round(userTrend),
       },
       games: {
         total: totalGames,
         today: todayGames,
-        trend: Math.round(gamesTrend)
+        trend: Math.round(gamesTrend),
       },
       leaderboard: {
         totalEntries: await prisma.leaderboardEntry.count(),
-        topScore: (await prisma.leaderboardEntry.findFirst({
-          orderBy: { score: 'desc' }
-        }))?.score || 0
+        topScore:
+          (
+            await prisma.leaderboardEntry.findFirst({
+              orderBy: { score: 'desc' },
+            })
+          )?.score || 0,
       },
       system: {
         uptime: uptimeFormatted,
-        status: 'healthy' as const
-      }
-    }
+        status: 'healthy' as const,
+      },
+    };
 
-    return res.json({ stats, recentActivity })
+    return res.json({ stats, recentActivity });
   } catch (error) {
-    console.error('Get dashboard error:', error)
-    return res.status(500).json({ message: 'Failed to fetch dashboard data' })
+    console.error('Get dashboard error:', error);
+    return res.status(500).json({ message: 'Failed to fetch dashboard data' });
   }
 }
 
@@ -1016,56 +1027,57 @@ export async function getDashboard(_req: AuthRequest, res: Response) {
  */
 export async function getSystemHealth(_req: AuthRequest, res: Response) {
   try {
-    const os = require('os')
+    const os = require('os');
 
     // System metrics
-    const totalMemory = os.totalmem()
-    const freeMemory = os.freemem()
-    const usedMemory = totalMemory - freeMemory
-    const memoryPercentage = (usedMemory / totalMemory) * 100
+    const totalMemory = os.totalmem();
+    const freeMemory = os.freemem();
+    const usedMemory = totalMemory - freeMemory;
+    const memoryPercentage = (usedMemory / totalMemory) * 100;
 
     // CPU usage (simplified)
-    const cpus = os.cpus()
-    const cpuUsage = cpus.reduce((acc: number, cpu: any) => {
-      const times = cpu.times as Record<string, number>
-      const total = Object.values(times).reduce((a, b) => a + b, 0)
-      const idle = times.idle
-      return acc + ((total - idle) / total) * 100
-    }, 0) / cpus.length
+    const cpus = os.cpus();
+    const cpuUsage =
+      cpus.reduce((acc: number, cpu: any) => {
+        const times = cpu.times as Record<string, number>;
+        const total = Object.values(times).reduce((a, b) => a + b, 0);
+        const idle = times.idle;
+        return acc + ((total - idle) / total) * 100;
+      }, 0) / cpus.length;
 
     // Database health
-    let dbResponseTime = 0
-    let dbStatus: 'connected' | 'disconnected' = 'connected'
+    let dbResponseTime = 0;
+    let dbStatus: 'connected' | 'disconnected' = 'connected';
     try {
-      const start = Date.now()
-      await prisma.$queryRaw`SELECT 1`
-      dbResponseTime = Date.now() - start
+      const start = Date.now();
+      await prisma.$queryRaw`SELECT 1`;
+      dbResponseTime = Date.now() - start;
     } catch (error) {
-      dbStatus = 'disconnected'
+      dbStatus = 'disconnected';
     }
 
     // Calculate uptime
-    const uptimeSeconds = Math.floor(process.uptime())
-    const days = Math.floor(uptimeSeconds / 86400)
-    const hours = Math.floor((uptimeSeconds % 86400) / 3600)
-    const minutes = Math.floor((uptimeSeconds % 3600) / 60)
-    const uptimeFormatted = `${days}d ${hours}h ${minutes}m`
+    const uptimeSeconds = Math.floor(process.uptime());
+    const days = Math.floor(uptimeSeconds / 86400);
+    const hours = Math.floor((uptimeSeconds % 86400) / 3600);
+    const minutes = Math.floor((uptimeSeconds % 3600) / 60);
+    const uptimeFormatted = `${days}d ${hours}h ${minutes}m`;
 
     // Active sessions (simplified - count recent users)
     const activeSessions = await prisma.user.count({
       where: {
         lastActive: {
-          gte: new Date(Date.now() - 15 * 60 * 1000) // Last 15 minutes
-        }
-      }
-    })
+          gte: new Date(Date.now() - 15 * 60 * 1000), // Last 15 minutes
+        },
+      },
+    });
 
     // Overall status
-    let status: 'healthy' | 'warning' | 'error' = 'healthy'
+    let status: 'healthy' | 'warning' | 'error' = 'healthy';
     if (dbStatus === 'disconnected' || memoryPercentage > 90 || cpuUsage > 90) {
-      status = 'error'
+      status = 'error';
     } else if (memoryPercentage > 70 || cpuUsage > 70) {
-      status = 'warning'
+      status = 'warning';
     }
 
     const metrics = {
@@ -1076,13 +1088,13 @@ export async function getSystemHealth(_req: AuthRequest, res: Response) {
         memory: {
           used: usedMemory,
           total: totalMemory,
-          percentage: Math.round(memoryPercentage * 10) / 10
+          percentage: Math.round(memoryPercentage * 10) / 10,
         },
         cpu: {
-          usage: Math.round(cpuUsage * 10) / 10
+          usage: Math.round(cpuUsage * 10) / 10,
         },
         platform: os.platform(),
-        nodeVersion: process.version
+        nodeVersion: process.version,
       },
       database: {
         status: dbStatus,
@@ -1090,24 +1102,24 @@ export async function getSystemHealth(_req: AuthRequest, res: Response) {
         connections: {
           active: 1,
           idle: 0,
-          total: 1
-        }
+          total: 1,
+        },
       },
       api: {
         totalRequests: 0, // TODO: Implement metrics tracking
         averageResponseTime: 0,
-        errorRate: 0
+        errorRate: 0,
       },
       sessions: {
         active: activeSessions,
-        total: await prisma.user.count()
-      }
-    }
+        total: await prisma.user.count(),
+      },
+    };
 
-    return res.json({ metrics })
+    return res.json({ metrics });
   } catch (error) {
-    console.error('Get system health error:', error)
-    return res.status(500).json({ message: 'Failed to fetch system health' })
+    console.error('Get system health error:', error);
+    return res.status(500).json({ message: 'Failed to fetch system health' });
   }
 }
 
@@ -1126,11 +1138,11 @@ export async function getAuditLogs(req: AuthRequest, res: Response) {
 
     // Build where clause
     const where: any = {};
-    
+
     // Add search filter (search in admin username)
     if (search) {
       where.admin = {
-        username: { contains: search, mode: 'insensitive' }
+        username: { contains: search, mode: 'insensitive' },
       };
     }
 
@@ -1253,7 +1265,17 @@ export async function getDatabaseTable(req: AuthRequest, res: Response) {
     const skip = (page - 1) * limit;
 
     // Validate table name
-    const allowedTables = ['users', 'game_sessions', 'leaderboard_entries', 'game_modes', 'admin_audits', 'system_settings', 'friendships', 'battles', 'battle_participants'];
+    const allowedTables = [
+      'users',
+      'game_sessions',
+      'leaderboard_entries',
+      'game_modes',
+      'admin_audits',
+      'system_settings',
+      'friendships',
+      'battles',
+      'battle_participants',
+    ];
     if (!allowedTables.includes(table)) {
       return res.status(400).json({ message: 'Invalid table name' });
     }
@@ -1263,12 +1285,14 @@ export async function getDatabaseTable(req: AuthRequest, res: Response) {
 
     switch (table) {
       case 'users':
-        const userWhere: any = search ? {
-          OR: [
-            { username: { contains: search, mode: 'insensitive' } },
-            { email: { contains: search, mode: 'insensitive' } },
-          ]
-        } : {};
+        const userWhere: any = search
+          ? {
+              OR: [
+                { username: { contains: search, mode: 'insensitive' } },
+                { email: { contains: search, mode: 'insensitive' } },
+              ],
+            }
+          : {};
         [data, total] = await Promise.all([
           prisma.user.findMany({
             where: userWhere,
@@ -1285,18 +1309,20 @@ export async function getDatabaseTable(req: AuthRequest, res: Response) {
               lastActive: true,
               createdAt: true,
               updatedAt: true,
-            }
+            },
           }),
-          prisma.user.count({ where: userWhere })
+          prisma.user.count({ where: userWhere }),
         ]);
         break;
 
       case 'game_sessions':
-        const sessionWhere: any = search ? {
-          user: {
-            username: { contains: search, mode: 'insensitive' }
-          }
-        } : {};
+        const sessionWhere: any = search
+          ? {
+              user: {
+                username: { contains: search, mode: 'insensitive' },
+              },
+            }
+          : {};
         [data, total] = await Promise.all([
           prisma.gameSession.findMany({
             where: sessionWhere,
@@ -1305,20 +1331,22 @@ export async function getDatabaseTable(req: AuthRequest, res: Response) {
             orderBy: { completedAt: 'desc' },
             include: {
               user: {
-                select: { username: true }
-              }
-            }
+                select: { username: true },
+              },
+            },
           }),
-          prisma.gameSession.count({ where: sessionWhere })
+          prisma.gameSession.count({ where: sessionWhere }),
         ]);
         break;
 
       case 'leaderboard_entries':
-        const leaderboardWhere: any = search ? {
-          user: {
-            username: { contains: search, mode: 'insensitive' }
-          }
-        } : {};
+        const leaderboardWhere: any = search
+          ? {
+              user: {
+                username: { contains: search, mode: 'insensitive' },
+              },
+            }
+          : {};
         [data, total] = await Promise.all([
           prisma.leaderboardEntry.findMany({
             where: leaderboardWhere,
@@ -1327,36 +1355,40 @@ export async function getDatabaseTable(req: AuthRequest, res: Response) {
             orderBy: { score: 'desc' },
             include: {
               user: {
-                select: { username: true }
-              }
-            }
+                select: { username: true },
+              },
+            },
           }),
-          prisma.leaderboardEntry.count({ where: leaderboardWhere })
+          prisma.leaderboardEntry.count({ where: leaderboardWhere }),
         ]);
         break;
 
       case 'game_modes':
-        const modeWhere: any = search ? {
-          name: { contains: search, mode: 'insensitive' }
-        } : {};
+        const modeWhere: any = search
+          ? {
+              name: { contains: search, mode: 'insensitive' },
+            }
+          : {};
         [data, total] = await Promise.all([
           prisma.gameMode.findMany({
             where: modeWhere,
             skip,
             take: limit,
-            orderBy: { createdAt: 'desc' }
+            orderBy: { createdAt: 'desc' },
           }),
-          prisma.gameMode.count({ where: modeWhere })
+          prisma.gameMode.count({ where: modeWhere }),
         ]);
         break;
 
       case 'admin_audits':
-        const auditWhere: any = search ? {
-          OR: [
-            { action: { contains: search, mode: 'insensitive' } },
-            { admin: { username: { contains: search, mode: 'insensitive' } } }
-          ]
-        } : {};
+        const auditWhere: any = search
+          ? {
+              OR: [
+                { action: { contains: search, mode: 'insensitive' } },
+                { admin: { username: { contains: search, mode: 'insensitive' } } },
+              ],
+            }
+          : {};
         [data, total] = await Promise.all([
           prisma.adminAudit.findMany({
             where: auditWhere,
@@ -1365,11 +1397,11 @@ export async function getDatabaseTable(req: AuthRequest, res: Response) {
             orderBy: { createdAt: 'desc' },
             include: {
               admin: {
-                select: { username: true }
-              }
-            }
+                select: { username: true },
+              },
+            },
           }),
-          prisma.adminAudit.count({ where: auditWhere })
+          prisma.adminAudit.count({ where: auditWhere }),
         ]);
         break;
 
@@ -1378,19 +1410,21 @@ export async function getDatabaseTable(req: AuthRequest, res: Response) {
           prisma.systemSettings.findMany({
             skip,
             take: limit,
-            orderBy: { updatedAt: 'desc' }
+            orderBy: { updatedAt: 'desc' },
           }),
-          prisma.systemSettings.count()
+          prisma.systemSettings.count(),
         ]);
         break;
 
       case 'friendships':
-        const friendshipWhere: any = search ? {
-          OR: [
-            { user: { username: { contains: search, mode: 'insensitive' } } },
-            { friend: { username: { contains: search, mode: 'insensitive' } } }
-          ]
-        } : {};
+        const friendshipWhere: any = search
+          ? {
+              OR: [
+                { user: { username: { contains: search, mode: 'insensitive' } } },
+                { friend: { username: { contains: search, mode: 'insensitive' } } },
+              ],
+            }
+          : {};
         [data, total] = await Promise.all([
           prisma.friendship.findMany({
             where: friendshipWhere,
@@ -1399,20 +1433,22 @@ export async function getDatabaseTable(req: AuthRequest, res: Response) {
             orderBy: { createdAt: 'desc' },
             include: {
               user: { select: { username: true } },
-              friend: { select: { username: true } }
-            }
+              friend: { select: { username: true } },
+            },
           }),
-          prisma.friendship.count({ where: friendshipWhere })
+          prisma.friendship.count({ where: friendshipWhere }),
         ]);
         break;
 
       case 'battles':
-        const battleWhere: any = search ? {
-          OR: [
-            { challenger: { username: { contains: search, mode: 'insensitive' } } },
-            { opponent: { username: { contains: search, mode: 'insensitive' } } }
-          ]
-        } : {};
+        const battleWhere: any = search
+          ? {
+              OR: [
+                { challenger: { username: { contains: search, mode: 'insensitive' } } },
+                { opponent: { username: { contains: search, mode: 'insensitive' } } },
+              ],
+            }
+          : {};
         [data, total] = await Promise.all([
           prisma.battle.findMany({
             where: battleWhere,
@@ -1422,17 +1458,19 @@ export async function getDatabaseTable(req: AuthRequest, res: Response) {
             include: {
               challenger: { select: { username: true } },
               opponent: { select: { username: true } },
-              winner: { select: { username: true } }
-            }
+              winner: { select: { username: true } },
+            },
           }),
-          prisma.battle.count({ where: battleWhere })
+          prisma.battle.count({ where: battleWhere }),
         ]);
         break;
 
       case 'battle_participants':
-        const participantWhere: any = search ? {
-          user: { username: { contains: search, mode: 'insensitive' } }
-        } : {};
+        const participantWhere: any = search
+          ? {
+              user: { username: { contains: search, mode: 'insensitive' } },
+            }
+          : {};
         [data, total] = await Promise.all([
           prisma.battleParticipant.findMany({
             where: participantWhere,
@@ -1441,10 +1479,10 @@ export async function getDatabaseTable(req: AuthRequest, res: Response) {
             orderBy: { joinedAt: 'desc' },
             include: {
               user: { select: { username: true } },
-              battle: { select: { id: true, status: true } }
-            }
+              battle: { select: { id: true, status: true } },
+            },
           }),
-          prisma.battleParticipant.count({ where: participantWhere })
+          prisma.battleParticipant.count({ where: participantWhere }),
         ]);
         break;
     }
@@ -1559,13 +1597,16 @@ export async function updateSystemSettings(req: AuthRequest, res: Response) {
   } catch (error) {
     console.error('Update system settings error:', error);
     // Check if it's a table doesn't exist error
-    if (error instanceof Error && error.message.includes('Table') && error.message.includes('does not exist')) {
+    if (
+      error instanceof Error &&
+      error.message.includes('Table') &&
+      error.message.includes('does not exist')
+    ) {
       return res.status(503).json({
         message: 'Database migration required. Please run: npx prisma migrate deploy',
-        error: 'MIGRATION_REQUIRED'
+        error: 'MIGRATION_REQUIRED',
       });
     }
     return res.status(500).json({ message: 'Failed to update system settings' });
   }
 }
-

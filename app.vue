@@ -1,7 +1,7 @@
 <template>
   <div class="video-background">
     <video autoplay muted loop playsinline>
-      <source src="/assets/videos/globe.mp4" type="video/mp4">
+      <source src="/assets/videos/globe.mp4" type="video/mp4" />
     </video>
     <div class="video-overlay"></div>
   </div>

@@ -9,7 +9,12 @@
     <!-- Game Screen -->
     <div v-else class="space-y-6">
       <!-- Score Header -->
-      <div class="card p-6" v-motion :initial="{ opacity: 0, y: -20 }" :visible="{ opacity: 1, y: 0 }">
+      <div
+        class="card p-6"
+        v-motion
+        :initial="{ opacity: 0, y: -20 }"
+        :visible="{ opacity: 1, y: 0 }"
+      >
         <div class="flex items-center justify-between flex-wrap gap-4">
           <div class="flex items-center gap-4">
             <div class="bg-rose-500/20 rounded-xl p-3">
@@ -45,7 +50,7 @@
           <div class="relative inline-block w-full max-w-lg mx-auto">
             <div
               class="outline-container relative overflow-hidden rounded-xl shadow-2xl border-4 border-gray-700 bg-gray-900 p-6"
-              style="aspect-ratio: 4/3;"
+              style="aspect-ratio: 4/3"
             >
               <svg
                 v-if="svgViewBox"
@@ -109,11 +114,15 @@
     </div>
 
     <!-- Quit Confirmation Dialog -->
-    <div v-if="showQuitDialog" class="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+    <div
+      v-if="showQuitDialog"
+      class="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4"
+    >
       <div class="card max-w-md w-full p-6">
         <h3 class="text-2xl font-bold text-gray-100 mb-4">Quit Game?</h3>
         <p class="text-gray-300 mb-6">
-          Are you sure you want to quit? Your current score of <strong class="text-rose-400">{{ gameState?.score || 0 }}</strong> will be lost.
+          Are you sure you want to quit? Your current score of
+          <strong class="text-rose-400">{{ gameState?.score || 0 }}</strong> will be lost.
         </p>
         <div class="flex gap-4">
           <button @click="showQuitDialog = false" class="btn-secondary flex-1">
@@ -207,7 +216,10 @@ function geoJsonToSvgPaths(geojson: any): string[] {
  * Compute a viewBox that fits all the GeoJSON coordinates
  */
 function computeViewBox(geojson: any): string {
-  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity
+  let minX = Infinity,
+    minY = Infinity,
+    maxX = -Infinity,
+    maxY = -Infinity
 
   const gatherCoords = (coords: number[][]) => {
     for (const c of coords) {

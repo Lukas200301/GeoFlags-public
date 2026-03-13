@@ -16,7 +16,10 @@ function getEnvSecret(key: string): string {
   const value = process.env[key];
   if (!value) {
     console.error(`ERROR: Environment variable ${key} is not set!`);
-    console.error(`Available env vars:`, Object.keys(process.env).filter(k => k.startsWith('JWT_')));
+    console.error(
+      `Available env vars:`,
+      Object.keys(process.env).filter((k) => k.startsWith('JWT_'))
+    );
     throw new Error(`${key} must be set in environment variables`);
   }
   return value;

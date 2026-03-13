@@ -9,7 +9,9 @@
       </div>
 
       <!-- Rules -->
-      <div class="bg-gradient-to-br from-primary-500/10 to-purple-500/10 rounded-2xl p-6 mb-8 border border-primary-500/20">
+      <div
+        class="bg-gradient-to-br from-primary-500/10 to-purple-500/10 rounded-2xl p-6 mb-8 border border-primary-500/20"
+      >
         <h2 class="text-2xl font-bold text-gray-100 mb-4 flex items-center gap-2">
           <Icon name="mdi:information" class="w-6 h-6 text-primary-400" />
           How to Play
@@ -19,7 +21,9 @@
             <Icon name="mdi:timer" class="w-5 h-5 text-primary-400 flex-shrink-0 mt-0.5" />
             <div>
               <p class="font-semibold text-gray-100">60 Second Time Limit</p>
-              <p class="text-sm text-gray-400">Race against the clock to identify as many flags as possible</p>
+              <p class="text-sm text-gray-400">
+                Race against the clock to identify as many flags as possible
+              </p>
             </div>
           </div>
           <div class="flex items-start gap-3">
@@ -47,7 +51,9 @@
             <Icon name="mdi:trophy" class="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
             <div>
               <p class="font-semibold text-gray-100">Auto-Submit to Leaderboard</p>
-              <p class="text-sm text-gray-400">Your score is automatically submitted when time runs out</p>
+              <p class="text-sm text-gray-400">
+                Your score is automatically submitted when time runs out
+              </p>
             </div>
           </div>
         </div>
@@ -77,17 +83,17 @@
 
       <!-- Start Button -->
       <div class="text-center">
-        <button
-          @click="startGame"
-          class="btn-primary btn-lg px-12 py-4 text-xl"
-        >
+        <button @click="startGame" class="btn-primary btn-lg px-12 py-4 text-xl">
           <Icon name="mdi:play" class="w-8 h-8" />
           <span>Start Time Trial</span>
         </button>
 
         <!-- Back Button -->
         <div class="mt-8 text-center">
-          <NuxtLink to="/play" class="text-gray-400 hover:text-gray-300 transition-colors inline-flex items-center gap-2">
+          <NuxtLink
+            to="/play"
+            class="text-gray-400 hover:text-gray-300 transition-colors inline-flex items-center gap-2"
+          >
             <Icon name="mdi:arrow-left" class="w-5 h-5" />
             <span>Back to Game Modes</span>
           </NuxtLink>

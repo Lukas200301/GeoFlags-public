@@ -47,9 +47,7 @@ export const useCountries = () => {
   const convertCCA3ArrayToCCA2 = (cca3Codes: string[]): string[] => {
     return cca3Codes
       .map((cca3) => {
-        const country = countriesData.find(
-          (c: WorldCountry) => c.cca3 === cca3
-        )
+        const country = countriesData.find((c: WorldCountry) => c.cca3 === cca3)
         return country?.cca2
       })
       .filter((code): code is string => code !== undefined)
@@ -105,7 +103,8 @@ export const useCountries = () => {
       cioc: country.cioc || null,
       region: country.region,
       subregion: country.subregion || null,
-      capital: Array.isArray(country.capital) && country.capital.length > 0 ? country.capital[0] : null,
+      capital:
+        Array.isArray(country.capital) && country.capital.length > 0 ? country.capital[0] : null,
       area: country.area,
       languages: country.languages || null,
       currencies: country.currencies || null,
@@ -121,7 +120,9 @@ export const useCountries = () => {
       unMember: country.unMember || false,
       unRegionalGroup: country.unRegionalGroup || null,
       tld: country.tld || null,
-      idd: country.idd ? { root: country.idd.root || '', suffixes: country.idd.suffixes || [] } : null,
+      idd: country.idd
+        ? { root: country.idd.root || '', suffixes: country.idd.suffixes || [] }
+        : null,
       altSpellings: country.altSpellings || null,
     }
   }

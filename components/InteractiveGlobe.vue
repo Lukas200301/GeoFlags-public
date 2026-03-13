@@ -1,9 +1,16 @@
 <template>
-  <div class="relative w-full h-full min-h-[600px] bg-gray-900/50 backdrop-blur-xl border border-gray-800/50 rounded-2xl overflow-hidden shadow-2xl">
+  <div
+    class="relative w-full h-full min-h-[600px] bg-gray-900/50 backdrop-blur-xl border border-gray-800/50 rounded-2xl overflow-hidden shadow-2xl"
+  >
     <!-- Loading State -->
-    <div v-if="loading" class="absolute inset-0 flex items-center justify-center z-10 bg-gray-900/80">
+    <div
+      v-if="loading"
+      class="absolute inset-0 flex items-center justify-center z-10 bg-gray-900/80"
+    >
       <div class="text-center">
-        <div class="w-16 h-16 border-4 border-primary-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+        <div
+          class="w-16 h-16 border-4 border-primary-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"
+        ></div>
         <p class="text-gray-400">Loading interactive map...</p>
       </div>
     </div>
@@ -33,7 +40,10 @@
         class="p-3 bg-gray-800/90 backdrop-blur-sm border border-gray-700 rounded-lg hover:bg-gray-700 transition-all shadow-lg group"
         title="Reset View"
       >
-        <Icon name="mdi:restore" class="w-5 h-5 text-gray-300 group-hover:text-primary-400 transition-colors" />
+        <Icon
+          name="mdi:restore"
+          class="w-5 h-5 text-gray-300 group-hover:text-primary-400 transition-colors"
+        />
       </button>
     </div>
 
@@ -46,7 +56,10 @@
       leave-from-class="opacity-100 translate-y-0"
       leave-to-class="opacity-0 translate-y-4"
     >
-      <div v-if="hoveredCountry && !loading && !error" class="absolute bottom-4 left-4 right-4 md:right-auto md:max-w-sm bg-gray-800/95 backdrop-blur-sm border border-gray-700 rounded-xl p-4 shadow-2xl z-20">
+      <div
+        v-if="hoveredCountry && !loading && !error"
+        class="absolute bottom-4 left-4 right-4 md:right-auto md:max-w-sm bg-gray-800/95 backdrop-blur-sm border border-gray-700 rounded-xl p-4 shadow-2xl z-20"
+      >
         <div class="flex items-center gap-3 mb-2">
           <img
             :src="hoveredCountry.flag"
@@ -99,7 +112,7 @@ const initMap = async () => {
 
     // Build country lookup map
     countryByName = new Map()
-    props.countries.forEach(country => {
+    props.countries.forEach((country) => {
       if (country.name) countryByName!.set(country.name.toLowerCase(), country)
     })
 
@@ -112,26 +125,26 @@ const initMap = async () => {
       style: {
         version: 8,
         sources: {
-          'basemap': {
+          basemap: {
             type: 'raster',
             tiles: [
-              'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
+              'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
             ],
             tileSize: 256,
-            attribution: '© Esri'
+            attribution: '© Esri',
           },
           'basemap-labels': {
             type: 'raster',
             tiles: [
-              'https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}'
+              'https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',
             ],
-            tileSize: 256
+            tileSize: 256,
           },
-          'countries': {
+          countries: {
             type: 'geojson',
             data: `${apiBaseUrl}/api/map`,
-            promoteId: 'ISO_A2' // Uses ISO_A2 property as the feature.id for setFeatureState
-          }
+            promoteId: 'ISO_A2', // Uses ISO_A2 property as the feature.id for setFeatureState
+          },
         },
         layers: [
           {
@@ -139,14 +152,14 @@ const initMap = async () => {
             type: 'raster',
             source: 'basemap',
             minzoom: 0,
-            maxzoom: 22
+            maxzoom: 22,
           },
           {
             id: 'basemap-labels-layer',
             type: 'raster',
             source: 'basemap-labels',
             minzoom: 0,
-            maxzoom: 22
+            maxzoom: 22,
           },
           {
             id: 'countries-fill',
@@ -154,13 +167,8 @@ const initMap = async () => {
             source: 'countries',
             paint: {
               'fill-color': 'rgba(34, 211, 238, 0.2)', // Cyan glow
-              'fill-opacity': [
-                'case',
-                ['boolean', ['feature-state', 'hover'], false],
-                0.6,
-                0.0
-              ]
-            }
+              'fill-opacity': ['case', ['boolean', ['feature-state', 'hover'], false], 0.6, 0.0],
+            },
           },
           {
             id: 'countries-outline',
@@ -170,27 +178,22 @@ const initMap = async () => {
               'line-color': [
                 'case',
                 ['boolean', ['feature-state', 'hover'], false],
-                'rgba(34, 211, 238, 1)',   // Bright cyan on hover
-                'rgba(34, 211, 238, 0.4)'  // Dim cyan normally
+                'rgba(34, 211, 238, 1)', // Bright cyan on hover
+                'rgba(34, 211, 238, 0.4)', // Dim cyan normally
               ],
-              'line-width': [
-                'case',
-                ['boolean', ['feature-state', 'hover'], false],
-                2.5,
-                1.5
-              ],
-              'line-opacity': 0.8
-            }
-          }
+              'line-width': ['case', ['boolean', ['feature-state', 'hover'], false], 2.5, 1.5],
+              'line-opacity': 0.8,
+            },
+          },
         ],
         projection: {
-          type: 'globe'
-        }
+          type: 'globe',
+        },
       },
       center: [0, 20],
       zoom: 1.2,
       pitch: 0,
-      bearing: 0
+      bearing: 0,
     })
 
     // Add navigation controls
@@ -201,47 +204,38 @@ const initMap = async () => {
     // Mouse move handler for hover effect
     map.on('mousemove', 'countries-fill', (e) => {
       if (e.features && e.features.length > 0) {
-        const featureId = e.features[0].id;
-        
+        const featureId = e.features[0].id
+
         // Only attempt to set state if the feature actually has an ID
         if (featureId !== undefined && featureId !== null) {
           if (hoveredFeatureId !== null && hoveredFeatureId !== featureId) {
-            map!.setFeatureState(
-              { source: 'countries', id: hoveredFeatureId },
-              { hover: false }
-            )
+            map!.setFeatureState({ source: 'countries', id: hoveredFeatureId }, { hover: false })
           }
-          
+
           hoveredFeatureId = featureId
-          map!.setFeatureState(
-            { source: 'countries', id: hoveredFeatureId },
-            { hover: true }
-          )
+          map!.setFeatureState({ source: 'countries', id: hoveredFeatureId }, { hover: true })
         }
 
-        const featProps = e.features[0].properties;
-        const countryCode = featProps?.ISO_A2;
-        const countryName = featProps?.NAME || featProps?.ADMIN;
-        
-        let country = null;
+        const featProps = e.features[0].properties
+        const countryCode = featProps?.ISO_A2
+        const countryName = featProps?.NAME || featProps?.ADMIN
+
+        let country = null
         if (countryCode) {
-           country = props.countries.find((c: any) => c.code === countryCode);
+          country = props.countries.find((c: any) => c.code === countryCode)
         }
         if (!country && countryName) {
-           country = countryByName!.get(countryName?.toLowerCase());
+          country = countryByName!.get(countryName?.toLowerCase())
         }
         hoveredCountry.value = country || null
-        
+
         map!.getCanvas().style.cursor = country ? 'pointer' : 'default'
       }
     })
 
     map.on('mouseleave', 'countries-fill', () => {
       if (hoveredFeatureId !== null) {
-        map!.setFeatureState(
-          { source: 'countries', id: hoveredFeatureId },
-          { hover: false }
-        )
+        map!.setFeatureState({ source: 'countries', id: hoveredFeatureId }, { hover: false })
       }
       hoveredFeatureId = null
       hoveredCountry.value = null
@@ -251,18 +245,18 @@ const initMap = async () => {
     // Click handler
     map.on('click', 'countries-fill', (e) => {
       if (e.features && e.features.length > 0) {
-        const featProps = e.features[0].properties;
-        const countryCode = featProps?.ISO_A2;
-        const countryName = featProps?.NAME || featProps?.ADMIN;
-        
-        let country = null;
+        const featProps = e.features[0].properties
+        const countryCode = featProps?.ISO_A2
+        const countryName = featProps?.NAME || featProps?.ADMIN
+
+        let country = null
         if (countryCode) {
-           country = props.countries.find((c: any) => c.code === countryCode);
+          country = props.countries.find((c: any) => c.code === countryCode)
         }
         if (!country && countryName) {
-           country = countryByName!.get(countryName?.toLowerCase());
+          country = countryByName!.get(countryName?.toLowerCase())
         }
-        
+
         if (country) {
           emit('countryClick', country)
         }
@@ -309,4 +303,3 @@ const retryLoad = () => {
   initMap()
 }
 </script>
-

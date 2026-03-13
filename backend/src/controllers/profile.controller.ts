@@ -25,7 +25,6 @@ const changePasswordSchema = z.object({
   newPassword: z.string().min(8),
 });
 
-
 /**
  * Get current user's profile
  * GET /api/profile
@@ -91,10 +90,7 @@ export async function updateProfile(req: AuthRequest, res: Response) {
           AND: [
             { id: { not: userId } },
             {
-              OR: [
-                username ? { username } : {},
-                email ? { email } : {},
-              ],
+              OR: [username ? { username } : {}, email ? { email } : {}],
             },
           ],
         },
@@ -102,7 +98,8 @@ export async function updateProfile(req: AuthRequest, res: Response) {
 
       if (existing) {
         return res.status(409).json({
-          message: existing.username === username ? 'Username already taken' : 'Email already registered',
+          message:
+            existing.username === username ? 'Username already taken' : 'Email already registered',
         });
       }
     }
@@ -287,9 +284,9 @@ export async function getGameHistory(req: AuthRequest, res: Response) {
     });
 
     // Transform data for frontend
-    const gameHistory = gameSessions.map(session => {
-      const data = session.data as any || {};
-      
+    const gameHistory = gameSessions.map((session) => {
+      const data = (session.data as any) || {};
+
       return {
         id: session.id,
         mode: session.mode,
@@ -337,7 +334,7 @@ export async function getStats(req: AuthRequest, res: Response) {
 
     // High scores per mode
     const highScores: Record<string, number> = {};
-    gameSessions.forEach(session => {
+    gameSessions.forEach((session) => {
       const mode = session.mode;
       if (!highScores[mode] || session.score > highScores[mode]) {
         highScores[mode] = session.score;
@@ -347,7 +344,7 @@ export async function getStats(req: AuthRequest, res: Response) {
     // Games per mode and average scores per mode
     const gamesPerMode: Record<string, number> = {};
     const scoresByMode: Record<string, number[]> = {};
-    gameSessions.forEach(session => {
+    gameSessions.forEach((session) => {
       const mode = session.mode;
       gamesPerMode[mode] = (gamesPerMode[mode] || 0) + 1;
       if (!scoresByMode[mode]) {
@@ -358,11 +355,9 @@ export async function getStats(req: AuthRequest, res: Response) {
 
     // Calculate average scores per mode
     const averageScoresByMode: Record<string, number> = {};
-    Object.keys(scoresByMode).forEach(mode => {
+    Object.keys(scoresByMode).forEach((mode) => {
       const scores = scoresByMode[mode];
-      averageScoresByMode[mode] = Math.round(
-        scores.reduce((a, b) => a + b, 0) / scores.length
-      );
+      averageScoresByMode[mode] = Math.round(scores.reduce((a, b) => a + b, 0) / scores.length);
     });
 
     // Performance over time (last 30 days, grouped by day)
@@ -370,11 +365,11 @@ export async function getStats(req: AuthRequest, res: Response) {
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
     const recentSessions = gameSessions.filter(
-      session => new Date(session.createdAt) >= thirtyDaysAgo
+      (session) => new Date(session.createdAt) >= thirtyDaysAgo
     );
 
     const dailyStats: Record<string, { totalScore: number; count: number; date: string }> = {};
-    recentSessions.forEach(session => {
+    recentSessions.forEach((session) => {
       const dateKey = new Date(session.createdAt).toISOString().split('T')[0];
       if (!dailyStats[dateKey]) {
         dailyStats[dateKey] = { totalScore: 0, count: 0, date: dateKey };
@@ -384,7 +379,7 @@ export async function getStats(req: AuthRequest, res: Response) {
     });
 
     const performanceOverTime = Object.values(dailyStats)
-      .map(day => ({
+      .map((day) => ({
         date: day.date,
         averageScore: Math.round(day.totalScore / day.count),
         gamesPlayed: day.count,
@@ -401,7 +396,7 @@ export async function getStats(req: AuthRequest, res: Response) {
 
     // Activity by day of week
     const dayOfWeekStats: Record<number, { count: number; totalScore: number }> = {};
-    gameSessions.forEach(session => {
+    gameSessions.forEach((session) => {
       const dayOfWeek = new Date(session.createdAt).getDay(); // 0 = Sunday, 6 = Saturday
       if (!dayOfWeekStats[dayOfWeek]) {
         dayOfWeekStats[dayOfWeek] = { count: 0, totalScore: 0 };
@@ -410,7 +405,7 @@ export async function getStats(req: AuthRequest, res: Response) {
       dayOfWeekStats[dayOfWeek].totalScore += session.score;
     });
 
-    const activityByDayOfWeek = [0, 1, 2, 3, 4, 5, 6].map(day => ({
+    const activityByDayOfWeek = [0, 1, 2, 3, 4, 5, 6].map((day) => ({
       day: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][day],
       gamesPlayed: dayOfWeekStats[day]?.count || 0,
       averageScore: dayOfWeekStats[day]
@@ -420,21 +415,24 @@ export async function getStats(req: AuthRequest, res: Response) {
 
     // Calculate accuracy stats if available in data field
     const accuracyData: number[] = [];
-    gameSessions.forEach(session => {
+    gameSessions.forEach((session) => {
       const data = session.data as any;
       if (data && typeof data.accuracy === 'number') {
         accuracyData.push(data.accuracy);
       }
     });
 
-    const averageAccuracy = accuracyData.length > 0
-      ? Math.round(accuracyData.reduce((a, b) => a + b, 0) / accuracyData.length)
-      : null;
+    const averageAccuracy =
+      accuracyData.length > 0
+        ? Math.round(accuracyData.reduce((a, b) => a + b, 0) / accuracyData.length)
+        : null;
 
     // Streak calculation (consecutive days played)
-    const uniqueDates = [...new Set(gameSessions.map(s =>
-      new Date(s.createdAt).toISOString().split('T')[0]
-    ))].sort().reverse();
+    const uniqueDates = [
+      ...new Set(gameSessions.map((s) => new Date(s.createdAt).toISOString().split('T')[0])),
+    ]
+      .sort()
+      .reverse();
 
     let currentStreak = 0;
     let longestStreak = 0;
@@ -445,14 +443,18 @@ export async function getStats(req: AuthRequest, res: Response) {
       if (i === 0) {
         tempStreak = 1;
         // Check if today or yesterday
-        const daysDiff = Math.floor((new Date(today).getTime() - new Date(uniqueDates[0]).getTime()) / (1000 * 60 * 60 * 24));
+        const daysDiff = Math.floor(
+          (new Date(today).getTime() - new Date(uniqueDates[0]).getTime()) / (1000 * 60 * 60 * 24)
+        );
         if (daysDiff <= 1) {
           currentStreak = 1;
         }
       } else {
         const prevDate = new Date(uniqueDates[i - 1]);
         const currDate = new Date(uniqueDates[i]);
-        const diffDays = Math.floor((prevDate.getTime() - currDate.getTime()) / (1000 * 60 * 60 * 24));
+        const diffDays = Math.floor(
+          (prevDate.getTime() - currDate.getTime()) / (1000 * 60 * 60 * 24)
+        );
 
         if (diffDays === 1) {
           tempStreak++;

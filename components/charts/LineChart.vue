@@ -3,10 +3,32 @@
 </template>
 
 <script setup lang="ts">
-import { Chart, LineElement, PointElement, LineController, CategoryScale, LinearScale, Title, Tooltip, Legend, Filler, type ChartConfiguration } from 'chart.js'
+import {
+  Chart,
+  LineElement,
+  PointElement,
+  LineController,
+  CategoryScale,
+  LinearScale,
+  Title,
+  Tooltip,
+  Legend,
+  Filler,
+  type ChartConfiguration,
+} from 'chart.js'
 
 // Register Chart.js components
-Chart.register(LineElement, PointElement, LineController, CategoryScale, LinearScale, Title, Tooltip, Legend, Filler)
+Chart.register(
+  LineElement,
+  PointElement,
+  LineController,
+  CategoryScale,
+  LinearScale,
+  Title,
+  Tooltip,
+  Legend,
+  Filler
+)
 
 interface Props {
   labels: string[]
@@ -38,7 +60,7 @@ const createChart = () => {
     type: 'line',
     data: {
       labels: props.labels,
-      datasets: props.datasets.map(dataset => ({
+      datasets: props.datasets.map((dataset) => ({
         label: dataset.label,
         data: dataset.data,
         borderColor: dataset.borderColor || 'rgb(99, 102, 241)',
@@ -143,9 +165,13 @@ const createChart = () => {
 }
 
 // Watch for prop changes and recreate chart
-watch(() => [props.labels, props.datasets], () => {
-  createChart()
-}, { deep: true })
+watch(
+  () => [props.labels, props.datasets],
+  () => {
+    createChart()
+  },
+  { deep: true }
+)
 
 onMounted(() => {
   createChart()

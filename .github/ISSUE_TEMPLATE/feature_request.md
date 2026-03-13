@@ -13,6 +13,7 @@ A clear and concise description of the feature you'd like to see.
 ## 🎯 Problem Statement
 
 Describe the problem this feature would solve. For example:
+
 - I'm always frustrated when [...]
 - It would be helpful if [...]
 - Currently, there's no way to [...]
@@ -32,6 +33,7 @@ If applicable, add mockups, wireframes, or examples from other applications.
 ## 📊 Impact
 
 **Who would benefit from this feature?**
+
 - [ ] All users
 - [ ] New users
 - [ ] Advanced users
@@ -39,6 +41,7 @@ If applicable, add mockups, wireframes, or examples from other applications.
 - [ ] Specific use case: [describe]
 
 **Priority (your opinion):**
+
 - [ ] High - Critical feature
 - [ ] Medium - Nice to have
 - [ ] Low - Future enhancement
@@ -46,6 +49,7 @@ If applicable, add mockups, wireframes, or examples from other applications.
 ## 🔧 Technical Considerations
 
 If you have technical knowledge, describe:
+
 - Which part of the codebase would be affected (frontend, backend, both)
 - Any technical challenges or dependencies
 - Potential breaking changes
@@ -57,6 +61,7 @@ Add any other context, screenshots, or information about the feature request her
 ## ✅ Acceptance Criteria
 
 What needs to be true for this feature to be considered complete?
+
 - [ ] Criterion 1
 - [ ] Criterion 2
 - [ ] Criterion 3

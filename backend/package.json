@@ -14,7 +14,8 @@
     "prisma:seed-demo": "tsx --env-file=.env src/seed-demo.ts",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
-    "format": "prettier --write \"src/**/*.ts\""
+    "format": "prettier --write \"src/**/*.ts\"",
+    "test:mail": "tsx --env-file=.env src/test-mail.ts"
   },
   "keywords": [
     "geoflags",

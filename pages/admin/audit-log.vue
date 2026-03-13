@@ -61,10 +61,7 @@ const fetchLogs = async () => {
     const response = await apiRequest<{
       logs: AuditLogEntry[]
       pagination: { page: number; limit: number; total: number; totalPages: number }
-    }>(
-      `/api/admin/audit-logs?${params.toString()}`,
-      { requiresAuth: true }
-    )
+    }>(`/api/admin/audit-logs?${params.toString()}`, { requiresAuth: true })
 
     logs.value = response.logs
     totalLogs.value = response.pagination.total
@@ -131,7 +128,12 @@ const getActionIcon = (action: string) => {
   if (actionLower.includes('delete')) return 'mdi:delete'
   if (actionLower.includes('create')) return 'mdi:plus-circle'
   if (actionLower.includes('update')) return 'mdi:pencil'
-  if (actionLower.includes('ban') || actionLower.includes('suspend') || actionLower.includes('status')) return 'mdi:gavel'
+  if (
+    actionLower.includes('ban') ||
+    actionLower.includes('suspend') ||
+    actionLower.includes('status')
+  )
+    return 'mdi:gavel'
   if (actionLower.includes('leaderboard')) return 'mdi:trophy'
   if (actionLower.includes('mode')) return 'mdi:gamepad'
   return 'mdi:information'
@@ -140,10 +142,13 @@ const getActionIcon = (action: string) => {
 // Get action color
 const getActionColor = (action: string) => {
   const actionLower = action.toLowerCase()
-  if (actionLower.includes('delete') || actionLower.includes('ban')) return 'bg-red-500/20 text-red-400'
-  if (actionLower.includes('suspend') || actionLower.includes('status')) return 'bg-yellow-500/20 text-yellow-400'
+  if (actionLower.includes('delete') || actionLower.includes('ban'))
+    return 'bg-red-500/20 text-red-400'
+  if (actionLower.includes('suspend') || actionLower.includes('status'))
+    return 'bg-yellow-500/20 text-yellow-400'
   if (actionLower.includes('create')) return 'bg-green-500/20 text-green-400'
-  if (actionLower.includes('update') || actionLower.includes('role')) return 'bg-blue-500/20 text-blue-400'
+  if (actionLower.includes('update') || actionLower.includes('role'))
+    return 'bg-blue-500/20 text-blue-400'
   return 'bg-gray-500/20 text-gray-400'
 }
 
@@ -193,11 +198,7 @@ const formatRelativeTime = (timestamp: string) => {
         :disabled="loading"
         class="flex items-center gap-2 px-4 py-2 glass-btn rounded-lg hover:scale-105 transition-transform"
       >
-        <Icon
-          name="mdi:refresh"
-          class="w-5 h-5"
-          :class="{ 'animate-spin': loading }"
-        />
+        <Icon name="mdi:refresh" class="w-5 h-5" :class="{ 'animate-spin': loading }" />
         <span class="text-sm font-medium">Refresh</span>
       </button>
     </div>
@@ -209,7 +210,10 @@ const formatRelativeTime = (timestamp: string) => {
         <div>
           <label class="block text-sm font-medium text-gray-300 mb-2">Search</label>
           <div class="relative">
-            <Icon name="mdi:magnify" class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <Icon
+              name="mdi:magnify"
+              class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
+            />
             <input
               v-model="searchQuery"
               type="text"
@@ -254,7 +258,9 @@ const formatRelativeTime = (timestamp: string) => {
             <Icon name="mdi:clock-outline" class="w-6 h-6 text-green-400" />
           </div>
           <div>
-            <div class="text-2xl font-bold text-gray-100">{{ logs.length > 0 ? formatRelativeTime(logs[0].createdAt) : 'N/A' }}</div>
+            <div class="text-2xl font-bold text-gray-100">
+              {{ logs.length > 0 ? formatRelativeTime(logs[0].createdAt) : 'N/A' }}
+            </div>
             <div class="text-sm text-gray-400">Latest Activity</div>
           </div>
         </div>
@@ -279,7 +285,11 @@ const formatRelativeTime = (timestamp: string) => {
 
       <!-- Loading State -->
       <div v-if="loading && logs.length === 0" class="space-y-3">
-        <div v-for="i in 5" :key="i" class="flex items-center gap-3 p-4 bg-gray-800/50 rounded-lg animate-pulse">
+        <div
+          v-for="i in 5"
+          :key="i"
+          class="flex items-center gap-3 p-4 bg-gray-800/50 rounded-lg animate-pulse"
+        >
           <div class="w-12 h-12 bg-gray-700 rounded-lg"></div>
           <div class="flex-1">
             <div class="h-4 bg-gray-700 rounded w-3/4 mb-2"></div>
@@ -315,7 +325,9 @@ const formatRelativeTime = (timestamp: string) => {
             <div class="flex-1 min-w-0">
               <div class="flex items-start justify-between gap-4 mb-2">
                 <div>
-                  <h3 class="text-gray-100 font-semibold text-lg">{{ formatActionName(log.action) }}</h3>
+                  <h3 class="text-gray-100 font-semibold text-lg">
+                    {{ formatActionName(log.action) }}
+                  </h3>
                   <p class="text-sm text-gray-400 mt-1">
                     by <span class="text-gray-300 font-medium">{{ log.admin.username }}</span>
                     <span class="text-gray-500 mx-1">•</span>
@@ -330,16 +342,28 @@ const formatRelativeTime = (timestamp: string) => {
               </div>
 
               <!-- Details -->
-              <div v-if="log.details && Object.keys(log.details).length > 0" class="mt-3 pt-3 border-t border-gray-700/50">
+              <div
+                v-if="log.details && Object.keys(log.details).length > 0"
+                class="mt-3 pt-3 border-t border-gray-700/50"
+              >
                 <details class="group/details">
-                  <summary class="text-sm text-gray-400 cursor-pointer hover:text-gray-300 flex items-center gap-2 select-none">
-                    <Icon name="mdi:chevron-right" class="w-4 h-4 group-open/details:rotate-90 transition-transform" />
+                  <summary
+                    class="text-sm text-gray-400 cursor-pointer hover:text-gray-300 flex items-center gap-2 select-none"
+                  >
+                    <Icon
+                      name="mdi:chevron-right"
+                      class="w-4 h-4 group-open/details:rotate-90 transition-transform"
+                    />
                     <span>View Details</span>
-                    <span class="text-xs text-gray-500">({{ Object.keys(log.details).length }} items)</span>
+                    <span class="text-xs text-gray-500"
+                      >({{ Object.keys(log.details).length }} items)</span
+                    >
                   </summary>
                   <div class="mt-3 ml-6">
                     <div class="bg-gray-900/50 rounded-lg p-4 border border-gray-700/50">
-                      <pre class="text-xs text-gray-300 overflow-x-auto">{{ JSON.stringify(log.details, null, 2) }}</pre>
+                      <pre class="text-xs text-gray-300 overflow-x-auto">{{
+                        JSON.stringify(log.details, null, 2)
+                      }}</pre>
                     </div>
                   </div>
                 </details>
@@ -362,10 +386,13 @@ const formatRelativeTime = (timestamp: string) => {
       </div>
 
       <!-- Pagination -->
-      <div v-if="totalPages > 1" class="flex items-center justify-between mt-6 pt-6 border-t border-gray-800">
+      <div
+        v-if="totalPages > 1"
+        class="flex items-center justify-between mt-6 pt-6 border-t border-gray-800"
+      >
         <p class="text-sm text-gray-400">
-          Showing {{ (currentPage - 1) * pageSize + 1 }} to {{ Math.min(currentPage * pageSize, totalLogs) }} of
-          {{ totalLogs }} logs
+          Showing {{ (currentPage - 1) * pageSize + 1 }} to
+          {{ Math.min(currentPage * pageSize, totalLogs) }} of {{ totalLogs }} logs
         </p>
         <div class="flex items-center gap-2">
           <button
@@ -383,7 +410,9 @@ const formatRelativeTime = (timestamp: string) => {
               :key="page"
               @click="goToPage(page)"
               class="px-3 py-1 rounded-lg text-sm font-medium transition-all"
-              :class="currentPage === page ? 'bg-primary-500 text-white' : 'glass-btn hover:bg-gray-700'"
+              :class="
+                currentPage === page ? 'bg-primary-500 text-white' : 'glass-btn hover:bg-gray-700'
+              "
             >
               {{ page }}
             </button>

@@ -13,12 +13,11 @@
         :visible="{ opacity: 1, scale: 1 }"
       >
         <!-- Header with Close Button -->
-        <div class="sticky top-0 z-10 bg-gray-900/95 backdrop-blur-xl border-b border-gray-800/50 px-6 py-4 flex items-center justify-between">
+        <div
+          class="sticky top-0 z-10 bg-gray-900/95 backdrop-blur-xl border-b border-gray-800/50 px-6 py-4 flex items-center justify-between"
+        >
           <h2 class="text-2xl font-bold text-gray-100">{{ country.name }}</h2>
-          <button
-            @click="close"
-            class="p-2 hover:bg-gray-800 rounded-lg transition-colors"
-          >
+          <button @click="close" class="p-2 hover:bg-gray-800 rounded-lg transition-colors">
             <Icon name="mdi:close" class="w-6 h-6 text-gray-400" />
           </button>
         </div>
@@ -34,24 +33,35 @@
                 :alt="`Flag of ${country.name}`"
                 class="w-full h-full object-cover"
               />
-              <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent opacity-40"></div>
+              <div
+                class="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent opacity-40"
+              ></div>
             </div>
 
             <!-- Header Info -->
             <div class="p-6 flex flex-col justify-center bg-gray-800/30">
               <div class="mb-4">
-                <p class="text-sm text-gray-500 uppercase tracking-wider mb-2">{{ country.region }}</p>
+                <p class="text-sm text-gray-500 uppercase tracking-wider mb-2">
+                  {{ country.region }}
+                </p>
                 <p class="text-lg text-gray-400">{{ country.officialName }}</p>
               </div>
 
               <div class="flex flex-wrap gap-2 mb-4">
-                <span class="px-3 py-1 bg-primary-900/30 border border-primary-800/50 rounded-full text-sm text-primary-400 font-medium">
+                <span
+                  class="px-3 py-1 bg-primary-900/30 border border-primary-800/50 rounded-full text-sm text-primary-400 font-medium"
+                >
                   {{ country.code }}
                 </span>
-                <span class="px-3 py-1 bg-primary-900/30 border border-primary-800/50 rounded-full text-sm text-primary-400 font-medium">
+                <span
+                  class="px-3 py-1 bg-primary-900/30 border border-primary-800/50 rounded-full text-sm text-primary-400 font-medium"
+                >
                   {{ country.cca3 }}
                 </span>
-                <span v-if="country.cioc" class="px-3 py-1 bg-secondary-900/30 border border-secondary-800/50 rounded-full text-sm text-secondary-400 font-medium">
+                <span
+                  v-if="country.cioc"
+                  class="px-3 py-1 bg-secondary-900/30 border border-secondary-800/50 rounded-full text-sm text-secondary-400 font-medium"
+                >
                   {{ country.cioc }}
                 </span>
               </div>
@@ -84,7 +94,9 @@
                 <p class="text-xs text-gray-500">Region</p>
               </div>
               <p class="text-lg font-bold text-gray-100">{{ country.region }}</p>
-              <p v-if="country.subregion" class="text-xs text-gray-500 mt-1">{{ country.subregion }}</p>
+              <p v-if="country.subregion" class="text-xs text-gray-500 mt-1">
+                {{ country.subregion }}
+              </p>
             </div>
 
             <!-- Demonym -->
@@ -153,7 +165,10 @@
             </div>
 
             <!-- Timezones -->
-            <div v-if="country.timezones && country.timezones.length > 0" class="bg-gray-800/30 rounded-xl p-4">
+            <div
+              v-if="country.timezones && country.timezones.length > 0"
+              class="bg-gray-800/30 rounded-xl p-4"
+            >
               <div class="flex items-center space-x-2 mb-3">
                 <Icon name="mdi:clock-outline" class="w-5 h-5 text-secondary-400" />
                 <h3 class="text-sm font-bold text-gray-100">Timezones</h3>
@@ -215,20 +230,23 @@ onMounted(() => {
     }
   }
   window.addEventListener('keydown', handleEscape)
-  
+
   onUnmounted(() => {
     window.removeEventListener('keydown', handleEscape)
   })
 })
 
 // Prevent body scroll when modal is open
-watch(() => props.isOpen, (isOpen) => {
-  if (process.client) {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = ''
+watch(
+  () => props.isOpen,
+  (isOpen) => {
+    if (process.client) {
+      if (isOpen) {
+        document.body.style.overflow = 'hidden'
+      } else {
+        document.body.style.overflow = ''
+      }
     }
   }
-})
+)
 </script>

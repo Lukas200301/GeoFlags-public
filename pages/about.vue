@@ -10,9 +10,9 @@
       <h2 class="text-2xl font-bold text-gray-100 mb-4">What is GeoFlags?</h2>
       <p class="text-gray-300 mb-4">
         GeoFlags is an interactive geography quiz game designed to help you test and improve your
-        knowledge of world geography. Whether you're a geography enthusiast or just looking to
-        learn more about the world, GeoFlags offers an engaging way to discover countries, flags,
-        and capitals.
+        knowledge of world geography. Whether you're a geography enthusiast or just looking to learn
+        more about the world, GeoFlags offers an engaging way to discover countries, flags, and
+        capitals.
       </p>
       <p class="text-gray-300">
         Challenge yourself across multiple game modes, compete with players worldwide on the global
@@ -54,12 +54,29 @@
       <h2 class="text-2xl font-bold text-gray-100 mb-6">Built With</h2>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div v-for="tech in technologies" :key="tech.name" class="text-center">
-          <div class="w-16 h-16 mx-auto mb-2 bg-gray-800 rounded-lg flex items-center justify-center">
+          <div
+            class="w-16 h-16 mx-auto mb-2 bg-gray-800 rounded-lg flex items-center justify-center"
+          >
             <Icon :name="tech.icon" class="w-10 h-10 text-primary-600" />
           </div>
           <p class="text-sm font-medium text-gray-300">{{ tech.name }}</p>
         </div>
       </div>
+    </div>
+
+    <!-- Contact & Support -->
+    <div class="card p-8 mb-8 text-center">
+      <h2 class="text-2xl font-bold text-gray-100 mb-4">Contact & Support</h2>
+      <p class="text-gray-300 mb-6">
+        Have questions, feedback, or need help with your account? We're here to assist you!
+      </p>
+      <a
+        href="mailto:support@geoflags.org"
+        class="inline-flex items-center gap-2 px-6 py-3 bg-primary-600 hover:bg-primary-500 text-white rounded-lg font-medium transition-colors"
+      >
+        <Icon name="mdi:email" class="w-5 h-5" />
+        <span>support@geoflags.org</span>
+      </a>
     </div>
 
     <!-- Legal Links -->

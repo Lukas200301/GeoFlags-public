@@ -28,9 +28,7 @@ function generateSessionId(): string {
 }
 
 function getRandomCountries(excludeCode: string, count: number): WorldCountry[] {
-  const available = countriesData.filter(
-    (c) => c.cca2.toLowerCase() !== excludeCode.toLowerCase()
-  );
+  const available = countriesData.filter((c) => c.cca2.toLowerCase() !== excludeCode.toLowerCase());
   const shuffled = available.sort(() => Math.random() - 0.5);
   return shuffled.slice(0, count);
 }
@@ -78,11 +76,13 @@ function getCountryOutline(cca2: string): object | null {
   // Return stripped feature (no properties to prevent cheating)
   return {
     type: 'FeatureCollection',
-    features: [{
-      type: 'Feature',
-      geometry: feature.geometry,
-      properties: {},
-    }],
+    features: [
+      {
+        type: 'Feature',
+        geometry: feature.geometry,
+        properties: {},
+      },
+    ],
   };
 }
 
@@ -119,9 +119,7 @@ export async function startGame(req: AuthRequest, res: Response) {
       }
     }
 
-    const allCodes = countriesData
-      .map((c) => c.cca2)
-      .filter((code) => availableCodes.has(code));
+    const allCodes = countriesData.map((c) => c.cca2).filter((code) => availableCodes.has(code));
     const shuffled = shuffleArray(allCodes);
 
     const sessionId = generateSessionId();

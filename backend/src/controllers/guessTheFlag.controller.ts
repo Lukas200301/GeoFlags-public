@@ -31,10 +31,7 @@ function generateSessionId(): string {
 }
 
 // Helper to get a random subset of countries (excluding the correct one)
-function getRandomCountries(
-  excludeCode: string,
-  count: number
-): WorldCountry[] {
+function getRandomCountries(excludeCode: string, count: number): WorldCountry[] {
   const availableCountries = countriesData.filter(
     (c) => c.cca2.toLowerCase() !== excludeCode.toLowerCase()
   );
@@ -102,9 +99,7 @@ export async function startGame(req: AuthRequest, res: Response) {
 
     // Get first flag
     const firstCountryCode = shuffledCountries[0];
-    const firstCountry = countriesData.find(
-      (c) => c.cca2 === firstCountryCode
-    );
+    const firstCountry = countriesData.find((c) => c.cca2 === firstCountryCode);
 
     if (!firstCountry) {
       return res.status(500).json({ message: 'Failed to initialize game' });
@@ -112,10 +107,7 @@ export async function startGame(req: AuthRequest, res: Response) {
 
     // Generate options (1 correct + 3 wrong)
     const wrongCountries = getRandomCountries(firstCountryCode, 3);
-    const allOptions = [
-      firstCountry,
-      ...wrongCountries,
-    ];
+    const allOptions = [firstCountry, ...wrongCountries];
     const shuffledOptions = shuffleArray(allOptions);
 
     // Return response with flag and options

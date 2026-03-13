@@ -25,10 +25,10 @@ export async function getFlag(req: Request, res: Response): Promise<void> {
     }
 
     const cca2 = code.toUpperCase();
-    
+
     // Find the country to get its cca3 code
     const country = countriesData.find((c: any) => c.cca2 === cca2);
-    
+
     if (!country) {
       res.status(404).json({ message: 'Country not found' });
       return;
@@ -75,7 +75,7 @@ export async function getCacheStats(_req: Request, res: Response): Promise<void>
   res.json({
     totalFlags: 0,
     totalSizeBytes: 0,
-    totalSizeMB: "0.00",
+    totalSizeMB: '0.00',
     cacheDurationDays: 0,
     flags: [],
   });

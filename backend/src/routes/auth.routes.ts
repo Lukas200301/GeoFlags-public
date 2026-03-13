@@ -20,6 +20,7 @@ const router = Router();
 router.post('/register', authRateLimiter, authController.register);
 router.post('/login', authRateLimiter, authController.login);
 router.post('/refresh', authController.refresh);
+router.post('/verify-email', authController.verifyEmail);
 
 /**
  * Protected routes (require authentication)
@@ -27,5 +28,6 @@ router.post('/refresh', authController.refresh);
 router.post('/logout', requireAuth, authController.logout);
 router.get('/me', requireAuth, authController.me);
 router.post('/re-auth', requireAuth, authController.reAuth);
+router.post('/resend-verification', requireAuth, authController.resendVerification);
 
 export default router;

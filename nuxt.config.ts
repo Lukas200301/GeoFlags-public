@@ -6,13 +6,7 @@ export default defineNuxtConfig({
 
   ssr: true,
 
-  modules: [
-    '@nuxtjs/tailwindcss',
-    '@vueuse/nuxt',
-    
-    '@nuxt/icon',
-    '@nuxt/eslint'
-  ],
+  modules: ['@nuxtjs/tailwindcss', '@vueuse/nuxt', '@nuxt/icon', '@nuxt/eslint'],
 
   css: ['~/assets/css/main.css'],
 
@@ -31,17 +25,18 @@ export default defineNuxtConfig({
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
         {
           name: 'description',
-          content: 'GeoFlags is an interactive geography quiz game. Test your knowledge of world flags, capitals, and countries!'
+          content:
+            'GeoFlags is an interactive geography quiz game. Test your knowledge of world flags, capitals, and countries!',
         },
       ],
       link: [
         { rel: 'icon', type: 'image/png', href: '/favicon.png' },
-        { rel: 'apple-touch-icon', sizes: '180x180', href: '/favicon.png' }
-      ]
+        { rel: 'apple-touch-icon', sizes: '180x180', href: '/favicon.png' },
+      ],
     },
     pageTransition: {
       name: 'page',
-      mode: 'out-in'
+      mode: 'out-in',
     },
   },
 
@@ -49,7 +44,8 @@ export default defineNuxtConfig({
     public: {
       apiBase: process.env.NUXT_PUBLIC_API_BASE || 'http://localhost:3001',
       wsUrl: process.env.NUXT_PUBLIC_WS_URL || 'http://localhost:3001',
-    }
+      captchaSiteKey: process.env.NUXT_PUBLIC_CAPTCHA_SITE_KEY || '1x00000000000000000000AA',
+    },
   },
 
   devServer: {
@@ -65,69 +61,69 @@ export default defineNuxtConfig({
 
   nitro: {
     routeRules: {
-      '/admin/**': { 
+      '/admin/**': {
         ssr: false,
         headers: {
           'X-Frame-Options': 'DENY',
           'X-Content-Type-Options': 'nosniff',
           'X-XSS-Protection': '1; mode=block',
           'Referrer-Policy': 'strict-origin-when-cross-origin',
-        }
+        },
       },
-      
+
       '/api/**': {
         cors: true,
         headers: {
           'X-Content-Type-Options': 'nosniff',
           'X-Frame-Options': 'DENY',
-        }
+        },
       },
-      
-      '/auth/**': { 
+
+      '/auth/**': {
         ssr: false,
         headers: {
           'X-Frame-Options': 'DENY',
           'X-Content-Type-Options': 'nosniff',
-        }
+        },
       },
-      
-      '/profile/**': { 
+
+      '/profile/**': {
         ssr: false,
         headers: {
           'X-Frame-Options': 'DENY',
           'X-Content-Type-Options': 'nosniff',
-        }
+        },
       },
-      
-      '/play/**': { 
+
+      '/play/**': {
         ssr: false,
         headers: {
           'X-Frame-Options': 'DENY',
           'X-Content-Type-Options': 'nosniff',
-        }
+        },
       },
-      
-      '/_nuxt/**': { 
-        headers: { 
-          'Cache-Control': 'public, max-age=31536000, immutable' 
-        } 
+
+      '/_nuxt/**': {
+        headers: {
+          'Cache-Control': 'public, max-age=31536000, immutable',
+        },
       },
-      
-      '/images/**': { 
-        headers: { 
-          'Cache-Control': 'public, max-age=31536000' 
-        } 
+
+      '/images/**': {
+        headers: {
+          'Cache-Control': 'public, max-age=31536000',
+        },
       },
-      
+
       '/**': {
         headers: {
           'X-Content-Type-Options': 'nosniff',
           'X-Frame-Options': 'SAMEORIGIN',
           'X-XSS-Protection': '1; mode=block',
           'Referrer-Policy': 'strict-origin-when-cross-origin',
-        }
-      }
-    }
+        },
+      },
+    },
   },
 
   experimental: {

@@ -30,9 +30,15 @@
   }
 
   @keyframes gradientShift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
   }
 
   /* Removed global transitions to prevent flickering */
@@ -76,8 +82,9 @@
     background: rgba(0, 0, 0, 0.5);
     border-color: rgba(255, 255, 255, 0.1);
     transform: translateY(-4px) scale(1.02);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6),
-                0 0 40px rgba(59, 130, 246, 0.15);
+    box-shadow:
+      0 20px 60px rgba(0, 0, 0, 0.6),
+      0 0 40px rgba(59, 130, 246, 0.15);
   }
 
   /* Glass Card Variants */
@@ -133,8 +140,9 @@
     transform: translateY(-2px) scale(1.05);
     background: rgba(0, 0, 0, 0.4);
     border-color: rgba(255, 255, 255, 0.2);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5),
-                0 0 20px rgba(59, 130, 246, 0.3);
+    box-shadow:
+      0 12px 40px rgba(0, 0, 0, 0.5),
+      0 0 20px rgba(59, 130, 246, 0.3);
   }
 
   .glass-btn:hover::before {
@@ -198,8 +206,9 @@
     background: rgba(0, 0, 0, 0.4);
     border-color: rgba(59, 130, 246, 0.5);
     transform: scale(1.02);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15),
-                inset 0 2px 8px rgba(0, 0, 0, 0.3);
+    box-shadow:
+      0 0 0 3px rgba(59, 130, 246, 0.15),
+      inset 0 2px 8px rgba(0, 0, 0, 0.3);
   }
 
   /* Select dropdowns */
@@ -233,8 +242,9 @@
     background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(30px) saturate(180%);
     border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.7),
-                0 0 60px rgba(59, 130, 246, 0.2);
+    box-shadow:
+      0 25px 80px rgba(0, 0, 0, 0.7),
+      0 0 60px rgba(59, 130, 246, 0.2);
   }
 
   /* Glass Sidebar - Specific for navigation sidebar */
@@ -324,7 +334,8 @@
 
   /* Float Animation */
   @keyframes float {
-    0%, 100% {
+    0%,
+    100% {
       transform: translateY(0px);
     }
     50% {
@@ -334,13 +345,16 @@
 
   /* Pulse Glow */
   @keyframes pulseGlow {
-    0%, 100% {
-      box-shadow: 0 0 10px rgba(59, 130, 246, 0.15),
-                  0 0 20px rgba(59, 130, 246, 0.1);
+    0%,
+    100% {
+      box-shadow:
+        0 0 10px rgba(59, 130, 246, 0.15),
+        0 0 20px rgba(59, 130, 246, 0.1);
     }
     50% {
-      box-shadow: 0 0 15px rgba(59, 130, 246, 0.2),
-                  0 0 30px rgba(59, 130, 246, 0.15);
+      box-shadow:
+        0 0 15px rgba(59, 130, 246, 0.2),
+        0 0 30px rgba(59, 130, 246, 0.15);
     }
   }
 
@@ -409,12 +423,24 @@
   }
 
   /* Stagger Animation Delays */
-  .stagger-1 { animation-delay: 0.1s; }
-  .stagger-2 { animation-delay: 0.2s; }
-  .stagger-3 { animation-delay: 0.3s; }
-  .stagger-4 { animation-delay: 0.4s; }
-  .stagger-5 { animation-delay: 0.5s; }
-  .stagger-6 { animation-delay: 0.6s; }
+  .stagger-1 {
+    animation-delay: 0.1s;
+  }
+  .stagger-2 {
+    animation-delay: 0.2s;
+  }
+  .stagger-3 {
+    animation-delay: 0.3s;
+  }
+  .stagger-4 {
+    animation-delay: 0.4s;
+  }
+  .stagger-5 {
+    animation-delay: 0.5s;
+  }
+  .stagger-6 {
+    animation-delay: 0.6s;
+  }
 
   /* ========== UTILITY CLASSES ========== */
 

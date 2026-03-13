@@ -72,10 +72,7 @@ const fetchMaintenanceSettings = async () => {
       requireRegistration: boolean
       maintenanceMode: boolean
       maintenanceMessage: string | null
-    }>(
-      '/api/admin/system/settings',
-      { requiresAuth: true }
-    )
+    }>('/api/admin/system/settings', { requiresAuth: true })
     maintenanceEnabled.value = response.maintenanceMode
     maintenanceMsg.value = response.maintenanceMessage || ''
   } catch (error: any) {
@@ -90,17 +87,14 @@ const toggleMaintenance = async () => {
   try {
     maintenanceSaving.value = true
     const newState = !maintenanceEnabled.value
-    await apiRequest(
-      '/api/admin/system/settings',
-      {
-        requiresAuth: true,
-        method: 'PUT',
-        body: {
-          maintenanceMode: newState,
-          maintenanceMessage: maintenanceMsg.value || null,
-        },
-      }
-    )
+    await apiRequest('/api/admin/system/settings', {
+      requiresAuth: true,
+      method: 'PUT',
+      body: {
+        maintenanceMode: newState,
+        maintenanceMessage: maintenanceMsg.value || null,
+      },
+    })
     maintenanceEnabled.value = newState
     toast.success(newState ? 'Maintenance mode activated' : 'Maintenance mode deactivated')
   } catch (error: any) {
@@ -114,16 +108,13 @@ const toggleMaintenance = async () => {
 const saveMaintenanceMessage = async () => {
   try {
     maintenanceSaving.value = true
-    await apiRequest(
-      '/api/admin/system/settings',
-      {
-        requiresAuth: true,
-        method: 'PUT',
-        body: {
-          maintenanceMessage: maintenanceMsg.value || null,
-        },
-      }
-    )
+    await apiRequest('/api/admin/system/settings', {
+      requiresAuth: true,
+      method: 'PUT',
+      body: {
+        maintenanceMessage: maintenanceMsg.value || null,
+      },
+    })
     toast.success('Maintenance message updated')
   } catch (error: any) {
     toast.error(error.message || 'Failed to update maintenance message')
@@ -154,10 +145,9 @@ const fetchSystemHealth = async (silent = false) => {
     if (!silent) {
       healthLoading.value = true
     }
-    const response = await apiRequest<{ metrics: SystemHealth }>(
-      '/api/admin/system/health',
-      { requiresAuth: true }
-    )
+    const response = await apiRequest<{ metrics: SystemHealth }>('/api/admin/system/health', {
+      requiresAuth: true,
+    })
     systemHealth.value = response.metrics
   } catch (error: any) {
     if (!silent) {
@@ -204,7 +194,7 @@ const formatRelativeTime = (timestamp: string) => {
 }
 
 const formatBytes = (bytes: number) => {
-  const gb = bytes / (1024 ** 3)
+  const gb = bytes / 1024 ** 3
   return `${gb.toFixed(2)} GB`
 }
 
@@ -264,7 +254,9 @@ const getMetricColor = (percentage: number, inverted = false) => {
     <!-- Header -->
     <div class="mb-8">
       <h1 class="text-4xl font-bold gradient-text mb-2">Admin Dashboard</h1>
-      <p class="text-gray-400">System health monitoring, maintenance controls, and recent activity</p>
+      <p class="text-gray-400">
+        System health monitoring, maintenance controls, and recent activity
+      </p>
     </div>
 
     <!-- Maintenance Mode Section -->
@@ -299,7 +291,11 @@ const getMetricColor = (percentage: number, inverted = false) => {
                   {{ maintenanceEnabled ? 'Maintenance Mode Active' : 'Site is Live' }}
                 </h3>
                 <p class="text-sm text-gray-400">
-                  {{ maintenanceEnabled ? 'Non-admin users cannot access the site' : 'All users can access the site normally' }}
+                  {{
+                    maintenanceEnabled
+                      ? 'Non-admin users cannot access the site'
+                      : 'All users can access the site normally'
+                  }}
                 </p>
               </div>
             </div>
@@ -353,17 +349,16 @@ const getMetricColor = (percentage: number, inverted = false) => {
           :disabled="healthLoading"
           class="flex items-center gap-2 px-4 py-2 glass-btn rounded-lg hover:scale-105 transition-transform"
         >
-          <Icon
-            name="mdi:refresh"
-            class="w-5 h-5"
-            :class="{ 'animate-spin': healthLoading }"
-          />
+          <Icon name="mdi:refresh" class="w-5 h-5" :class="{ 'animate-spin': healthLoading }" />
           <span class="text-sm font-medium">Refresh</span>
         </button>
       </div>
 
       <!-- Loading State -->
-      <div v-if="!systemHealth && healthLoading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div
+        v-if="!systemHealth && healthLoading"
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+      >
         <div v-for="i in 4" :key="i" class="glass-card p-6 animate-pulse">
           <div class="h-4 bg-gray-700 rounded w-1/2 mb-4"></div>
           <div class="h-8 bg-gray-700 rounded w-3/4"></div>
@@ -375,7 +370,13 @@ const getMetricColor = (percentage: number, inverted = false) => {
         <!-- Overall Status Banner -->
         <div
           class="glass-card p-6 border-l-4 transition-all duration-300"
-          :class="systemHealth.status === 'healthy' ? 'border-green-500' : systemHealth.status === 'warning' ? 'border-yellow-500' : 'border-red-500'"
+          :class="
+            systemHealth.status === 'healthy'
+              ? 'border-green-500'
+              : systemHealth.status === 'warning'
+                ? 'border-yellow-500'
+                : 'border-red-500'
+          "
         >
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-4">
@@ -384,14 +385,26 @@ const getMetricColor = (percentage: number, inverted = false) => {
                 :class="getStatusBg(systemHealth.status)"
               >
                 <Icon
-                  :name="systemHealth.status === 'healthy' ? 'mdi:check-circle' : systemHealth.status === 'warning' ? 'mdi:alert' : 'mdi:alert-octagon'"
+                  :name="
+                    systemHealth.status === 'healthy'
+                      ? 'mdi:check-circle'
+                      : systemHealth.status === 'warning'
+                        ? 'mdi:alert'
+                        : 'mdi:alert-octagon'
+                  "
                   class="w-8 h-8"
                   :class="getStatusColor(systemHealth.status)"
                 />
               </div>
               <div>
                 <h3 class="text-2xl font-bold text-gray-100">
-                  {{ systemHealth.status === 'healthy' ? 'All Systems Operational' : systemHealth.status === 'warning' ? 'System Warning' : 'System Error' }}
+                  {{
+                    systemHealth.status === 'healthy'
+                      ? 'All Systems Operational'
+                      : systemHealth.status === 'warning'
+                        ? 'System Warning'
+                        : 'System Error'
+                  }}
                 </h3>
                 <p class="text-gray-400 mt-1">
                   Uptime: <span class="font-mono text-gray-300">{{ systemHealth.uptime }}</span>
@@ -406,7 +419,13 @@ const getMetricColor = (percentage: number, inverted = false) => {
               >
                 <div
                   class="w-2 h-2 rounded-full animate-pulse"
-                  :class="systemHealth.status === 'healthy' ? 'bg-green-500' : systemHealth.status === 'warning' ? 'bg-yellow-500' : 'bg-red-500'"
+                  :class="
+                    systemHealth.status === 'healthy'
+                      ? 'bg-green-500'
+                      : systemHealth.status === 'warning'
+                        ? 'bg-yellow-500'
+                        : 'bg-red-500'
+                  "
                 ></div>
                 <span class="text-sm font-semibold capitalize">{{ systemHealth.status }}</span>
               </div>
@@ -425,7 +444,10 @@ const getMetricColor = (percentage: number, inverted = false) => {
               <span class="text-xs text-gray-400">CPU</span>
             </div>
             <div class="mb-2">
-              <div class="text-3xl font-bold" :class="getMetricColor(systemHealth.server.cpu.usage, true)">
+              <div
+                class="text-3xl font-bold"
+                :class="getMetricColor(systemHealth.server.cpu.usage, true)"
+              >
                 {{ systemHealth.server.cpu.usage.toFixed(1) }}%
               </div>
               <div class="text-sm text-gray-400">Usage</div>
@@ -433,7 +455,13 @@ const getMetricColor = (percentage: number, inverted = false) => {
             <div class="w-full bg-gray-800 rounded-full h-2 overflow-hidden">
               <div
                 class="h-full rounded-full transition-all duration-500"
-                :class="systemHealth.server.cpu.usage < 50 ? 'bg-green-500' : systemHealth.server.cpu.usage < 80 ? 'bg-yellow-500' : 'bg-red-500'"
+                :class="
+                  systemHealth.server.cpu.usage < 50
+                    ? 'bg-green-500'
+                    : systemHealth.server.cpu.usage < 80
+                      ? 'bg-yellow-500'
+                      : 'bg-red-500'
+                "
                 :style="{ width: `${systemHealth.server.cpu.usage}%` }"
               ></div>
             </div>
@@ -448,17 +476,27 @@ const getMetricColor = (percentage: number, inverted = false) => {
               <span class="text-xs text-gray-400">Memory</span>
             </div>
             <div class="mb-2">
-              <div class="text-3xl font-bold" :class="getMetricColor(systemHealth.server.memory.percentage, true)">
+              <div
+                class="text-3xl font-bold"
+                :class="getMetricColor(systemHealth.server.memory.percentage, true)"
+              >
                 {{ systemHealth.server.memory.percentage.toFixed(1) }}%
               </div>
               <div class="text-sm text-gray-400">
-                {{ formatBytes(systemHealth.server.memory.used) }} / {{ formatBytes(systemHealth.server.memory.total) }}
+                {{ formatBytes(systemHealth.server.memory.used) }} /
+                {{ formatBytes(systemHealth.server.memory.total) }}
               </div>
             </div>
             <div class="w-full bg-gray-800 rounded-full h-2 overflow-hidden">
               <div
                 class="h-full rounded-full transition-all duration-500"
-                :class="systemHealth.server.memory.percentage < 50 ? 'bg-green-500' : systemHealth.server.memory.percentage < 80 ? 'bg-yellow-500' : 'bg-red-500'"
+                :class="
+                  systemHealth.server.memory.percentage < 50
+                    ? 'bg-green-500'
+                    : systemHealth.server.memory.percentage < 80
+                      ? 'bg-yellow-500'
+                      : 'bg-red-500'
+                "
                 :style="{ width: `${systemHealth.server.memory.percentage}%` }"
               ></div>
             </div>
@@ -475,7 +513,9 @@ const getMetricColor = (percentage: number, inverted = false) => {
             <div class="mb-2">
               <div
                 class="text-3xl font-bold"
-                :class="systemHealth.database.status === 'connected' ? 'text-green-400' : 'text-red-400'"
+                :class="
+                  systemHealth.database.status === 'connected' ? 'text-green-400' : 'text-red-400'
+                "
               >
                 {{ systemHealth.database.status === 'connected' ? 'Connected' : 'Offline' }}
               </div>
@@ -486,10 +526,14 @@ const getMetricColor = (percentage: number, inverted = false) => {
             <div class="flex items-center gap-2">
               <div
                 class="w-2 h-2 rounded-full animate-pulse"
-                :class="systemHealth.database.status === 'connected' ? 'bg-green-500' : 'bg-red-500'"
+                :class="
+                  systemHealth.database.status === 'connected' ? 'bg-green-500' : 'bg-red-500'
+                "
               ></div>
               <span class="text-xs text-gray-400">
-                {{ systemHealth.database.status === 'connected' ? 'Operational' : 'Connection Lost' }}
+                {{
+                  systemHealth.database.status === 'connected' ? 'Operational' : 'Connection Lost'
+                }}
               </span>
             </div>
           </div>
@@ -506,9 +550,7 @@ const getMetricColor = (percentage: number, inverted = false) => {
               <div class="text-3xl font-bold text-orange-400">
                 {{ systemHealth.sessions.active }}
               </div>
-              <div class="text-sm text-gray-400">
-                Active (15 min)
-              </div>
+              <div class="text-sm text-gray-400">Active (15 min)</div>
             </div>
             <div class="text-xs text-gray-400">
               Total registered: {{ systemHealth.sessions.total }}
@@ -548,11 +590,7 @@ const getMetricColor = (percentage: number, inverted = false) => {
           :disabled="loading"
           class="flex items-center gap-2 px-4 py-2 glass-btn rounded-lg hover:scale-105 transition-transform"
         >
-          <Icon
-            name="mdi:refresh"
-            class="w-5 h-5"
-            :class="{ 'animate-spin': loading }"
-          />
+          <Icon name="mdi:refresh" class="w-5 h-5" :class="{ 'animate-spin': loading }" />
           <span class="text-sm font-medium">Refresh</span>
         </button>
       </div>
@@ -560,7 +598,11 @@ const getMetricColor = (percentage: number, inverted = false) => {
       <div class="glass-card p-6">
         <!-- Loading State -->
         <div v-if="loading" class="space-y-3">
-          <div v-for="i in 5" :key="i" class="flex items-center gap-3 p-3 bg-gray-800/50 rounded-lg animate-pulse">
+          <div
+            v-for="i in 5"
+            :key="i"
+            class="flex items-center gap-3 p-3 bg-gray-800/50 rounded-lg animate-pulse"
+          >
             <div class="w-10 h-10 bg-gray-700 rounded-lg"></div>
             <div class="flex-1">
               <div class="h-4 bg-gray-700 rounded w-3/4 mb-2"></div>
@@ -573,7 +615,9 @@ const getMetricColor = (percentage: number, inverted = false) => {
         <div v-else-if="recentActivity.length === 0" class="text-center py-12">
           <Icon name="mdi:clock-outline" class="w-16 h-16 mx-auto mb-4 text-gray-600" />
           <p class="text-gray-400 text-lg">No recent activity</p>
-          <p class="text-gray-500 text-sm mt-2">Activity will appear here as users interact with the application</p>
+          <p class="text-gray-500 text-sm mt-2">
+            Activity will appear here as users interact with the application
+          </p>
         </div>
 
         <!-- Activity List -->
@@ -596,10 +640,15 @@ const getMetricColor = (percentage: number, inverted = false) => {
                   <Icon name="mdi:account" class="w-4 h-4 inline mr-1" />
                   {{ activity.user.username }}
                 </p>
-                <span class="text-sm text-gray-500">{{ formatRelativeTime(activity.timestamp) }}</span>
+                <span class="text-sm text-gray-500">{{
+                  formatRelativeTime(activity.timestamp)
+                }}</span>
               </div>
             </div>
-            <Icon name="mdi:chevron-right" class="w-5 h-5 text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity" />
+            <Icon
+              name="mdi:chevron-right"
+              class="w-5 h-5 text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity"
+            />
           </div>
         </div>
       </div>
@@ -609,7 +658,8 @@ const getMetricColor = (percentage: number, inverted = false) => {
 
 <style scoped>
 @keyframes pulse-glow {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
     box-shadow: 0 0 8px currentColor;
   }

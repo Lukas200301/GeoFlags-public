@@ -15,7 +15,7 @@ export default defineEventHandler(async (event): Promise<any> => {
 
   // Get CSRF token - either from request header or fetch a new one
   let csrfToken = event.node.req.headers['x-csrf-token']
-  let csrfTokenStr = Array.isArray(csrfToken) ? csrfToken[0] : (csrfToken || '')
+  let csrfTokenStr = Array.isArray(csrfToken) ? csrfToken[0] : csrfToken || ''
   let cookieHeader = event.node.req.headers.cookie || ''
 
   // If no CSRF token provided, get one from the backend

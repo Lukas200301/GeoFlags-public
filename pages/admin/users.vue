@@ -14,7 +14,10 @@
     <!-- Search Bar -->
     <div class="card p-4 mb-6">
       <div class="relative">
-        <Icon name="mdi:magnify" class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+        <Icon
+          name="mdi:magnify"
+          class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
+        />
         <input
           v-model="searchQuery"
           type="text"
@@ -26,7 +29,9 @@
 
     <!-- Loading State -->
     <div v-if="loading" class="card p-8 text-center">
-      <div class="animate-spin w-12 h-12 border-4 border-primary-600 border-t-transparent rounded-full mx-auto"></div>
+      <div
+        class="animate-spin w-12 h-12 border-4 border-primary-600 border-t-transparent rounded-full mx-auto"
+      ></div>
       <p class="text-gray-400 mt-4">Loading users...</p>
     </div>
 
@@ -52,7 +57,12 @@
           <div
             class="w-10 h-10 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center text-white font-semibold overflow-hidden"
           >
-            <img v-if="row.avatarUrl" :src="getAvatarUrl(row.avatarUrl)" alt="Avatar" class="w-full h-full object-cover">
+            <img
+              v-if="row.avatarUrl"
+              :src="getAvatarUrl(row.avatarUrl)"
+              alt="Avatar"
+              class="w-full h-full object-cover"
+            />
             <span v-else>{{ row.username.charAt(0).toUpperCase() }}</span>
           </div>
           <div>
@@ -151,7 +161,12 @@
               <div
                 class="w-16 h-16 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center text-white font-semibold text-2xl overflow-hidden"
               >
-                <img v-if="detailsModal.user.avatarUrl" :src="getAvatarUrl(detailsModal.user.avatarUrl)" alt="Avatar" class="w-full h-full object-cover">
+                <img
+                  v-if="detailsModal.user.avatarUrl"
+                  :src="getAvatarUrl(detailsModal.user.avatarUrl)"
+                  alt="Avatar"
+                  class="w-full h-full object-cover"
+                />
                 <span v-else>{{ detailsModal.user.username.charAt(0).toUpperCase() }}</span>
               </div>
               <button
@@ -205,7 +220,11 @@
             <div>
               <p class="text-sm text-gray-400">Last Active</p>
               <p class="text-gray-100 mt-1">
-                {{ detailsModal.user.lastLogin ? formatRelativeTime(detailsModal.user.lastLogin) : 'Never' }}
+                {{
+                  detailsModal.user.lastLogin
+                    ? formatRelativeTime(detailsModal.user.lastLogin)
+                    : 'Never'
+                }}
               </p>
             </div>
           </div>
@@ -217,24 +236,36 @@
           <div class="grid grid-cols-2 gap-4">
             <div>
               <p class="text-sm text-gray-400">Games Played</p>
-              <p class="text-2xl font-bold text-primary-600 mt-1">{{ detailsModal.user.gamesPlayed }}</p>
+              <p class="text-2xl font-bold text-primary-600 mt-1">
+                {{ detailsModal.user.gamesPlayed }}
+              </p>
             </div>
 
             <div>
               <p class="text-sm text-gray-400">Total Score</p>
-              <p class="text-2xl font-bold text-primary-600 mt-1">{{ detailsModal.user.totalScore.toLocaleString() }}</p>
+              <p class="text-2xl font-bold text-primary-600 mt-1">
+                {{ detailsModal.user.totalScore.toLocaleString() }}
+              </p>
             </div>
 
             <div>
               <p class="text-sm text-gray-400">Average Score</p>
               <p class="text-xl font-semibold text-gray-100 mt-1">
-                {{ detailsModal.user.gamesPlayed > 0 ? Math.round(detailsModal.user.totalScore / detailsModal.user.gamesPlayed).toLocaleString() : '0' }}
+                {{
+                  detailsModal.user.gamesPlayed > 0
+                    ? Math.round(
+                        detailsModal.user.totalScore / detailsModal.user.gamesPlayed
+                      ).toLocaleString()
+                    : '0'
+                }}
               </p>
             </div>
 
             <div>
               <p class="text-sm text-gray-400">User ID</p>
-              <p class="text-xs font-mono text-gray-300 mt-1 break-all">{{ detailsModal.user.id }}</p>
+              <p class="text-xs font-mono text-gray-300 mt-1 break-all">
+                {{ detailsModal.user.id }}
+              </p>
             </div>
           </div>
         </div>
@@ -258,10 +289,7 @@
         <!-- Status Selection -->
         <div>
           <label class="block text-sm font-medium text-gray-300 mb-2">New Status</label>
-          <select
-            v-model="statusModal.newStatus"
-            class="input-field"
-          >
+          <select v-model="statusModal.newStatus" class="input-field">
             <option value="ACTIVE">Active</option>
             <option value="SUSPENDED">Suspended</option>
             <option value="BANNED">Banned</option>
@@ -277,7 +305,11 @@
             v-model="statusModal.reason"
             class="w-full px-4 py-2 bg-black/30 border border-white/10 rounded-xl text-gray-100 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all resize-none"
             rows="3"
-            :placeholder="statusModal.newStatus === 'BANNED' ? 'Why is this user being banned?' : 'Why is this user being suspended?'"
+            :placeholder="
+              statusModal.newStatus === 'BANNED'
+                ? 'Why is this user being banned?'
+                : 'Why is this user being suspended?'
+            "
           ></textarea>
         </div>
 
@@ -300,13 +332,17 @@
               :min="new Date().toISOString().slice(0, 16)"
             />
             <p class="text-xs text-gray-400 mt-1">
-              {{ statusModal.newStatus === 'BANNED' ? 'Ban' : 'Suspension' }} will automatically expire at this date
+              {{ statusModal.newStatus === 'BANNED' ? 'Ban' : 'Suspension' }} will automatically
+              expire at this date
             </p>
           </div>
         </div>
 
         <!-- Warning for permanent ban -->
-        <div v-if="statusModal.newStatus === 'BANNED' && !statusModal.hasExpiration" class="flex items-center space-x-3 p-4 bg-red-900/20 rounded-lg">
+        <div
+          v-if="statusModal.newStatus === 'BANNED' && !statusModal.hasExpiration"
+          class="flex items-center space-x-3 p-4 bg-red-900/20 rounded-lg"
+        >
           <Icon name="mdi:alert" class="w-6 h-6 text-red-400" />
           <p class="text-sm text-red-300">
             This will be a permanent ban. User will not be able to access the application.
@@ -332,7 +368,8 @@
           </p>
         </div>
         <p class="text-gray-300">
-          Are you sure you want to delete <strong>{{ deleteModal.user?.username }}</strong>?
+          Are you sure you want to delete <strong>{{ deleteModal.user?.username }}</strong
+          >?
         </p>
       </div>
     </AdminModal>
@@ -374,11 +411,11 @@ const filteredUsers = computed(() => {
   if (!searchQuery.value.trim()) {
     return users.value
   }
-  
+
   const query = searchQuery.value.toLowerCase()
-  return users.value.filter(user => 
-    user.username.toLowerCase().includes(query) ||
-    user.email.toLowerCase().includes(query)
+  return users.value.filter(
+    (user) =>
+      user.username.toLowerCase().includes(query) || user.email.toLowerCase().includes(query)
   )
 })
 

@@ -25,10 +25,7 @@
 
         <!-- Action Button (e.g., Undo) -->
         <div v-if="toast.action" class="mt-3 pt-3 border-t border-current/20">
-          <button
-            @click="handleAction(toast)"
-            class="text-sm font-medium hover:underline"
-          >
+          <button @click="handleAction(toast)" class="text-sm font-medium hover:underline">
             {{ toast.action.label }}
           </button>
         </div>

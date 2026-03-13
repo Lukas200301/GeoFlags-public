@@ -63,17 +63,20 @@ Unsure where to begin? You can start by looking through issues tagged with:
 1. **Fork the repository** on GitHub
 
 2. **Clone your fork**
+
    ```bash
    git clone https://github.com/YOUR_USERNAME/GeoFlags.git
    cd GeoFlags
    ```
 
 3. **Add upstream remote**
+
    ```bash
    git remote add upstream https://github.com/Lukas200301/GeoFlags.git
    ```
 
 4. **Install dependencies**
+
    ```bash
    # Frontend
    npm install
@@ -88,6 +91,7 @@ Unsure where to begin? You can start by looking through issues tagged with:
    See [SETUP_INSTRUCTIONS.md](./SETUP_INSTRUCTIONS.md) for detailed configuration.
 
 6. **Start the development servers**
+
    ```bash
    # Both frontend and backend
    npm run dev:all
@@ -100,6 +104,7 @@ Unsure where to begin? You can start by looking through issues tagged with:
 ## 🔄 Development Workflow
 
 1. **Create a new branch** for your work
+
    ```bash
    git checkout -b feature/your-feature-name
    # or
@@ -113,6 +118,7 @@ Unsure where to begin? You can start by looking through issues tagged with:
    - Update documentation if required
 
 3. **Test your changes**
+
    ```bash
    npm run lint        # Check code style
    npm run format      # Format code
@@ -122,12 +128,14 @@ Unsure where to begin? You can start by looking through issues tagged with:
 4. **Commit your changes** (see [Commit Guidelines](#commit-guidelines))
 
 5. **Keep your fork up-to-date**
+
    ```bash
    git fetch upstream
    git rebase upstream/main
    ```
 
 6. **Push to your fork**
+
    ```bash
    git push origin feature/your-feature-name
    ```
@@ -177,6 +185,7 @@ npm run format      # Format with Prettier
 ```
 
 **Configuration:**
+
 - Indentation: 2 spaces
 - Quotes: Single quotes for JavaScript/TypeScript
 - Semicolons: Required
@@ -243,7 +252,7 @@ Add Node.js version requirement and clarify setup steps
 - Use imperative mood ("move cursor to..." not "moves cursor to...")
 - Keep the subject line under 72 characters
 - Separate subject from body with a blank line
-- Use the body to explain *what* and *why*, not *how*
+- Use the body to explain _what_ and _why_, not _how_
 - Reference issues and pull requests in the footer
 
 ## 🔀 Pull Request Process
@@ -263,6 +272,7 @@ Add Node.js version requirement and clarify setup steps
 ### PR Title
 
 Follow the same format as commit messages:
+
 ```
 feat(scope): description of change
 ```
@@ -270,6 +280,7 @@ feat(scope): description of change
 ### PR Description
 
 Include:
+
 - **Summary**: Brief description of changes
 - **Motivation**: Why is this change needed?
 - **Changes**: List of specific changes made
@@ -282,26 +293,33 @@ Include:
 
 ```markdown
 ## Description
+
 <!-- Brief description of changes -->
 
 ## Motivation
+
 <!-- Why is this change needed? -->
 
 ## Changes Made
+
 - [ ] Change 1
 - [ ] Change 2
 - [ ] Change 3
 
 ## Testing
+
 <!-- How did you test these changes? -->
 
 ## Screenshots
+
 <!-- If applicable -->
 
 ## Breaking Changes
+
 <!-- List any breaking changes -->
 
 ## Related Issues
+
 Closes #123
 ```
 
@@ -348,11 +366,13 @@ Use the **Feature Request** issue template and include:
 **Do NOT** create public issues for security vulnerabilities.
 
 Instead, please use GitHub's private security advisory feature to report vulnerabilities:
+
 1. Go to the repository's Security tab
 2. Click "Report a vulnerability"
 3. Provide detailed information
 
 Include:
+
 - Description of the vulnerability
 - Steps to reproduce
 - Potential impact

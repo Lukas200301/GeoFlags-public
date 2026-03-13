@@ -11,9 +11,18 @@ import { z } from 'zod';
 
 // Auth validation
 export const registerSchema = z.object({
-  username: z.string().min(3).max(30).regex(/^[a-zA-Z0-9_-]+$/),
+  username: z
+    .string()
+    .min(3)
+    .max(30)
+    .regex(/^[a-zA-Z0-9_-]+$/),
   email: z.string().email(),
   password: z.string().min(8).max(100),
+  captchaToken: z.string().min(1, 'Captcha verification is required'),
+});
+
+export const verifyEmailSchema = z.object({
+  token: z.string().min(1, 'Verification token is required'),
 });
 
 export const loginSchema = z.object({
@@ -27,7 +36,17 @@ export const reAuthSchema = z.object({
 
 // Game validation
 export const gameSubmissionSchema = z.object({
-  mode: z.enum(['FLAGS', 'CAPITALS', 'MAPS', 'MIXED', 'GUESS_FLAG', 'TIME_TRIAL', 'FIND_CAPITAL', 'HIGHER_LOWER', 'SILHOUETTE']),
+  mode: z.enum([
+    'FLAGS',
+    'CAPITALS',
+    'MAPS',
+    'MIXED',
+    'GUESS_FLAG',
+    'TIME_TRIAL',
+    'FIND_CAPITAL',
+    'HIGHER_LOWER',
+    'SILHOUETTE',
+  ]),
   score: z.number().int().min(0).max(100000),
   data: z.record(z.unknown()).optional(),
 });

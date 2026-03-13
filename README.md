@@ -6,9 +6,9 @@
 
 Test your knowledge of world flags, capitals, countries, and geography through engaging game modes and compete with players worldwide!
 
-[![Built with Nuxt](https://img.shields.io/badge/Nuxt-3.15.0-00DC82?style=flat&logo=nuxt.js)](https://nuxt.com)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.7.2-3178C6?style=flat&logo=typescript)](https://www.typescriptlang.org)
-[![TailwindCSS](https://img.shields.io/badge/Tailwind-3.4.15-38B2AC?style=flat&logo=tailwind-css)](https://tailwindcss.com)
+[![Built with Nuxt](https://img.shields.io/badge/Nuxt-3-00DC82?style=flat&logo=nuxt.js)](https://nuxt.com)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=flat&logo=typescript)](https://www.typescriptlang.org)
+[![TailwindCSS](https://img.shields.io/badge/Tailwind-3-38B2AC?style=flat&logo=tailwind-css)](https://tailwindcss.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 [Features](#-features) • [Tech Stack](#-tech-stack) • [Getting Started](#-getting-started) • [Game Modes](#-game-modes) • [Documentation](#-documentation)
@@ -25,8 +25,9 @@ Test your knowledge of world flags, capitals, countries, and geography through e
 - **🏙️ Find the Capital** - Match countries with their capital cities
 - **📊 Higher or Lower** - Guess country statistics (population, area, GDP)
 - **⏱️ Time Trial** - Race against the clock in fast-paced challenges
+- **👤 Silhouette** - Identify countries by their geographic shape
 - **🎯 Solo Challenges** - Practice modes for skill improvement
-- **⚔️ Battle Mode** - Real-time PvP geography duels
+- **⚔️ Battle Modes** - Real-time PvP geography duels across 4 distinct variants
 - **📖 Learn Mode** - Explore detailed country information with interactive maps
 
 ### 🌐 **Interactive Visualizations**
@@ -163,6 +164,16 @@ Race against the clock to answer as many questions as possible before time runs 
 - Global time-based leaderboard
 - Various time limits (30s, 60s, 120s)
 
+### 👤 Silhouette
+
+Test your spatial geography knowledge by identifying countries strictly based on their geographic borders and shape.
+
+**Features:**
+
+- Distraction-free blackout outlines
+- Pan and zoom support
+- Difficulty scaling based on country size or obscurity
+
 ### 🎯 Solo Challenges
 
 Practice mode for learning and improving your geography skills without the pressure of competition.
@@ -174,16 +185,21 @@ Practice mode for learning and improving your geography skills without the press
 - Progress tracking
 - Unlimited retries
 
-### ⚔️ Battle Mode
+### ⚔️ Battle Modes
 
-Challenge other players in real-time head-to-head geography battles!
+Challenge other players in real-time head-to-head geography battles! The system supports 4 distinct variants:
+
+- **Flag Speed**: Fastest to guess the flag wins the round.
+- **Capital Rush**: Sprint to identify the correct capital.
+- **Geography Duel**: A mixed-bag testing extensive global knowledge.
+- **Expert Showdown**: Obscure territories, extreme difficulty, true mastery required.
 
 **Features:**
 
-- Real-time multiplayer
+- Real-time multiplayer synchronization
 - Friend or random matchmaking
-- Live scoring
-- Best of 3/5/7 rounds
+- Live scoring and progress bars
+- Customizable rounds (Best of 3/5/7)
 - Battle history and statistics
 
 ### 📖 Learn Mode
@@ -444,59 +460,20 @@ Key security features:
 
 ## 🌐 Backend Integration
 
-This frontend requires the GeoFlags backend API. See the [Backend README](./backend/README.md) for setup instructions.
+This frontend requires the GeoFlags backend API to function correctly. See the [Backend README](./backend/README.md) for detailed setup instructions.
 
-### Required Endpoints
+### API Structure Overview
 
-**Authentication:**
+The frontend interacts with several core backend namespaces:
 
-- `POST /api/auth/register` - User registration
-- `POST /api/auth/login` - User login
-- `POST /api/auth/logout` - Logout and clear cookies
-- `GET /api/auth/me` - Get current user session
-- `POST /api/auth/refresh` - Refresh access token
-- `GET /api/csrf-token` - Get CSRF token
+- `/api/auth/*` - Handles user registration, login, logout, verification, and session refreshes.
+- `/api/game/*` - Manages game modes, score submissions, statistics, and leaderboards.
+- `/api/admin/*` - Secured endpoints for platform administration, user management, and analytics.
+- `/api/battles/*` - Endpoints for configuring and joining PvP battle instances.
 
-**Game:**
+### Real-Time Events (Socket.io)
 
-- `GET /api/game/modes` - Get available game modes
-- `POST /api/game/submit` - Submit game score
-- `GET /api/game/history` - Get user game history
-- `GET /api/game/stats` - Get user statistics
-
-**Leaderboard:**
-
-- `GET /api/game/leaderboard?mode=FLAGS` - Get leaderboard for mode
-
-**Admin:**
-
-- `GET /api/admin/users` - User management
-- `GET /api/admin/stats` - Platform statistics
-- `PUT /api/admin/users/:id/role` - Update user role
-- `DELETE /api/admin/users/:id` - Delete user
-
-**Battles:**
-
-- `POST /api/battles/create` - Create new battle
-- `POST /api/battles/:id/join` - Join battle
-- `GET /api/battles/:id` - Get battle details
-
-### Socket.io Events
-
-**Client → Server:**
-
-- `game:join` - Join game mode room
-- `game:leave` - Leave game mode room
-- `battle:join` - Join battle room
-- `battle:answer` - Submit battle answer
-
-**Server → Client:**
-
-- `leaderboard:update` - Leaderboard updated
-- `battle:start` - Battle started
-- `battle:question` - New battle question
-- `battle:result` - Battle round result
-- `battle:end` - Battle finished
+Real-time interaction is powered by WebSockets via `Socket.io`, covering functionality like live leaderboard updates and step-by-step multiplayer battle synchronization. The event names generally follow a `namespace:action` format (e.g. `battle:answer` or `leaderboard:update`).
 
 ---
 

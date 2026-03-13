@@ -3,7 +3,17 @@
 </template>
 
 <script setup lang="ts">
-import { Chart, BarElement, BarController, CategoryScale, LinearScale, Title, Tooltip, Legend, type ChartConfiguration } from 'chart.js'
+import {
+  Chart,
+  BarElement,
+  BarController,
+  CategoryScale,
+  LinearScale,
+  Title,
+  Tooltip,
+  Legend,
+  type ChartConfiguration,
+} from 'chart.js'
 
 // Register Chart.js components
 Chart.register(BarElement, BarController, CategoryScale, LinearScale, Title, Tooltip, Legend)
@@ -38,7 +48,7 @@ const createChart = () => {
     type: 'bar',
     data: {
       labels: props.labels,
-      datasets: props.datasets.map(dataset => ({
+      datasets: props.datasets.map((dataset) => ({
         label: dataset.label,
         data: dataset.data,
         backgroundColor: dataset.backgroundColor || [
@@ -148,9 +158,13 @@ const createChart = () => {
 }
 
 // Watch for prop changes and recreate chart
-watch(() => [props.labels, props.datasets], () => {
-  createChart()
-}, { deep: true })
+watch(
+  () => [props.labels, props.datasets],
+  () => {
+    createChart()
+  },
+  { deep: true }
+)
 
 onMounted(() => {
   createChart()

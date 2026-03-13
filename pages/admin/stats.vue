@@ -18,7 +18,9 @@
     <!-- Loading State -->
     <div v-if="loading && !stats" class="flex items-center justify-center py-20">
       <div class="text-center">
-        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500 mx-auto mb-4"></div>
+        <div
+          class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500 mx-auto mb-4"
+        ></div>
         <p class="text-gray-400">Loading statistics...</p>
       </div>
     </div>
@@ -84,12 +86,16 @@
         <!-- Total Battles -->
         <div class="glass-card p-6 hover:border-red-500/30 transition-colors">
           <div class="flex items-center gap-4">
-            <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-red-500/20 to-pink-500/20 flex items-center justify-center">
+            <div
+              class="w-14 h-14 rounded-xl bg-gradient-to-br from-red-500/20 to-pink-500/20 flex items-center justify-center"
+            >
               <Icon name="mdi:sword-cross" class="w-8 h-8 text-red-400" />
             </div>
             <div class="flex-1">
               <div class="text-sm text-gray-400 mb-1">Total Battles</div>
-              <div class="text-2xl font-bold text-gray-100">{{ formatNumber(extraStats.totalBattles) }}</div>
+              <div class="text-2xl font-bold text-gray-100">
+                {{ formatNumber(extraStats.totalBattles) }}
+              </div>
             </div>
           </div>
         </div>
@@ -97,12 +103,16 @@
         <!-- Friendships -->
         <div class="glass-card p-6 hover:border-pink-500/30 transition-colors">
           <div class="flex items-center gap-4">
-            <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-pink-500/20 to-purple-500/20 flex items-center justify-center">
+            <div
+              class="w-14 h-14 rounded-xl bg-gradient-to-br from-pink-500/20 to-purple-500/20 flex items-center justify-center"
+            >
               <Icon name="mdi:account-heart" class="w-8 h-8 text-pink-400" />
             </div>
             <div class="flex-1">
               <div class="text-sm text-gray-400 mb-1">Friendships</div>
-              <div class="text-2xl font-bold text-gray-100">{{ formatNumber(extraStats.activeFriendships) }}</div>
+              <div class="text-2xl font-bold text-gray-100">
+                {{ formatNumber(extraStats.activeFriendships) }}
+              </div>
             </div>
           </div>
         </div>
@@ -110,12 +120,16 @@
         <!-- Leaderboard Entries -->
         <div class="glass-card p-6 hover:border-yellow-500/30 transition-colors">
           <div class="flex items-center gap-4">
-            <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-yellow-500/20 to-orange-500/20 flex items-center justify-center">
+            <div
+              class="w-14 h-14 rounded-xl bg-gradient-to-br from-yellow-500/20 to-orange-500/20 flex items-center justify-center"
+            >
               <Icon name="mdi:trophy" class="w-8 h-8 text-yellow-400" />
             </div>
             <div class="flex-1">
               <div class="text-sm text-gray-400 mb-1">Leaderboard</div>
-              <div class="text-2xl font-bold text-gray-100">{{ formatNumber(extraStats.leaderboardEntries) }}</div>
+              <div class="text-2xl font-bold text-gray-100">
+                {{ formatNumber(extraStats.leaderboardEntries) }}
+              </div>
             </div>
           </div>
         </div>
@@ -123,7 +137,9 @@
         <!-- Avg Score -->
         <div class="glass-card p-6 hover:border-cyan-500/30 transition-colors">
           <div class="flex items-center gap-4">
-            <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center">
+            <div
+              class="w-14 h-14 rounded-xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center"
+            >
               <Icon name="mdi:chart-line" class="w-8 h-8 text-cyan-400" />
             </div>
             <div class="flex-1">
@@ -174,7 +190,9 @@
           <div class="space-y-3">
             <div class="flex items-center justify-between">
               <span class="text-sm text-gray-400">Total Battles</span>
-              <span class="text-lg font-bold text-red-400">{{ formatNumber(extraStats.totalBattles) }}</span>
+              <span class="text-lg font-bold text-red-400">{{
+                formatNumber(extraStats.totalBattles)
+              }}</span>
             </div>
             <div class="flex items-center justify-between">
               <span class="text-sm text-gray-400">Battles Today</span>
@@ -196,7 +214,9 @@
           <div class="space-y-3">
             <div class="flex items-center justify-between">
               <span class="text-sm text-gray-400">Friendships</span>
-              <span class="text-lg font-bold text-pink-400">{{ formatNumber(extraStats.activeFriendships) }}</span>
+              <span class="text-lg font-bold text-pink-400">{{
+                formatNumber(extraStats.activeFriendships)
+              }}</span>
             </div>
             <div class="flex items-center justify-between">
               <span class="text-sm text-gray-400">Avg Friends</span>
@@ -225,13 +245,22 @@
               class="flex items-center justify-between p-3 bg-gray-950/50 rounded-lg hover:bg-gray-900/50 transition-colors"
             >
               <div class="flex items-center gap-3 flex-1 min-w-0">
-                <Icon :name="getGameModeIcon(mode.mode)" class="w-6 h-6 text-primary-400 flex-shrink-0" />
-                <span class="font-medium text-gray-100 truncate">{{ formatGameMode(mode.mode) }}</span>
+                <Icon
+                  :name="getGameModeIcon(mode.mode)"
+                  class="w-6 h-6 text-primary-400 flex-shrink-0"
+                />
+                <span class="font-medium text-gray-100 truncate">{{
+                  formatGameMode(mode.mode)
+                }}</span>
               </div>
               <div class="flex items-center gap-4">
                 <div class="text-right">
-                  <div class="text-lg font-bold text-primary-400">{{ formatNumber(mode.count) }}</div>
-                  <div class="text-xs text-gray-500">{{ getPercentage(mode.count, totalGames).toFixed(1) }}%</div>
+                  <div class="text-lg font-bold text-primary-400">
+                    {{ formatNumber(mode.count) }}
+                  </div>
+                  <div class="text-xs text-gray-500">
+                    {{ getPercentage(mode.count, totalGames).toFixed(1) }}%
+                  </div>
                 </div>
                 <div class="w-32 bg-gray-800 rounded-full h-2">
                   <div
@@ -284,7 +313,9 @@
                 </div>
               </div>
             </div>
-            <div class="flex items-center justify-between text-sm text-gray-400 pt-4 border-t border-gray-800">
+            <div
+              class="flex items-center justify-between text-sm text-gray-400 pt-4 border-t border-gray-800"
+            >
               <div class="flex items-center gap-2">
                 <div class="w-3 h-3 rounded bg-blue-500"></div>
                 <span>Active Users</span>
@@ -309,7 +340,10 @@
             <h2 class="text-xl font-bold text-gray-100">Top Players by Score</h2>
             <Icon name="mdi:trophy-variant" class="w-6 h-6 text-yellow-400" />
           </div>
-          <div v-if="stats.topPlayers.byScore && stats.topPlayers.byScore.length > 0" class="space-y-3">
+          <div
+            v-if="stats.topPlayers.byScore && stats.topPlayers.byScore.length > 0"
+            class="space-y-3"
+          >
             <div
               v-for="(player, index) in stats.topPlayers.byScore"
               :key="player.id"
@@ -328,7 +362,9 @@
                 </div>
               </div>
               <div class="text-right ml-4">
-                <div class="font-bold text-xl text-primary-400">{{ formatNumber(player.totalScore) }}</div>
+                <div class="font-bold text-xl text-primary-400">
+                  {{ formatNumber(player.totalScore) }}
+                </div>
                 <div class="text-xs text-gray-500">Total Score</div>
               </div>
             </div>
@@ -345,7 +381,10 @@
             <h2 class="text-xl font-bold text-gray-100">Most Active Players</h2>
             <Icon name="mdi:account-star" class="w-6 h-6 text-green-400" />
           </div>
-          <div v-if="stats.topPlayers.byGames && stats.topPlayers.byGames.length > 0" class="space-y-3">
+          <div
+            v-if="stats.topPlayers.byGames && stats.topPlayers.byGames.length > 0"
+            class="space-y-3"
+          >
             <div
               v-for="(player, index) in stats.topPlayers.byGames"
               :key="player.id"
@@ -364,7 +403,9 @@
                 </div>
               </div>
               <div class="text-right ml-4">
-                <div class="font-bold text-xl text-green-400">{{ formatNumber(player.gamesPlayed) }}</div>
+                <div class="font-bold text-xl text-green-400">
+                  {{ formatNumber(player.gamesPlayed) }}
+                </div>
                 <div class="text-xs text-gray-500">Games Played</div>
               </div>
             </div>
@@ -488,8 +529,12 @@ const fetchExtraStats = async () => {
     // Fetch from database tables
     const [battlesRes, friendshipsRes, leaderboardRes] = await Promise.all([
       apiRequest<{ total: number }>('/api/admin/database?table=battles&limit=1', { method: 'GET' }),
-      apiRequest<{ total: number }>('/api/admin/database?table=friendships&limit=1', { method: 'GET' }),
-      apiRequest<{ total: number }>('/api/admin/database?table=leaderboard_entries&limit=1', { method: 'GET' }),
+      apiRequest<{ total: number }>('/api/admin/database?table=friendships&limit=1', {
+        method: 'GET',
+      }),
+      apiRequest<{ total: number }>('/api/admin/database?table=leaderboard_entries&limit=1', {
+        method: 'GET',
+      }),
     ])
 
     extraStats.value = {
@@ -510,7 +555,7 @@ const totalGames = computed(() => {
 
 const maxUsers = computed(() => {
   if (!stats.value?.userActivity) return 1
-  return Math.max(...stats.value.userActivity.map(day => day.users), 1)
+  return Math.max(...stats.value.userActivity.map((day) => day.users), 1)
 })
 
 const totalWeeklyUsers = computed(() => {
@@ -525,7 +570,8 @@ const totalWeeklyGames = computed(() => {
 
 const dailyActiveRate = computed(() => {
   if (!stats.value?.overview) return 0
-  const rate = (stats.value.overview.activeToday.value / stats.value.overview.totalUsers.value) * 100
+  const rate =
+    (stats.value.overview.activeToday.value / stats.value.overview.totalUsers.value) * 100
   return Math.min(Math.round(rate), 100)
 })
 
@@ -585,9 +631,10 @@ const formatActivityDate = (dateStr: string): string => {
 }
 
 const formatGameMode = (mode: string): string => {
-  return mode.split('_').map(word =>
-    word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-  ).join(' ')
+  return mode
+    .split('_')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ')
 }
 
 const getGameModeIcon = (mode: string): string => {
@@ -614,9 +661,11 @@ const getPercentage = (value: number, max: number): number => {
 }
 
 const getRankBadgeClass = (index: number): string => {
-  if (index === 0) return 'bg-gradient-to-br from-yellow-400 to-yellow-600 shadow-lg shadow-yellow-500/50'
+  if (index === 0)
+    return 'bg-gradient-to-br from-yellow-400 to-yellow-600 shadow-lg shadow-yellow-500/50'
   if (index === 1) return 'bg-gradient-to-br from-gray-300 to-gray-500 shadow-lg shadow-gray-400/50'
-  if (index === 2) return 'bg-gradient-to-br from-orange-400 to-orange-600 shadow-lg shadow-orange-500/50'
+  if (index === 2)
+    return 'bg-gradient-to-br from-orange-400 to-orange-600 shadow-lg shadow-orange-500/50'
   return 'bg-gradient-to-br from-primary-400 to-primary-600'
 }
 

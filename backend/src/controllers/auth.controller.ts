@@ -1,9 +1,11 @@
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import { AuthRequest } from '../types';
 import prisma from '../utils/prisma';
 import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from '../utils/jwt';
-import { registerSchema, loginSchema } from '../utils/validation';
+import { registerSchema, loginSchema, verifyEmailSchema } from '../utils/validation';
+import { sendVerificationEmail } from '../utils/mail';
+import crypto from 'crypto';
 
 /**
  * Authentication Controller
@@ -33,7 +35,22 @@ export async function register(req: AuthRequest, res: Response) {
       });
     }
 
-    const { username, email, password } = validation.data;
+    const { username, email, password, captchaToken } = validation.data;
+
+    // Verify Captcha
+    if (process.env.NODE_ENV === 'production' || !!process.env.CAPTCHA_SECRET) {
+      const secret = process.env.CAPTCHA_SECRET || '1x0000000000000000000000000000000AA'; // Standard Cloudflare test secret
+      const resCaptcha = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ secret, response: captchaToken }),
+      });
+      const captchaData: any = await resCaptcha.json();
+
+      if (!captchaData.success) {
+        return res.status(400).json({ message: 'Invalid captcha verification' });
+      }
+    }
 
     // Check if user already exists
     const existingUser = await prisma.user.findFirst({
@@ -44,12 +61,19 @@ export async function register(req: AuthRequest, res: Response) {
 
     if (existingUser) {
       return res.status(409).json({
-        message: existingUser.email === email ? 'Email already registered' : 'Username already taken',
+        message:
+          existingUser.email === email ? 'Email already registered' : 'Username already taken',
       });
     }
 
     // Hash password
     const password_hash = await bcrypt.hash(password, SALT_ROUNDS);
+
+    // Generate verification tokens
+    const verificationToken = crypto.randomBytes(32).toString('hex');
+    const verificationExpires = new Date();
+    // Valid for 24h
+    verificationExpires.setHours(verificationExpires.getHours() + 24);
 
     // Create user
     const user = await prisma.user.create({
@@ -59,6 +83,9 @@ export async function register(req: AuthRequest, res: Response) {
         password_hash,
         role: 'USER', // Default role
         tokenVersion: 0,
+        emailVerified: false,
+        verificationToken,
+        verificationExpires,
       },
       select: {
         id: true,
@@ -104,13 +131,126 @@ export async function register(req: AuthRequest, res: Response) {
       maxAge: 90 * 24 * 60 * 60 * 1000, // 90 days
     });
 
+    // Send verification email
+    await sendVerificationEmail(email, username, verificationToken);
+
     return res.status(201).json({
-      message: 'Registration successful',
+      message: 'Registration successful. Please check your email to verify your account.',
       user,
     });
   } catch (error) {
     console.error('Registration error:', error);
     return res.status(500).json({ message: 'Registration failed' });
+  }
+}
+
+/**
+ * Verify Email Address
+ * POST /api/auth/verify-email
+ */
+export async function verifyEmail(req: Request, res: Response) {
+  try {
+    const validation = verifyEmailSchema.safeParse(req.body);
+    if (!validation.success) {
+      return res.status(400).json({
+        message: 'Invalid input',
+        errors: validation.error.errors,
+      });
+    }
+
+    const { token } = validation.data;
+
+    const user: any = await prisma.user.findUnique({
+      where: { verificationToken: token } as any,
+    });
+
+    if (!user) {
+      return res.status(400).json({ message: 'Invalid verification token' });
+    }
+
+    if (user.emailVerified) {
+      return res.status(400).json({ message: 'Email address is already verified' });
+    }
+
+    if (user.verificationExpires && new Date(user.verificationExpires) < new Date()) {
+      return res
+        .status(400)
+        .json({ message: 'Verification token has expired. Please request a new one.' });
+    }
+
+    // Update user to be verified
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        emailVerified: true,
+        verificationToken: null,
+        verificationExpires: null,
+      } as any,
+    });
+
+    return res.json({ message: 'Email verified successfully!' });
+  } catch (error) {
+    console.error('Verification error:', error);
+    return res.status(500).json({ message: 'Verification failed' });
+  }
+}
+
+/**
+ * Resend Verification Email
+ * POST /api/auth/resend-verification
+ */
+export async function resendVerification(req: AuthRequest, res: Response) {
+  try {
+    if (!req.user) {
+      return res.status(401).json({ message: 'Not authenticated' });
+    }
+
+    const user: any = await prisma.user.findUnique({
+      where: { id: req.user.id },
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    if (user.emailVerified) {
+      return res.status(400).json({ message: 'Email already verified' });
+    }
+
+    // Rate limiting: Check if an email was sent in the last 24 hours
+    if (user.lastVerificationSentAt) {
+      const twentyFourHoursAgo = new Date();
+      twentyFourHoursAgo.setHours(twentyFourHoursAgo.getHours() - 24);
+
+      if (new Date(user.lastVerificationSentAt) > twentyFourHoursAgo) {
+        return res.status(429).json({
+          message: 'A verification email was already sent recently. Please try again tomorrow.',
+        });
+      }
+    }
+
+    // Generate new token
+    const verificationToken = crypto.randomBytes(32).toString('hex');
+    const verificationExpires = new Date();
+    verificationExpires.setHours(verificationExpires.getHours() + 24);
+
+    // Update DB
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        verificationToken,
+        verificationExpires,
+        lastVerificationSentAt: new Date(),
+      } as any,
+    });
+
+    // Send the email
+    await sendVerificationEmail(user.email, user.username, verificationToken);
+
+    return res.json({ message: 'Verification email resent successfully' });
+  } catch (error) {
+    console.error('Resend verification error:', error);
+    return res.status(500).json({ message: 'Failed to resend verification email' });
   }
 }
 
@@ -134,10 +274,7 @@ export async function login(req: AuthRequest, res: Response) {
     // Find user by email or username
     const user = await prisma.user.findFirst({
       where: {
-        OR: [
-          { email: emailOrUsername },
-          { username: emailOrUsername },
-        ],
+        OR: [{ email: emailOrUsername }, { username: emailOrUsername }],
       },
     });
 
@@ -192,6 +329,7 @@ export async function login(req: AuthRequest, res: Response) {
         username: user.username,
         email: user.email,
         avatarUrl: user.avatarUrl,
+        emailVerified: (user as any).emailVerified,
         role: user.role,
         status: user.status,
         bannedUntil: user.bannedUntil?.toISOString(),
@@ -227,6 +365,7 @@ export async function refresh(req: AuthRequest, res: Response) {
         id: true,
         username: true,
         email: true,
+        emailVerified: true,
         role: true,
         tokenVersion: true,
         createdAt: true,
@@ -315,6 +454,7 @@ export async function me(req: AuthRequest, res: Response) {
         id: true,
         username: true,
         email: true,
+        emailVerified: true,
         avatarUrl: true,
         role: true,
         status: true,
@@ -335,6 +475,7 @@ export async function me(req: AuthRequest, res: Response) {
         id: fullUser.id,
         username: fullUser.username,
         email: fullUser.email,
+        emailVerified: (fullUser as any).emailVerified,
         avatarUrl: fullUser.avatarUrl,
         role: fullUser.role,
         status: fullUser.status,

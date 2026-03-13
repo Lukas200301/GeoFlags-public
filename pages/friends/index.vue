@@ -3,7 +3,9 @@
     <div class="container mx-auto px-4 max-w-6xl">
       <!-- Header -->
       <div class="flex items-center justify-between mb-8">
-        <h1 class="text-4xl font-bold bg-gradient-to-r from-sky-400 to-blue-500 bg-clip-text text-transparent">
+        <h1
+          class="text-4xl font-bold bg-gradient-to-r from-sky-400 to-blue-500 bg-clip-text text-transparent"
+        >
           Friends
         </h1>
         <button
@@ -23,9 +25,7 @@
           @click="activeTab = tab.id"
           :class="[
             'px-6 py-3 font-semibold transition-all duration-300 relative',
-            activeTab === tab.id
-              ? 'text-sky-400'
-              : 'text-gray-400 hover:text-gray-200'
+            activeTab === tab.id ? 'text-sky-400' : 'text-gray-400 hover:text-gray-200',
           ]"
         >
           {{ tab.label }}
@@ -39,7 +39,9 @@
       <!-- Friends List -->
       <div v-if="activeTab === 'friends'" class="space-y-4">
         <div v-if="loading" class="text-center py-12">
-          <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-sky-500"></div>
+          <div
+            class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-sky-500"
+          ></div>
         </div>
 
         <div v-else-if="friends.length === 0" class="text-center py-12">
@@ -54,14 +56,23 @@
             class="glass-card p-6 hover:scale-[1.02] transition-transform duration-300"
           >
             <div class="flex items-center justify-between">
-              <NuxtLink :to="`/users/${friendship.friend.id}`" class="flex items-center gap-4 hover:opacity-80 transition-opacity cursor-pointer">
-                <div class="w-16 h-16 rounded-full bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center text-2xl font-bold">
+              <NuxtLink
+                :to="`/users/${friendship.friend.id}`"
+                class="flex items-center gap-4 hover:opacity-80 transition-opacity cursor-pointer"
+              >
+                <div
+                  class="w-16 h-16 rounded-full bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center text-2xl font-bold"
+                >
                   {{ friendship.friend.username[0].toUpperCase() }}
                 </div>
                 <div>
                   <h3 class="text-xl font-semibold">{{ friendship.friend.username }}</h3>
-                  <p class="text-sm text-gray-400">Friends since {{ formatDate(friendship.since) }}</p>
-                  <p class="text-xs text-gray-500">Last active: {{ formatRelativeTime(friendship.friend.lastActive) }}</p>
+                  <p class="text-sm text-gray-400">
+                    Friends since {{ formatDate(friendship.since) }}
+                  </p>
+                  <p class="text-xs text-gray-500">
+                    Last active: {{ formatRelativeTime(friendship.friend.lastActive) }}
+                  </p>
                 </div>
               </NuxtLink>
               <button
@@ -91,8 +102,13 @@
               class="glass-card p-6"
             >
               <div class="flex items-center justify-between">
-                <NuxtLink :to="`/users/${request.from.id}`" class="flex items-center gap-4 hover:opacity-80 transition-opacity cursor-pointer">
-                  <div class="w-12 h-12 rounded-full bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center text-xl font-bold">
+                <NuxtLink
+                  :to="`/users/${request.from.id}`"
+                  class="flex items-center gap-4 hover:opacity-80 transition-opacity cursor-pointer"
+                >
+                  <div
+                    class="w-12 h-12 rounded-full bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center text-xl font-bold"
+                  >
                     {{ request.from.username[0].toUpperCase() }}
                   </div>
                   <div>
@@ -126,19 +142,22 @@
             <p class="text-gray-400">No outgoing friend requests</p>
           </div>
           <div v-else class="grid gap-4">
-            <div
-              v-for="request in sentRequests"
-              :key="request.friendshipId"
-              class="glass-card p-6"
-            >
+            <div v-for="request in sentRequests" :key="request.friendshipId" class="glass-card p-6">
               <div class="flex items-center justify-between">
-                <NuxtLink :to="`/users/${request.to.id}`" class="flex items-center gap-4 hover:opacity-80 transition-opacity cursor-pointer">
-                  <div class="w-12 h-12 rounded-full bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center text-xl font-bold">
+                <NuxtLink
+                  :to="`/users/${request.to.id}`"
+                  class="flex items-center gap-4 hover:opacity-80 transition-opacity cursor-pointer"
+                >
+                  <div
+                    class="w-12 h-12 rounded-full bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center text-xl font-bold"
+                  >
                     {{ request.to.username[0].toUpperCase() }}
                   </div>
                   <div>
                     <h3 class="text-lg font-semibold">{{ request.to.username }}</h3>
-                    <p class="text-sm text-gray-400">Sent {{ formatRelativeTime(request.createdAt) }}</p>
+                    <p class="text-sm text-gray-400">
+                      Sent {{ formatRelativeTime(request.createdAt) }}
+                    </p>
                   </div>
                 </NuxtLink>
                 <button
@@ -156,7 +175,9 @@
       <!-- Suggestions -->
       <div v-if="activeTab === 'suggestions'" class="space-y-4">
         <div v-if="loading" class="text-center py-12">
-          <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-sky-500"></div>
+          <div
+            class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-sky-500"
+          ></div>
         </div>
 
         <div v-else-if="suggestions.length === 0" class="text-center py-12 glass-card">
@@ -164,19 +185,22 @@
         </div>
 
         <div v-else class="grid gap-4">
-          <div
-            v-for="user in suggestions"
-            :key="user.id"
-            class="glass-card p-6"
-          >
+          <div v-for="user in suggestions" :key="user.id" class="glass-card p-6">
             <div class="flex items-center justify-between">
-              <NuxtLink :to="`/users/${user.id}`" class="flex items-center gap-4 hover:opacity-80 transition-opacity cursor-pointer">
-                <div class="w-12 h-12 rounded-full bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center text-xl font-bold">
+              <NuxtLink
+                :to="`/users/${user.id}`"
+                class="flex items-center gap-4 hover:opacity-80 transition-opacity cursor-pointer"
+              >
+                <div
+                  class="w-12 h-12 rounded-full bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center text-xl font-bold"
+                >
                   {{ user.username[0].toUpperCase() }}
                 </div>
                 <div>
                   <h3 class="text-lg font-semibold">{{ user.username }}</h3>
-                  <p class="text-sm text-gray-400">Last active: {{ formatRelativeTime(user.lastActive) }}</p>
+                  <p class="text-sm text-gray-400">
+                    Last active: {{ formatRelativeTime(user.lastActive) }}
+                  </p>
                 </div>
               </NuxtLink>
               <button
@@ -215,7 +239,9 @@
             class="flex items-center justify-between p-3 hover:bg-white/5 rounded-lg"
           >
             <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-full bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center font-bold">
+              <div
+                class="w-10 h-10 rounded-full bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center font-bold"
+              >
                 {{ user.username[0].toUpperCase() }}
               </div>
               <span>{{ user.username }}</span>
@@ -227,7 +253,7 @@
                 'px-4 py-2 rounded-lg font-semibold transition-all',
                 user.relationshipStatus === 'NONE'
                   ? 'bg-sky-500 hover:bg-sky-600'
-                  : 'bg-gray-600 cursor-not-allowed'
+                  : 'bg-gray-600 cursor-not-allowed',
               ]"
             >
               {{ getRelationshipButtonText(user.relationshipStatus) }}
@@ -243,13 +269,12 @@
         </button>
       </div>
     </div>
-
   </div>
 </template>
 
 <script setup lang="ts">
 definePageMeta({
-  middleware: 'auth'
+  middleware: 'auth',
 })
 
 interface FriendsResponse {
@@ -285,22 +310,18 @@ const suggestions = ref<any[]>([])
 const tabs = computed(() => [
   { id: 'friends', label: 'Friends', badge: friends.value.length || null },
   { id: 'requests', label: 'Requests', badge: receivedRequests.value.length || null },
-  { id: 'suggestions', label: 'Suggestions' }
+  { id: 'suggestions', label: 'Suggestions' },
 ])
 
 onMounted(async () => {
-  await Promise.all([
-    loadFriends(),
-    loadFriendRequests(),
-    loadSuggestions()
-  ])
+  await Promise.all([loadFriends(), loadFriendRequests(), loadSuggestions()])
 })
 
 async function loadFriends() {
   try {
     loading.value = true
     const data = await api.apiRequest<FriendsResponse>('/api/friends', {
-      method: 'GET'
+      method: 'GET',
     })
     friends.value = data.friends
   } catch (error) {
@@ -313,7 +334,7 @@ async function loadFriends() {
 async function loadFriendRequests() {
   try {
     const data = await api.apiRequest<FriendRequestsResponse>('/api/friends/requests', {
-      method: 'GET'
+      method: 'GET',
     })
     receivedRequests.value = data.received
     sentRequests.value = data.sent
@@ -325,14 +346,13 @@ async function loadFriendRequests() {
 async function loadSuggestions() {
   try {
     const data = await api.apiRequest<SuggestionsResponse>('/api/friends/suggestions', {
-      method: 'GET'
+      method: 'GET',
     })
     suggestions.value = data.suggestions
   } catch (error) {
     console.error('Failed to load suggestions:', error)
   }
 }
-
 
 async function searchUsers() {
   if (searchQuery.value.length < 2) {
@@ -341,9 +361,12 @@ async function searchUsers() {
   }
 
   try {
-    const data = await api.apiRequest<SearchResponse>(`/api/friends/search?q=${searchQuery.value}`, {
-      method: 'GET'
-    })
+    const data = await api.apiRequest<SearchResponse>(
+      `/api/friends/search?q=${searchQuery.value}`,
+      {
+        method: 'GET',
+      }
+    )
     searchResults.value = data.users
   } catch (error) {
     console.error('Search failed:', error)
@@ -353,7 +376,7 @@ async function searchUsers() {
 async function sendFriendRequest(userId: string) {
   try {
     await api.apiRequest(`/api/friends/request/${userId}`, {
-      method: 'POST'
+      method: 'POST',
     })
     toast.success('Friend request sent successfully!')
     showAddFriend.value = false
@@ -368,7 +391,7 @@ async function sendFriendRequest(userId: string) {
 async function acceptRequest(friendshipId: string) {
   try {
     await api.apiRequest(`/api/friends/accept/${friendshipId}`, {
-      method: 'POST'
+      method: 'POST',
     })
     toast.success('Friend request accepted! You are now friends.')
     await Promise.all([loadFriends(), loadFriendRequests()])
@@ -380,7 +403,7 @@ async function acceptRequest(friendshipId: string) {
 async function rejectRequest(friendshipId: string) {
   try {
     await api.apiRequest(`/api/friends/reject/${friendshipId}`, {
-      method: 'POST'
+      method: 'POST',
     })
     toast.success('Friend request rejected')
     await loadFriendRequests()
@@ -392,7 +415,7 @@ async function rejectRequest(friendshipId: string) {
 async function cancelRequest(friendshipId: string) {
   try {
     await api.apiRequest(`/api/friends/${friendshipId}`, {
-      method: 'DELETE'
+      method: 'DELETE',
     })
     toast.success('Friend request cancelled')
     await loadFriendRequests()
@@ -406,7 +429,7 @@ async function removeFriend(friendshipId: string) {
 
   try {
     await api.apiRequest(`/api/friends/${friendshipId}`, {
-      method: 'DELETE'
+      method: 'DELETE',
     })
     toast.success('Friend removed successfully')
     await loadFriends()
@@ -414,7 +437,6 @@ async function removeFriend(friendshipId: string) {
     toast.error(error.data?.error || 'Failed to remove friend')
   }
 }
-
 
 function formatDate(date: string) {
   return new Date(date).toLocaleDateString()
@@ -430,10 +452,14 @@ function formatRelativeTime(date: string) {
 
 function getRelationshipButtonText(status: string) {
   switch (status) {
-    case 'PENDING': return 'Pending'
-    case 'ACCEPTED': return 'Friends'
-    case 'BLOCKED': return 'Blocked'
-    default: return 'Add'
+    case 'PENDING':
+      return 'Pending'
+    case 'ACCEPTED':
+      return 'Friends'
+    case 'BLOCKED':
+      return 'Blocked'
+    default:
+      return 'Add'
   }
 }
 </script>

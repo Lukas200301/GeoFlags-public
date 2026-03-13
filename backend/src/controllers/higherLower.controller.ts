@@ -5,7 +5,7 @@ import type { Country as WorldCountry } from 'world-countries';
 
 /**
  * Higher/Lower Game Controller
- * 
+ *
  * Game Logic: Players compare two countries and guess if the second country
  * is larger or smaller in area than the first. Streak continues until wrong answer.
  *
@@ -39,9 +39,7 @@ function getCountryByCode(code: string): WorldCountry | undefined {
 
 // Helper to get a random country (excluding used ones)
 function getRandomCountry(exclude: Set<string>): WorldCountry | null {
-  const availableCountries = countriesData.filter(
-    (c) => !exclude.has(c.cca2)
-  );
+  const availableCountries = countriesData.filter((c) => !exclude.has(c.cca2));
 
   if (availableCountries.length === 0) {
     return null; // All countries used
@@ -162,7 +160,9 @@ export async function submitAnswer(req: AuthRequest, res: Response) {
     const { sessionId, guess, previousCountryCode } = req.body;
 
     if (!sessionId || !guess || !previousCountryCode) {
-      return res.status(400).json({ message: 'Session ID, guess, and previous country code are required' });
+      return res
+        .status(400)
+        .json({ message: 'Session ID, guess, and previous country code are required' });
     }
 
     if (!['higher', 'lower'].includes(guess)) {

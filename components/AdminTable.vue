@@ -20,7 +20,11 @@
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-200">
-          <tr v-for="(row, index) in paginatedData" :key="index" class="hover:bg-gray-950 transition-colors">
+          <tr
+            v-for="(row, index) in paginatedData"
+            :key="index"
+            class="hover:bg-gray-950 transition-colors"
+          >
             <td v-for="column in columns" :key="column.key" class="px-6 py-4">
               <slot :name="`cell-${column.key}`" :row="row" :value="row[column.key]">
                 {{ row[column.key] }}
@@ -54,7 +58,7 @@
           >
             Previous
           </button>
-          
+
           <div class="flex gap-1">
             <button
               v-for="page in visiblePages"
@@ -64,7 +68,7 @@
               :class="[
                 page === currentPage
                   ? 'bg-primary-600 text-white'
-                  : 'border border-gray-700 hover:bg-gray-950'
+                  : 'border border-gray-700 hover:bg-gray-950',
               ]"
             >
               {{ page }}
@@ -129,11 +133,11 @@ const visiblePages = computed(() => {
   const maxVisible = 5
   let start = Math.max(1, currentPage.value - Math.floor(maxVisible / 2))
   let end = Math.min(totalPages.value, start + maxVisible - 1)
-  
+
   if (end - start < maxVisible - 1) {
     start = Math.max(1, end - maxVisible + 1)
   }
-  
+
   for (let i = start; i <= end; i++) {
     pages.push(i)
   }
@@ -141,8 +145,10 @@ const visiblePages = computed(() => {
 })
 
 // Reset to first page when data changes
-watch(() => props.data.length, () => {
-  currentPage.value = 1
-})
+watch(
+  () => props.data.length,
+  () => {
+    currentPage.value = 1
+  }
+)
 </script>
-

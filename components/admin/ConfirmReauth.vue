@@ -39,18 +39,8 @@
 
       <!-- Footer Actions -->
       <div class="flex gap-3 justify-end mt-6">
-        <button
-          @click="handleCancel"
-          class="btn-secondary"
-          :disabled="loading"
-        >
-          Cancel
-        </button>
-        <button
-          @click="handleConfirm"
-          class="btn-primary"
-          :disabled="loading || !password"
-        >
+        <button @click="handleCancel" class="btn-secondary" :disabled="loading">Cancel</button>
+        <button @click="handleConfirm" class="btn-primary" :disabled="loading || !password">
           <Icon v-if="loading" name="mdi:loading" class="w-5 h-5 animate-spin" />
           <Icon v-else name="mdi:shield-check" class="w-5 h-5" />
           <span>{{ loading ? 'Verifying...' : 'Confirm' }}</span>
@@ -72,7 +62,7 @@ interface Emits {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  open: false
+  open: false,
 })
 const emit = defineEmits<Emits>()
 
@@ -87,15 +77,18 @@ const isOpen = ref(props.open)
 let resolveCallback: ((value: boolean) => void) | null = null
 
 // Auto-focus password input when modal opens
-watch(() => isOpen.value, (isOpenValue) => {
-  if (isOpenValue) {
-    password.value = ''
-    error.value = ''
-    nextTick(() => {
-      passwordInput.value?.focus()
-    })
+watch(
+  () => isOpen.value,
+  (isOpenValue) => {
+    if (isOpenValue) {
+      password.value = ''
+      error.value = ''
+      nextTick(() => {
+        passwordInput.value?.focus()
+      })
+    }
   }
-})
+)
 
 // Listen for global reauth requests
 onMounted(() => {
@@ -156,7 +149,10 @@ const handleCancel = () => {
 }
 
 // Watch prop changes
-watch(() => props.open, (value) => {
-  isOpen.value = value
-})
+watch(
+  () => props.open,
+  (value) => {
+    isOpen.value = value
+  }
+)
 </script>

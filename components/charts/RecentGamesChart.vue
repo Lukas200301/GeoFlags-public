@@ -3,10 +3,32 @@
 </template>
 
 <script setup lang="ts">
-import { Chart, LineElement, PointElement, LineController, CategoryScale, LinearScale, Title, Tooltip, Legend, Filler, type ChartConfiguration } from 'chart.js'
+import {
+  Chart,
+  LineElement,
+  PointElement,
+  LineController,
+  CategoryScale,
+  LinearScale,
+  Title,
+  Tooltip,
+  Legend,
+  Filler,
+  type ChartConfiguration,
+} from 'chart.js'
 
 // Register Chart.js components
-Chart.register(LineElement, PointElement, LineController, CategoryScale, LinearScale, Title, Tooltip, Legend, Filler)
+Chart.register(
+  LineElement,
+  PointElement,
+  LineController,
+  CategoryScale,
+  LinearScale,
+  Title,
+  Tooltip,
+  Legend,
+  Filler
+)
 
 interface Game {
   gameNumber: number
@@ -46,9 +68,14 @@ const createChart = () => {
   }
 
   // Prepare labels (dates) and data
-  const labels = props.games.map(game => {
+  const labels = props.games.map((game) => {
     const date = new Date(game.date)
-    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    })
   })
 
   const config: ChartConfiguration<'line'> = {
@@ -58,7 +85,7 @@ const createChart = () => {
       datasets: [
         {
           label: 'Score',
-          data: props.games.map(game => game.score),
+          data: props.games.map((game) => game.score),
           borderColor: 'rgb(139, 92, 246)',
           backgroundColor: 'rgba(139, 92, 246, 0.1)',
           fill: true,
@@ -97,7 +124,7 @@ const createChart = () => {
                 day: 'numeric',
                 year: 'numeric',
                 hour: '2-digit',
-                minute: '2-digit'
+                minute: '2-digit',
               })
             },
             label: (context) => {
@@ -106,7 +133,7 @@ const createChart = () => {
               return [
                 `Mode: ${formatGameMode(game.mode)}`,
                 `Score: ${game.score}`,
-                `Game #${game.gameNumber}`
+                `Game #${game.gameNumber}`,
               ]
             },
           },
@@ -165,9 +192,13 @@ const createChart = () => {
 }
 
 // Watch for prop changes and recreate chart
-watch(() => props.games, () => {
-  createChart()
-}, { deep: true })
+watch(
+  () => props.games,
+  () => {
+    createChart()
+  },
+  { deep: true }
+)
 
 onMounted(() => {
   createChart()

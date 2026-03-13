@@ -6,12 +6,16 @@
   >
     <div class="game-card relative overflow-hidden p-6 h-full">
       <!-- Animated Background Gradient -->
-      <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-           :class="gradientClass"></div>
+      <div
+        class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+        :class="gradientClass"
+      ></div>
 
       <!-- Glow Effect on Hover -->
-      <div class="absolute inset-0 opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-500"
-           :class="glowClass"></div>
+      <div
+        class="absolute inset-0 opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-500"
+        :class="glowClass"
+      ></div>
 
       <!-- Content -->
       <div class="relative z-10">
@@ -21,16 +25,28 @@
             class="w-20 h-20 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-300"
             :class="mode.enabled ? iconBgClass : 'bg-gray-700'"
           >
-            <Icon :name="mode.icon" class="w-12 h-12 text-white group-hover:scale-110 transition-transform duration-300" />
+            <Icon
+              :name="mode.icon"
+              class="w-12 h-12 text-white group-hover:scale-110 transition-transform duration-300"
+            />
           </div>
           <!-- Decorative Circle -->
-          <div class="absolute -top-2 -right-2 w-8 h-8 rounded-full opacity-20 group-hover:scale-150 transition-transform duration-500"
-               :class="mode.enabled ? accentClass : 'bg-gray-600'"></div>
+          <div
+            class="absolute -top-2 -right-2 w-8 h-8 rounded-full opacity-20 group-hover:scale-150 transition-transform duration-500"
+            :class="mode.enabled ? accentClass : 'bg-gray-600'"
+          ></div>
         </div>
 
         <!-- Title with Gradient on Hover -->
-        <h3 class="text-xl font-bold mb-2 capitalize transition-colors duration-300"
-            :class="mode.enabled ? 'text-gray-100 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r ' + textGradientClass : 'text-gray-400'">
+        <h3
+          class="text-xl font-bold mb-2 capitalize transition-colors duration-300"
+          :class="
+            mode.enabled
+              ? 'text-gray-100 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r ' +
+                textGradientClass
+              : 'text-gray-400'
+          "
+        >
           {{ mode.name }}
         </h3>
 
@@ -38,20 +54,31 @@
         <p class="text-sm text-gray-400 mb-6 leading-relaxed">{{ mode.description }}</p>
 
         <!-- Action Button -->
-        <div v-if="!mode.enabled" class="inline-flex items-center px-4 py-2 rounded-lg bg-gray-700/50 text-xs text-gray-400 font-medium">
+        <div
+          v-if="!mode.enabled"
+          class="inline-flex items-center px-4 py-2 rounded-lg bg-gray-700/50 text-xs text-gray-400 font-medium"
+        >
           <Icon name="mdi:clock-outline" class="w-4 h-4 mr-2" />
           Coming Soon
         </div>
-        <div v-else class="inline-flex items-center px-4 py-2 rounded-lg font-medium text-sm transition-all duration-300 group-hover:px-6"
-             :class="buttonClass">
+        <div
+          v-else
+          class="inline-flex items-center px-4 py-2 rounded-lg font-medium text-sm transition-all duration-300 group-hover:px-6"
+          :class="buttonClass"
+        >
           <span>Play Now</span>
-          <Icon name="mdi:arrow-right" class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
+          <Icon
+            name="mdi:arrow-right"
+            class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-300"
+          />
         </div>
       </div>
 
       <!-- Corner Accent -->
-      <div class="absolute top-0 right-0 w-24 h-24 opacity-10 group-hover:opacity-20 transition-opacity duration-300"
-           :class="cornerAccentClass"></div>
+      <div
+        class="absolute top-0 right-0 w-24 h-24 opacity-10 group-hover:opacity-20 transition-opacity duration-300"
+        :class="cornerAccentClass"
+      ></div>
     </div>
   </div>
 </template>
@@ -79,15 +106,18 @@ const handleClick = () => {
 }
 
 // Color schemes for different game modes
-const colorSchemes: Record<string, {
-  gradient: string
-  glow: string
-  iconBg: string
-  accent: string
-  textGradient: string
-  button: string
-  cornerAccent: string
-}> = {
+const colorSchemes: Record<
+  string,
+  {
+    gradient: string
+    glow: string
+    iconBg: string
+    accent: string
+    textGradient: string
+    button: string
+    cornerAccent: string
+  }
+> = {
   GUESS_FLAG: {
     gradient: 'bg-gradient-to-br from-blue-500/10 via-cyan-500/10 to-blue-600/10',
     glow: 'bg-blue-500',
@@ -121,7 +151,8 @@ const colorSchemes: Record<string, {
     iconBg: 'bg-gradient-to-br from-emerald-500 to-teal-600',
     accent: 'bg-teal-400',
     textGradient: 'from-emerald-400 to-teal-400',
-    button: 'bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 border border-emerald-500/30',
+    button:
+      'bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 border border-emerald-500/30',
     cornerAccent: 'bg-gradient-to-br from-emerald-500/30 to-transparent rounded-bl-full',
   },
   CAPITALS: {
@@ -130,7 +161,8 @@ const colorSchemes: Record<string, {
     iconBg: 'bg-gradient-to-br from-emerald-500 to-teal-600',
     accent: 'bg-teal-400',
     textGradient: 'from-emerald-400 to-teal-400',
-    button: 'bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 border border-emerald-500/30',
+    button:
+      'bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 border border-emerald-500/30',
     cornerAccent: 'bg-gradient-to-br from-emerald-500/30 to-transparent rounded-bl-full',
   },
   HIGHER_LOWER: {

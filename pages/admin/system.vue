@@ -63,10 +63,9 @@ const lastUpdated = ref<Date | null>(null)
 const fetchMetrics = async () => {
   try {
     loading.value = true
-    const response = await apiRequest<{ metrics: SystemMetrics }>(
-      '/api/admin/system/health',
-      { requiresAuth: true }
-    )
+    const response = await apiRequest<{ metrics: SystemMetrics }>('/api/admin/system/health', {
+      requiresAuth: true,
+    })
     metrics.value = response.metrics
     lastUpdated.value = new Date()
   } catch (error: any) {
@@ -190,22 +189,40 @@ const formatTimeAgo = (date: Date | null) => {
             <div
               :class="[
                 'w-16 h-16 rounded-full flex items-center justify-center',
-                getStatusBgColor(metrics.status)
+                getStatusBgColor(metrics.status),
               ]"
             >
               <Icon
-                :name="metrics.status === 'healthy' ? 'mdi:check-circle' : metrics.status === 'warning' ? 'mdi:alert' : 'mdi:alert-circle'"
+                :name="
+                  metrics.status === 'healthy'
+                    ? 'mdi:check-circle'
+                    : metrics.status === 'warning'
+                      ? 'mdi:alert'
+                      : 'mdi:alert-circle'
+                "
                 :class="['w-8 h-8', getStatusColor(metrics.status)]"
               />
             </div>
             <div>
               <h2 class="text-2xl font-bold text-gray-100">
-                {{ metrics.status === 'healthy' ? 'All Systems Operational' : metrics.status === 'warning' ? 'System Warning' : 'System Error' }}
+                {{
+                  metrics.status === 'healthy'
+                    ? 'All Systems Operational'
+                    : metrics.status === 'warning'
+                      ? 'System Warning'
+                      : 'System Error'
+                }}
               </h2>
               <p class="text-gray-400">Uptime: {{ metrics.uptime }}</p>
             </div>
           </div>
-          <div :class="['px-4 py-2 rounded-full text-sm font-medium', getStatusBgColor(metrics.status), getStatusColor(metrics.status)]">
+          <div
+            :class="[
+              'px-4 py-2 rounded-full text-sm font-medium',
+              getStatusBgColor(metrics.status),
+              getStatusColor(metrics.status),
+            ]"
+          >
             {{ metrics.status.toUpperCase() }}
           </div>
         </div>
@@ -224,7 +241,12 @@ const formatTimeAgo = (date: Date | null) => {
             <div>
               <div class="flex items-center justify-between mb-2">
                 <span class="text-sm text-gray-400">Memory Usage</span>
-                <span :class="['text-sm font-medium', getMetricColor(metrics.server.memory.percentage, 70, 90)]">
+                <span
+                  :class="[
+                    'text-sm font-medium',
+                    getMetricColor(metrics.server.memory.percentage, 70, 90),
+                  ]"
+                >
                   {{ metrics.server.memory.percentage.toFixed(1) }}%
                 </span>
               </div>
@@ -232,14 +254,18 @@ const formatTimeAgo = (date: Date | null) => {
                 <div
                   class="h-full transition-all duration-500 rounded-full"
                   :class="[
-                    metrics.server.memory.percentage >= 90 ? 'bg-red-500' :
-                    metrics.server.memory.percentage >= 70 ? 'bg-yellow-500' : 'bg-green-500'
+                    metrics.server.memory.percentage >= 90
+                      ? 'bg-red-500'
+                      : metrics.server.memory.percentage >= 70
+                        ? 'bg-yellow-500'
+                        : 'bg-green-500',
                   ]"
                   :style="{ width: `${metrics.server.memory.percentage}%` }"
                 ></div>
               </div>
               <p class="text-xs text-gray-500 mt-1">
-                {{ formatBytes(metrics.server.memory.used) }} / {{ formatBytes(metrics.server.memory.total) }}
+                {{ formatBytes(metrics.server.memory.used) }} /
+                {{ formatBytes(metrics.server.memory.total) }}
               </p>
             </div>
 
@@ -247,7 +273,9 @@ const formatTimeAgo = (date: Date | null) => {
             <div>
               <div class="flex items-center justify-between mb-2">
                 <span class="text-sm text-gray-400">CPU Usage</span>
-                <span :class="['text-sm font-medium', getMetricColor(metrics.server.cpu.usage, 70, 90)]">
+                <span
+                  :class="['text-sm font-medium', getMetricColor(metrics.server.cpu.usage, 70, 90)]"
+                >
                   {{ metrics.server.cpu.usage.toFixed(1) }}%
                 </span>
               </div>
@@ -255,8 +283,11 @@ const formatTimeAgo = (date: Date | null) => {
                 <div
                   class="h-full transition-all duration-500 rounded-full"
                   :class="[
-                    metrics.server.cpu.usage >= 90 ? 'bg-red-500' :
-                    metrics.server.cpu.usage >= 70 ? 'bg-yellow-500' : 'bg-green-500'
+                    metrics.server.cpu.usage >= 90
+                      ? 'bg-red-500'
+                      : metrics.server.cpu.usage >= 70
+                        ? 'bg-yellow-500'
+                        : 'bg-green-500',
                   ]"
                   :style="{ width: `${metrics.server.cpu.usage}%` }"
                 ></div>
@@ -287,8 +318,18 @@ const formatTimeAgo = (date: Date | null) => {
             <!-- Status -->
             <div class="flex items-center justify-between p-3 rounded-lg bg-gray-800/50">
               <span class="text-sm text-gray-400">Status</span>
-              <span :class="['text-sm font-medium flex items-center gap-2', getStatusColor(metrics.database.status)]">
-                <div :class="['w-2 h-2 rounded-full', metrics.database.status === 'connected' ? 'bg-green-500' : 'bg-red-500']"></div>
+              <span
+                :class="[
+                  'text-sm font-medium flex items-center gap-2',
+                  getStatusColor(metrics.database.status),
+                ]"
+              >
+                <div
+                  :class="[
+                    'w-2 h-2 rounded-full',
+                    metrics.database.status === 'connected' ? 'bg-green-500' : 'bg-red-500',
+                  ]"
+                ></div>
                 {{ metrics.database.status === 'connected' ? 'Connected' : 'Disconnected' }}
               </span>
             </div>
@@ -296,7 +337,12 @@ const formatTimeAgo = (date: Date | null) => {
             <!-- Response Time -->
             <div class="flex items-center justify-between p-3 rounded-lg bg-gray-800/50">
               <span class="text-sm text-gray-400">Response Time</span>
-              <span :class="['text-sm font-medium', getMetricColor(metrics.database.responseTime, 100, 500)]">
+              <span
+                :class="[
+                  'text-sm font-medium',
+                  getMetricColor(metrics.database.responseTime, 100, 500),
+                ]"
+              >
                 {{ metrics.database.responseTime }}ms
               </span>
             </div>
@@ -305,7 +351,9 @@ const formatTimeAgo = (date: Date | null) => {
             <div class="pt-2 border-t border-gray-800 space-y-2">
               <div class="flex justify-between text-sm">
                 <span class="text-gray-400">Active:</span>
-                <span class="text-gray-200 font-medium">{{ metrics.database.connections.active }}</span>
+                <span class="text-gray-200 font-medium">{{
+                  metrics.database.connections.active
+                }}</span>
               </div>
               <div class="flex justify-between text-sm">
                 <span class="text-gray-400">Idle:</span>
@@ -313,7 +361,9 @@ const formatTimeAgo = (date: Date | null) => {
               </div>
               <div class="flex justify-between text-sm">
                 <span class="text-gray-400">Total:</span>
-                <span class="text-gray-200 font-medium">{{ metrics.database.connections.total }}</span>
+                <span class="text-gray-200 font-medium">{{
+                  metrics.database.connections.total
+                }}</span>
               </div>
             </div>
           </div>
@@ -331,11 +381,18 @@ const formatTimeAgo = (date: Date | null) => {
           <div class="space-y-3">
             <div class="flex items-center justify-between p-3 rounded-lg bg-gray-800/50">
               <span class="text-sm text-gray-400">Total Requests</span>
-              <span class="text-lg font-bold text-gray-100">{{ metrics.api.totalRequests.toLocaleString() }}</span>
+              <span class="text-lg font-bold text-gray-100">{{
+                metrics.api.totalRequests.toLocaleString()
+              }}</span>
             </div>
             <div class="flex items-center justify-between p-3 rounded-lg bg-gray-800/50">
               <span class="text-sm text-gray-400">Avg Response Time</span>
-              <span :class="['text-lg font-bold', getMetricColor(metrics.api.averageResponseTime, 200, 500)]">
+              <span
+                :class="[
+                  'text-lg font-bold',
+                  getMetricColor(metrics.api.averageResponseTime, 200, 500),
+                ]"
+              >
                 {{ metrics.api.averageResponseTime }}ms
               </span>
             </div>
@@ -361,7 +418,9 @@ const formatTimeAgo = (date: Date | null) => {
             </div>
             <div class="flex items-center justify-between p-3 rounded-lg bg-gray-800/50">
               <span class="text-sm text-gray-400">Total Sessions</span>
-              <span class="text-lg font-bold text-gray-100">{{ metrics.sessions.total.toLocaleString() }}</span>
+              <span class="text-lg font-bold text-gray-100">{{
+                metrics.sessions.total.toLocaleString()
+              }}</span>
             </div>
           </div>
         </div>

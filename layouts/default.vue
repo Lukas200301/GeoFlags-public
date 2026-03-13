@@ -1,13 +1,21 @@
 <template>
   <div class="min-h-screen flex relative overflow-hidden">
-
     <!-- The animated gradient background is now defined globally in main.css -->
 
     <!-- Floating gradient orbs for depth -->
     <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-      <div class="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/20 rounded-full filter blur-3xl animate-float" style="animation-duration: 20s;"></div>
-      <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full filter blur-3xl animate-float" style="animation-duration: 25s; animation-delay: -5s;"></div>
-      <div class="absolute top-1/2 left-1/2 w-64 h-64 bg-cyan-500/15 rounded-full filter blur-3xl animate-float" style="animation-duration: 30s; animation-delay: -10s;"></div>
+      <div
+        class="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/20 rounded-full filter blur-3xl animate-float"
+        style="animation-duration: 20s"
+      ></div>
+      <div
+        class="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full filter blur-3xl animate-float"
+        style="animation-duration: 25s; animation-delay: -5s"
+      ></div>
+      <div
+        class="absolute top-1/2 left-1/2 w-64 h-64 bg-cyan-500/15 rounded-full filter blur-3xl animate-float"
+        style="animation-duration: 30s; animation-delay: -10s"
+      ></div>
     </div>
 
     <!-- Left Sidebar with Glassmorphism -->
@@ -15,13 +23,22 @@
       class="glass-sidebar flex flex-col fixed h-screen z-50 transition-all duration-500 ease-in-out"
       :class="[
         sidebarCollapsed ? 'w-20' : 'w-64',
-        !sidebarOpen && 'lg:translate-x-0 -translate-x-full'
+        !sidebarOpen && 'lg:translate-x-0 -translate-x-full',
       ]"
     >
       <!-- Logo & App Name -->
       <div class="p-6 border-b border-white/10">
-        <NuxtLink to="/" class="flex items-center group" :class="sidebarCollapsed ? 'justify-center' : 'space-x-3'">
-            <img src="/assets/images/image.png" alt="GeoFlags Logo" :class="sidebarCollapsed ? 'w-10 h-10' : 'w-12 h-12'" class="object-contain hover-lift transition-all duration-300" />
+        <NuxtLink
+          to="/"
+          class="flex items-center group"
+          :class="sidebarCollapsed ? 'justify-center' : 'space-x-3'"
+        >
+          <img
+            src="/assets/images/image.png"
+            alt="GeoFlags Logo"
+            :class="sidebarCollapsed ? 'w-10 h-10' : 'w-12 h-12'"
+            class="object-contain hover-lift transition-all duration-300"
+          />
           <div v-if="!sidebarCollapsed" class="overflow-hidden">
             <h1 class="text-xl font-bold gradient-text">GeoFlags</h1>
             <p class="text-xs text-gray-300">Geography Quiz</p>
@@ -51,7 +68,7 @@
           :class="[
             sidebarCollapsed ? 'justify-center p-3' : 'space-x-3 px-4 py-3',
             sidebarCollapsed ? 'bg-black/20 hover:bg-black/30' : '',
-            isLinkActive(link.to) ? 'glass-card-primary' : ''
+            isLinkActive(link.to) ? 'glass-card-primary' : '',
           ]"
         >
           <Icon
@@ -81,7 +98,7 @@
             :class="[
               sidebarCollapsed ? 'justify-center p-3' : 'space-x-3 px-4 py-3',
               sidebarCollapsed ? 'bg-black/20 hover:bg-black/30' : '',
-              isPlayMenuActive() ? 'glass-card-primary' : ''
+              isPlayMenuActive() ? 'glass-card-primary' : '',
             ]"
           >
             <Icon
@@ -135,7 +152,10 @@
 
         <!-- Admin Section (Only visible to admins) -->
         <div v-if="isAdmin" class="pt-4 mt-4 border-t border-white/10">
-          <div v-if="!sidebarCollapsed" class="px-4 py-2 text-xs font-semibold text-red-400 uppercase tracking-wider">
+          <div
+            v-if="!sidebarCollapsed"
+            class="px-4 py-2 text-xs font-semibold text-red-400 uppercase tracking-wider"
+          >
             Admin Panel
           </div>
 
@@ -147,7 +167,7 @@
             :class="[
               sidebarCollapsed ? 'justify-center p-3' : 'space-x-3 px-4 py-3',
               sidebarCollapsed ? 'bg-black/20 hover:bg-black/30' : '',
-              isLinkActive(link.to) ? 'glass-card-primary' : ''
+              isLinkActive(link.to) ? 'glass-card-primary' : '',
             ]"
           >
             <Icon
@@ -181,7 +201,7 @@
           :class="[
             sidebarCollapsed ? 'justify-center p-3' : 'space-x-3 px-4 py-3',
             sidebarCollapsed ? 'bg-black/20 hover:bg-black/30' : '',
-            isLinkActive(link.to) ? 'glass-card-primary' : ''
+            isLinkActive(link.to) ? 'glass-card-primary' : '',
           ]"
         >
           <Icon
@@ -215,7 +235,12 @@
           <div
             class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-400 to-pink-600 flex items-center justify-center text-white font-semibold shadow-lg hover-lift overflow-hidden"
           >
-            <img v-if="user.avatarUrl" :src="getAvatarUrl(user.avatarUrl)" alt="Avatar" class="w-full h-full object-cover">
+            <img
+              v-if="user.avatarUrl"
+              :src="getAvatarUrl(user.avatarUrl)"
+              alt="Avatar"
+              class="w-full h-full object-cover"
+            />
             <span v-else>{{ user.username.charAt(0).toUpperCase() }}</span>
           </div>
           <div v-if="!sidebarCollapsed" class="flex-1 min-w-0">
@@ -310,9 +335,7 @@ const playSubLinks = [
 ]
 
 // Bottom links (above user profile)
-const bottomLinks = [
-  { to: '/about', label: 'About', icon: 'mdi:information' },
-]
+const bottomLinks = [{ to: '/about', label: 'About', icon: 'mdi:information' }]
 
 // Admin links (only visible to admins)
 const adminLinks = [
@@ -344,7 +367,7 @@ const togglePlayMenu = () => {
 // Check if any play submenu link is active
 const isPlayMenuActive = () => {
   const currentPath = route.path
-  return playSubLinks.some(link => {
+  return playSubLinks.some((link) => {
     if (link.to === currentPath) return true
     if (currentPath.startsWith(link.to + '/')) return true
     return false
@@ -439,7 +462,8 @@ onMounted(() => {
 
 <style scoped>
 @keyframes float {
-  0%, 100% {
+  0%,
+  100% {
     transform: translate(0, 0) rotate(0deg);
   }
   33% {

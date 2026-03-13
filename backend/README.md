@@ -37,6 +37,7 @@ Built with Express, TypeScript, PostgreSQL, Prisma ORM, and Socket.io for real-t
 ## ✨ Features
 
 ### 🔐 **Authentication & Security**
+
 - **JWT-based Authentication** - Access tokens (15 min) + refresh tokens (7 days)
 - **HttpOnly Secure Cookies** - No token exposure in localStorage
 - **CSRF Protection** - Token validation for all mutating requests
@@ -45,6 +46,7 @@ Built with Express, TypeScript, PostgreSQL, Prisma ORM, and Socket.io for real-t
 - **Re-authentication Flow** - Sensitive operations require password confirmation
 
 ### 🎮 **Game Management**
+
 - **Multiple Game Modes** - FLAGS, CAPITALS, MAPS, MIXED
 - **Score Submission** - Validated game session recording
 - **Game History** - Track all user game sessions with pagination
@@ -52,6 +54,7 @@ Built with Express, TypeScript, PostgreSQL, Prisma ORM, and Socket.io for real-t
 - **Game Mode Configuration** - Enable/disable modes dynamically
 
 ### 🏆 **Leaderboard System**
+
 - **Global Leaderboards** - Per game mode rankings
 - **Real-time Updates** - Socket.io broadcasts for live leaderboard changes
 - **High Score Tracking** - Automatic best score per user per mode
@@ -59,6 +62,7 @@ Built with Express, TypeScript, PostgreSQL, Prisma ORM, and Socket.io for real-t
 - **Rank Calculation** - Automatic ranking on score submission
 
 ### 👨‍💼 **Admin Panel**
+
 - **User Management** - View, suspend, promote, delete users
 - **Role-Based Access Control** - USER and ADMIN roles
 - **Game Mode Management** - Configure and toggle game modes
@@ -67,6 +71,7 @@ Built with Express, TypeScript, PostgreSQL, Prisma ORM, and Socket.io for real-t
 - **Audit Logging** - Complete admin action trail with IP tracking
 
 ### 🔄 **Real-time Features**
+
 - **Socket.io Integration** - Bidirectional real-time communication
 - **Live Leaderboard Updates** - Instant leaderboard refreshes
 - **Battle System** - Real-time PvP gameplay support
@@ -74,6 +79,7 @@ Built with Express, TypeScript, PostgreSQL, Prisma ORM, and Socket.io for real-t
 - **Connection Management** - Automatic reconnection handling
 
 ### 🛡️ **API Protection**
+
 - **Rate Limiting** - Different limits for auth, admin, and API routes
 - **Helmet.js Security Headers** - XSS, clickjacking, MIME-sniffing protection
 - **CORS Configuration** - Credential-enabled cross-origin requests
@@ -85,17 +91,20 @@ Built with Express, TypeScript, PostgreSQL, Prisma ORM, and Socket.io for real-t
 ## 🛠️ Tech Stack
 
 ### **Core Technologies**
+
 - **[Node.js](https://nodejs.org)** (v24.11.1+) - JavaScript runtime
 - **[Express.js](https://expressjs.com)** (v4.21.2) - Fast, minimalist web framework
 - **[TypeScript](https://www.typescriptlang.org)** (v5.7) - Type-safe JavaScript
 
 ### **Database & ORM**
+
 - **[PostgreSQL](https://www.postgresql.org)** (v14+) - Robust relational database
 - **[Prisma ORM](https://www.prisma.io)** (v6.18.0) - Next-generation Node.js ORM
 - **Prisma Migrate** - Version-controlled database migrations
 - **Prisma Studio** - Visual database browser
 
 ### **Authentication & Security**
+
 - **[jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken)** - JWT implementation
 - **[bcrypt](https://www.npmjs.com/package/bcrypt)** - Password hashing
 - **[helmet](https://helmetjs.github.io)** - Security headers middleware
@@ -105,11 +114,13 @@ Built with Express, TypeScript, PostgreSQL, Prisma ORM, and Socket.io for real-t
 - **[cookie-parser](https://www.npmjs.com/package/cookie-parser)** - Cookie parsing
 
 ### **Real-time & Data**
+
 - **[Socket.io](https://socket.io)** (v4.8.1) - Real-time bidirectional communication
 - **[world-countries](https://www.npmjs.com/package/world-countries)** - Comprehensive country dataset
 - **[zod](https://zod.dev)** - TypeScript-first schema validation
 
 ### **Development Tools**
+
 - **[tsx](https://www.npmjs.com/package/tsx)** - TypeScript execution with hot reload
 - **[ESLint](https://eslint.org)** - Code linting
 - **[Prettier](https://prettier.io)** - Code formatting
@@ -143,20 +154,23 @@ Built with Express, TypeScript, PostgreSQL, Prisma ORM, and Socket.io for real-t
 ```
 
 ### **Token Management**
-| Token Type | Lifespan | Storage | Purpose |
-|------------|----------|---------|---------|
-| Access Token | 15 minutes | HttpOnly Cookie | API authentication |
-| Refresh Token | 7 days | HttpOnly Cookie | Access token renewal |
-| CSRF Token | Session | Client memory | Mutation protection |
-| Re-auth Token | 5 minutes | Client memory | Sensitive operations |
+
+| Token Type    | Lifespan   | Storage         | Purpose              |
+| ------------- | ---------- | --------------- | -------------------- |
+| Access Token  | 15 minutes | HttpOnly Cookie | API authentication   |
+| Refresh Token | 7 days     | HttpOnly Cookie | Access token renewal |
+| CSRF Token    | Session    | Client memory   | Mutation protection  |
+| Re-auth Token | 5 minutes  | Client memory   | Sensitive operations |
 
 ### **Authorization Levels**
+
 - **Public Routes** - No authentication required (health, CSRF token)
 - **User Routes** - Require valid JWT (game submission, profile)
 - **Admin Routes** - Require JWT + ADMIN role (user management, stats)
 - **Sensitive Admin Actions** - Require JWT + ADMIN + re-authentication token
 
 ### **Protection Mechanisms**
+
 - **Rate Limiting**:
   - Authentication endpoints: 5 requests / 15 minutes
   - Admin endpoints: 100 requests / 15 minutes
@@ -168,7 +182,9 @@ Built with Express, TypeScript, PostgreSQL, Prisma ORM, and Socket.io for real-t
 - **Password Security**: bcrypt hashing with 10 rounds
 
 ### **Audit Trail**
+
 All admin actions are logged with:
+
 - Admin user ID and details
 - Action type (e.g., USER_DELETE, ROLE_CHANGE)
 - Target user/resource ID
@@ -298,650 +314,20 @@ All endpoints return JSON responses. Authenticated endpoints require cookies set
 
 ---
 
-### 🔐 Authentication Endpoints
-
-#### **POST** `/api/auth/register`
-Register a new user account.
-
-**Request Body:**
-```json
-{
-  "username": "johndoe",
-  "email": "john@example.com",
-  "password": "SecurePass123!"
-}
-```
-
-**Validation:**
-- `username`: 3-30 characters, alphanumeric + underscores
-- `email`: Valid email format
-- `password`: 8-100 characters
-
-**Response:** `201 Created`
-```json
-{
-  "message": "Registration successful",
-  "user": {
-    "id": "uuid-here",
-    "username": "johndoe",
-    "email": "john@example.com",
-    "role": "USER",
-    "createdAt": "2025-01-15T12:00:00.000Z"
-  }
-}
-```
-
-**Cookies Set:**
-- `accessToken` - HttpOnly, Secure, 15min
-- `refreshToken` - HttpOnly, Secure, 7 days
-
----
-
-#### **POST** `/api/auth/login`
-Login with email and password.
-
-**Request Body:**
-```json
-{
-  "email": "john@example.com",
-  "password": "SecurePass123!"
-}
-```
-
-**Response:** `200 OK`
-```json
-{
-  "message": "Login successful",
-  "user": {
-    "id": "uuid-here",
-    "username": "johndoe",
-    "email": "john@example.com",
-    "role": "USER",
-    "createdAt": "2025-01-15T12:00:00.000Z"
-  }
-}
-```
-
-**Cookies Set:**
-- `accessToken` - HttpOnly, Secure, 15min
-- `refreshToken` - HttpOnly, Secure, 7 days
-
-**Rate Limit:** 5 requests per 15 minutes per IP
-
----
-
-#### **POST** `/api/auth/refresh`
-Refresh access token using refresh token.
-
-**Authentication:** Requires `refreshToken` cookie
-
-**Response:** `200 OK`
-```json
-{
-  "message": "Token refreshed successfully"
-}
-```
-
-**Cookies Updated:**
-- `accessToken` - New access token
-
----
-
-#### **POST** `/api/auth/logout`
-Logout and clear authentication cookies.
-
-**Authentication:** Required
-
-**Response:** `200 OK`
-```json
-{
-  "message": "Logged out successfully"
-}
-```
-
-**Cookies Cleared:**
-- `accessToken`
-- `refreshToken`
-
----
-
-#### **GET** `/api/auth/me`
-Get current authenticated user information.
-
-**Authentication:** Required
-
-**Response:** `200 OK`
-```json
-{
-  "user": {
-    "id": "uuid-here",
-    "username": "johndoe",
-    "email": "john@example.com",
-    "role": "USER",
-    "createdAt": "2025-01-15T12:00:00.000Z"
-  }
-}
-```
-
----
-
-#### **POST** `/api/auth/re-auth`
-Generate short-lived re-authentication token for sensitive operations.
-
-**Authentication:** Required
-
-**Request Body:**
-```json
-{
-  "password": "SecurePass123!"
-}
-```
-
-**Response:** `200 OK`
-```json
-{
-  "message": "Re-authentication successful",
-  "reAuthToken": "temp-token-here",
-  "expiresIn": 300
-}
-```
-
-**Token Lifespan:** 5 minutes
-
----
-
-### 🎮 Game Endpoints
-
-#### **GET** `/api/game/modes`
-Get all enabled game modes.
-
-**Authentication:** Not required
-
-**Response:** `200 OK`
-```json
-{
-  "modes": [
-    {
-      "id": "FLAGS",
-      "name": "Flags Quiz",
-      "description": "Identify countries by their flags",
-      "enabled": true
-    },
-    {
-      "id": "CAPITALS",
-      "name": "Capitals Quiz",
-      "description": "Match countries with their capital cities",
-      "enabled": true
-    }
-  ]
-}
-```
-
----
-
-#### **GET** `/api/game/leaderboard?mode=FLAGS&limit=100`
-Get leaderboard for a specific game mode.
-
-**Authentication:** Not required
-
-**Query Parameters:**
-- `mode` (required): `FLAGS` | `CAPITALS` | `MAPS` | `MIXED`
-- `limit` (optional): Number of entries (default: 100, max: 500)
-
-**Response:** `200 OK`
-```json
-{
-  "leaderboard": [
-    {
-      "id": "uuid-here",
-      "userId": "user-uuid",
-      "mode": "FLAGS",
-      "score": 15000,
-      "createdAt": "2025-01-15T12:00:00.000Z",
-      "user": {
-        "username": "player1",
-        "id": "user-uuid"
-      },
-      "rank": 1
-    }
-  ],
-  "total": 1234
-}
-```
-
----
-
-#### **POST** `/api/game/submit`
-Submit a game score.
-
-**Authentication:** Required
-
-**Request Body:**
-```json
-{
-  "mode": "FLAGS",
-  "score": 1500,
-  "data": {
-    "difficulty": "medium",
-    "correct": 15,
-    "total": 20,
-    "timeSpent": 120
-  }
-}
-```
-
-**Headers:**
-- `x-csrf-token`: CSRF token (get from `/api/csrf-token`)
-
-**Response:** `201 Created`
-```json
-{
-  "message": "Score submitted successfully",
-  "session": {
-    "id": "session-uuid",
-    "userId": "user-uuid",
-    "mode": "FLAGS",
-    "score": 1500,
-    "data": {...},
-    "createdAt": "2025-01-15T12:00:00.000Z"
-  },
-  "isNewHighScore": true,
-  "rank": 42,
-  "leaderboardEntry": {
-    "id": "lb-uuid",
-    "userId": "user-uuid",
-    "mode": "FLAGS",
-    "score": 1500,
-    "createdAt": "2025-01-15T12:00:00.000Z"
-  }
-}
-```
-
----
-
-#### **GET** `/api/game/history?mode=FLAGS&page=1&limit=20`
-Get user's game history.
-
-**Authentication:** Required
-
-**Query Parameters:**
-- `mode` (optional): Filter by game mode
-- `page` (optional): Page number (default: 1)
-- `limit` (optional): Items per page (default: 20, max: 100)
-
-**Response:** `200 OK`
-```json
-{
-  "sessions": [
-    {
-      "id": "session-uuid",
-      "mode": "FLAGS",
-      "score": 1500,
-      "data": {...},
-      "createdAt": "2025-01-15T12:00:00.000Z"
-    }
-  ],
-  "total": 45,
-  "page": 1,
-  "totalPages": 3
-}
-```
-
----
-
-#### **GET** `/api/game/stats`
-Get user's game statistics.
-
-**Authentication:** Required
-
-**Response:** `200 OK`
-```json
-{
-  "stats": {
-    "totalGames": 100,
-    "totalScore": 125000,
-    "averageScore": 1250,
-    "highScores": {
-      "FLAGS": 2000,
-      "CAPITALS": 1800,
-      "MAPS": 1600,
-      "MIXED": 1900
-    },
-    "gamesByMode": {
-      "FLAGS": 30,
-      "CAPITALS": 25,
-      "MAPS": 20,
-      "MIXED": 25
-    }
-  }
-}
-```
-
----
-
-### 👨‍💼 Admin Endpoints
-
-All admin endpoints require authentication + `ADMIN` role.
-
-**Rate Limit:** 100 requests per 15 minutes
-
----
-
-#### **GET** `/api/admin/users?page=1&limit=20&search=query`
-Get all users with pagination and search.
-
-**Authentication:** Required (Admin only)
-
-**Query Parameters:**
-- `page` (optional): Page number (default: 1)
-- `limit` (optional): Items per page (default: 20, max: 100)
-- `search` (optional): Search by username or email
-
-**Response:** `200 OK`
-```json
-{
-  "users": [
-    {
-      "id": "uuid-here",
-      "username": "johndoe",
-      "email": "john@example.com",
-      "role": "USER",
-      "tokenVersion": 1,
-      "createdAt": "2025-01-15T12:00:00.000Z",
-      "_count": {
-        "gameSessions": 50,
-        "leaderboardEntries": 4
-      }
-    }
-  ],
-  "total": 1234,
-  "page": 1,
-  "totalPages": 62
-}
-```
-
----
-
-#### **GET** `/api/admin/users/:id`
-Get detailed information about a single user.
-
-**Authentication:** Required (Admin only)
-
-**Response:** `200 OK`
-```json
-{
-  "user": {
-    "id": "uuid-here",
-    "username": "johndoe",
-    "email": "john@example.com",
-    "role": "USER",
-    "createdAt": "2025-01-15T12:00:00.000Z",
-    "gameSessions": [...],
-    "leaderboardEntries": [...]
-  }
-}
-```
-
----
-
-#### **PUT** `/api/admin/users/:id/role`
-Change a user's role.
-
-**Authentication:** Required (Admin only + Re-auth token)
-
-**Headers:**
-- `x-csrf-token`: CSRF token
-- `x-reauth-token`: Re-authentication token
-
-**Request Body:**
-```json
-{
-  "role": "ADMIN"
-}
-```
-
-**Response:** `200 OK`
-```json
-{
-  "message": "User role updated successfully",
-  "user": {
-    "id": "uuid-here",
-    "username": "johndoe",
-    "role": "ADMIN"
-  }
-}
-```
-
-**Audit Log:** `ROLE_CHANGE` action logged
-
----
-
-#### **DELETE** `/api/admin/users/:id`
-Delete a user account.
-
-**Authentication:** Required (Admin only + Re-auth token)
-
-**Headers:**
-- `x-csrf-token`: CSRF token
-- `x-reauth-token`: Re-authentication token
-
-**Response:** `200 OK`
-```json
-{
-  "message": "User deleted successfully"
-}
-```
-
-**Audit Log:** `USER_DELETE` action logged
-
-**Note:** Cannot delete yourself or other admins without elevated permissions
-
----
-
-#### **GET** `/api/admin/game-modes`
-Get all game modes (including disabled).
-
-**Authentication:** Required (Admin only)
-
-**Response:** `200 OK`
-```json
-{
-  "modes": [
-    {
-      "id": "FLAGS",
-      "name": "Flags Quiz",
-      "description": "Identify countries by their flags",
-      "enabled": true
-    },
-    {
-      "id": "CAPITALS",
-      "name": "Capitals Quiz",
-      "description": "Match countries with capitals",
-      "enabled": false
-    }
-  ]
-}
-```
-
----
-
-#### **PUT** `/api/admin/game-modes/:id`
-Update game mode settings.
-
-**Authentication:** Required (Admin only)
-
-**Headers:**
-- `x-csrf-token`: CSRF token
-
-**Request Body:**
-```json
-{
-  "name": "Updated Name",
-  "description": "Updated description",
-  "enabled": false
-}
-```
-
-**Response:** `200 OK`
-```json
-{
-  "message": "Game mode updated successfully",
-  "mode": {
-    "id": "FLAGS",
-    "name": "Updated Name",
-    "description": "Updated description",
-    "enabled": false
-  }
-}
-```
-
-**Audit Log:** `GAME_MODE_UPDATE` action logged
-
----
-
-#### **GET** `/api/admin/leaderboard?mode=FLAGS&page=1&limit=50`
-Get leaderboard with admin controls.
-
-**Authentication:** Required (Admin only)
-
-**Query Parameters:**
-- `mode` (required): Game mode
-- `page` (optional): Page number (default: 1)
-- `limit` (optional): Items per page (default: 50, max: 500)
-
-**Response:** `200 OK`
-```json
-{
-  "leaderboard": [...],
-  "total": 1234,
-  "page": 1,
-  "totalPages": 25
-}
-```
-
----
-
-#### **DELETE** `/api/admin/leaderboard/:id`
-Delete a leaderboard entry.
-
-**Authentication:** Required (Admin only + Re-auth token)
-
-**Headers:**
-- `x-csrf-token`: CSRF token
-- `x-reauth-token`: Re-authentication token
-
-**Response:** `200 OK`
-```json
-{
-  "message": "Leaderboard entry deleted successfully"
-}
-```
-
-**Audit Log:** `LEADERBOARD_DELETE` action logged
-
----
-
-#### **GET** `/api/admin/stats`
-Get platform-wide statistics.
-
-**Authentication:** Required (Admin only)
-
-**Response:** `200 OK`
-```json
-{
-  "stats": {
-    "totalUsers": 1234,
-    "totalGameSessions": 50000,
-    "totalLeaderboardEntries": 4567,
-    "adminUsers": 5,
-    "averageScorePerMode": {
-      "FLAGS": 1250,
-      "CAPITALS": 1180,
-      "MAPS": 1100,
-      "MIXED": 1350
-    },
-    "gamesPerMode": {
-      "FLAGS": 15000,
-      "CAPITALS": 12000,
-      "MAPS": 10000,
-      "MIXED": 13000
-    }
-  }
-}
-```
-
----
-
-#### **GET** `/api/admin/audit-logs?page=1&limit=50`
-Get audit logs of admin actions.
-
-**Authentication:** Required (Admin only)
-
-**Query Parameters:**
-- `page` (optional): Page number (default: 1)
-- `limit` (optional): Items per page (default: 50, max: 200)
-
-**Response:** `200 OK`
-```json
-{
-  "logs": [
-    {
-      "id": "log-uuid",
-      "adminId": "admin-uuid",
-      "action": "USER_DELETE",
-      "targetId": "user-uuid",
-      "details": {
-        "username": "deleteduser",
-        "reason": "Terms violation"
-      },
-      "ip": "192.168.1.1",
-      "createdAt": "2025-01-15T12:00:00.000Z",
-      "admin": {
-        "username": "admin",
-        "email": "admin@example.com"
-      }
-    }
-  ],
-  "total": 456,
-  "page": 1,
-  "totalPages": 10
-}
-```
-
----
-
-### 🛠️ Utility Endpoints
-
-#### **GET** `/api/csrf-token`
-Get CSRF token for mutating requests.
-
-**Authentication:** Not required
-
-**Response:** `200 OK`
-```json
-{
-  "csrfToken": "token-string-here"
-}
-```
-
-**Usage:** Include token in `x-csrf-token` header for POST/PUT/DELETE/PATCH requests
-
----
-
-#### **GET** `/api/health`
-Health check endpoint.
-
-**Authentication:** Not required
-
-**Response:** `200 OK`
-```json
-{
-  "status": "ok",
-  "timestamp": "2025-01-15T12:00:00.000Z",
-  "uptime": 3600,
-  "database": "connected"
-}
-```
+### Core Namespaces
+
+With the backend regularly adding new functionality, maintaining individual endpoint signatures in this README is difficult. Instead, here is a breakdown of the primary namespaces:
+
+- **`/api/auth/*`**
+  Handles authentication, including `register`, `login`, `logout`, `me`, `verify-email`, `resend-verification`, `refresh`, and `re-auth`. Most endpoints securely deal with HttpOnly cookies.
+- **`/api/game/*`**
+  Includes `modes`, `leaderboard`, `submit`, `history`, and `stats` to manage the lifecycle of gameplay and scoring.
+- **`/api/admin/*`**
+  Requires `ADMIN` role. Includes administration endpoints for `users`, `game-modes`, `leaderboard`, `stats`, and viewing `audit-logs`.
+- **`/api/battles/*`**
+  Handles real-time PvP setups, allowing clients to `create` and `join` multiplayer battles.
+- **`/api/csrf-token` & `/api/health`**
+  Utility endpoints. Use `csrf-token` to get a token required for mutating requests (`POST`/`PUT`/`DELETE`).
 
 ---
 
@@ -1066,15 +452,16 @@ model AdminAudit {
 Socket.io server runs on the same port as the HTTP server.
 
 **Client Connection:**
+
 ```javascript
-import io from 'socket.io-client'
+import io from 'socket.io-client';
 
 const socket = io('http://localhost:3001', {
   auth: {
-    token: 'your-jwt-access-token'
+    token: 'your-jwt-access-token',
   },
-  withCredentials: true
-})
+  withCredentials: true,
+});
 ```
 
 **Authentication:** JWT token required for connection
@@ -1084,53 +471,62 @@ const socket = io('http://localhost:3001', {
 ### Client → Server Events
 
 #### `game:join`
+
 Join a game mode room to receive live updates.
 
 **Payload:**
+
 ```javascript
-socket.emit('game:join', 'FLAGS')
+socket.emit('game:join', 'FLAGS');
 ```
 
 **Parameters:**
+
 - `mode` (string): Game mode ID (`FLAGS`, `CAPITALS`, `MAPS`, `MIXED`)
 
 ---
 
 #### `game:leave`
+
 Leave a game mode room.
 
 **Payload:**
+
 ```javascript
-socket.emit('game:leave', 'FLAGS')
+socket.emit('game:leave', 'FLAGS');
 ```
 
 ---
 
 #### `score:submit`
+
 Notify server of score submission (triggers leaderboard broadcast).
 
 **Payload:**
+
 ```javascript
 socket.emit('score:submit', {
   mode: 'FLAGS',
-  score: 1500
-})
+  score: 1500,
+});
 ```
 
 ---
 
 #### `admin:action`
+
 Notify other admins of an action (admin only).
 
 **Payload:**
+
 ```javascript
 socket.emit('admin:action', {
   action: 'USER_DELETE',
   details: {
     userId: 'user-uuid',
-    username: 'deleteduser'
-  }
-})
+    username: 'deleteduser',
+  },
+});
 ```
 
 ---
@@ -1138,72 +534,80 @@ socket.emit('admin:action', {
 ### Server → Client Events
 
 #### `leaderboard:update`
+
 Receive updated leaderboard for joined game mode.
 
 **Payload:**
+
 ```javascript
 socket.on('leaderboard:update', (data) => {
-  console.log('Updated leaderboard:', data)
+  console.log('Updated leaderboard:', data);
   // {
   //   mode: 'FLAGS',
   //   leaderboard: [...]
   // }
-})
+});
 ```
 
 ---
 
 #### `admin:update`
+
 Receive admin action notifications (admin only).
 
 **Payload:**
+
 ```javascript
 socket.on('admin:update', (data) => {
-  console.log('Admin action:', data)
+  console.log('Admin action:', data);
   // {
   //   action: 'USER_DELETE',
   //   details: {...},
   //   timestamp: '2025-01-15T12:00:00.000Z'
   // }
-})
+});
 ```
 
 ---
 
 #### `error`
+
 Receive error messages.
 
 **Payload:**
+
 ```javascript
 socket.on('error', (error) => {
-  console.error('Socket error:', error)
+  console.error('Socket error:', error);
   // {
   //   message: 'Error description',
   //   code: 'ERROR_CODE'
   // }
-})
+});
 ```
 
 ---
 
 #### `connect`
+
 Connection established.
 
 ```javascript
 socket.on('connect', () => {
-  console.log('Connected to server')
-})
+  console.log('Connected to server');
+});
 ```
 
 ---
 
 #### `disconnect`
+
 Connection closed.
 
 ```javascript
 socket.on('disconnect', (reason) => {
-  console.log('Disconnected:', reason)
-})
+  console.log('Disconnected:', reason);
+});
 ```
 
 ---
@@ -1377,15 +781,15 @@ pm2 start dist/index.js --name geoflags-backend
 
 ### Recommended Infrastructure
 
-| Component | Recommendation |
-|-----------|----------------|
-| **Web Server** | Nginx or Caddy (reverse proxy) |
-| **Process Manager** | PM2 or systemd |
-| **Database** | PostgreSQL 14+ (managed service recommended) |
-| **Monitoring** | Prometheus + Grafana |
-| **Logging** | Winston + ELK Stack or Datadog |
-| **Hosting** | DigitalOcean, AWS, Railway, Render |
-| **SSL** | Let's Encrypt or managed SSL |
+| Component           | Recommendation                               |
+| ------------------- | -------------------------------------------- |
+| **Web Server**      | Nginx or Caddy (reverse proxy)               |
+| **Process Manager** | PM2 or systemd                               |
+| **Database**        | PostgreSQL 14+ (managed service recommended) |
+| **Monitoring**      | Prometheus + Grafana                         |
+| **Logging**         | Winston + ELK Stack or Datadog               |
+| **Hosting**         | DigitalOcean, AWS, Railway, Render           |
+| **SSL**             | Let's Encrypt or managed SSL                 |
 
 ### PM2 Setup
 

@@ -116,7 +116,22 @@
           </label>
         </div>
 
-        <button type="submit" class="w-full btn-primary" :disabled="authLoading || !formData.acceptTerms">
+        <!-- Captcha -->
+        <!-- Note: Turnstile might be completely invisible in standard mode. Adding explicit theme for better visibility. -->
+        <div class="flex justify-center my-4">
+          <div
+            class="cf-turnstile"
+            :data-sitekey="config.public.captchaSiteKey"
+            data-theme="dark"
+            data-callback="onTurnstileSuccess"
+          ></div>
+        </div>
+
+        <button
+          type="submit"
+          class="w-full btn-primary"
+          :disabled="authLoading || !formData.acceptTerms"
+        >
           <span v-if="authLoading">Creating account...</span>
           <span v-else>Create Account</span>
         </button>
@@ -159,6 +174,13 @@ definePageMeta({
 
 const { register, error: authError, loading: authLoading } = useAuth()
 const router = useRouter()
+const config = useRuntimeConfig()
+
+useHead({
+  script: [
+    { src: 'https://challenges.cloudflare.com/turnstile/v0/api.js', async: true, defer: true },
+  ],
+})
 
 const formData = reactive({
   username: '',
@@ -166,6 +188,15 @@ const formData = reactive({
   password: '',
   confirmPassword: '',
   acceptTerms: false,
+  captchaToken: '',
+})
+
+onMounted(() => {
+  if (typeof window !== 'undefined') {
+    ;(window as any).onTurnstileSuccess = (token: string) => {
+      formData.captchaToken = token
+    }
+  }
 })
 
 const validationError = ref<string | null>(null)
@@ -188,6 +219,12 @@ const handleRegister = async () => {
   // Validate password length
   if (formData.password.length < 8) {
     validationError.value = 'Password must be at least 8 characters'
+    return
+  }
+
+  // Validate captcha
+  if (!formData.captchaToken) {
+    validationError.value = 'Please complete the Captcha verification.'
     return
   }
 

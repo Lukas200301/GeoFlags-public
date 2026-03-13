@@ -2,7 +2,7 @@ import prisma from '../utils/prisma';
 
 /**
  * Uptime Tracking Service
- * 
+ *
  * Runs a continuous background interval that pings the database every hour.
  * It measures the accurate response time in milliseconds for precise metrics.
  */
@@ -32,7 +32,7 @@ export function startUptimeTracker() {
         data: {
           responseTime: responseTimeMs,
           isUp,
-          error: errorMsg
+          error: errorMsg,
         },
       });
     } catch (insertError) {
@@ -47,7 +47,8 @@ export function startUptimeTracker() {
 
   // Calculate milliseconds until the very next top of the hour
   const now = new Date();
-  const msUntilNextHour = ONE_HOUR_MS - (now.getMinutes() * 60000 + now.getSeconds() * 1000 + now.getMilliseconds());
+  const msUntilNextHour =
+    ONE_HOUR_MS - (now.getMinutes() * 60000 + now.getSeconds() * 1000 + now.getMilliseconds());
 
   // Wait until the top of the hour, then start the true hourly interval
   setTimeout(() => {
@@ -56,7 +57,7 @@ export function startUptimeTracker() {
       performPing();
     }, ONE_HOUR_MS);
   }, msUntilNextHour);
-  
+
   // Log successful startup
   console.log('[Uptime Service] Background tracker started. Next ping aligned to top of the hour.');
 }

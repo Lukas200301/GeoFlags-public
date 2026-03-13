@@ -9,13 +9,17 @@
           :class="score >= 30 ? 'text-amber-500' : score >= 15 ? 'text-sky-500' : 'text-gray-500'"
         />
         <h1 class="text-4xl md:text-5xl font-bold text-gray-100 mb-2">Time's Up!</h1>
-        <p class="text-gray-400">You guessed {{ score }} flag{{ score !== 1 ? 's' : '' }} in 60 seconds</p>
+        <p class="text-gray-400">
+          You guessed {{ score }} flag{{ score !== 1 ? 's' : '' }} in 60 seconds
+        </p>
       </div>
 
       <!-- Score Display -->
       <div
         class="bg-gradient-to-br from-primary-500/20 to-purple-500/20 rounded-2xl p-8 mb-8 border-2"
-        :class="score >= 30 ? 'border-amber-500' : score >= 15 ? 'border-primary-500' : 'border-gray-600'"
+        :class="
+          score >= 30 ? 'border-amber-500' : score >= 15 ? 'border-primary-500' : 'border-gray-600'
+        "
       >
         <div class="text-center">
           <p class="text-gray-400 text-lg mb-2">Final Score</p>
@@ -27,24 +31,19 @@
       </div>
 
       <!-- Submitted Confirmation -->
-      <div
-        v-if="submitted"
-        class="text-center mb-6"
-      >
+      <div v-if="submitted" class="text-center mb-6">
         <div class="bg-green-500/20 border border-green-500/50 rounded-xl p-6">
           <Icon name="mdi:check-circle" class="w-12 h-12 text-green-500 mx-auto mb-3" />
           <p class="text-green-400 text-lg font-semibold mb-2">Score Submitted to Leaderboard!</p>
           <p v-if="userRank" class="text-gray-300">
-            You ranked <span class="text-primary-400 font-bold">#{{ userRank }}</span> on the leaderboard
+            You ranked <span class="text-primary-400 font-bold">#{{ userRank }}</span> on the
+            leaderboard
           </p>
         </div>
       </div>
 
       <!-- Submitting State -->
-      <div
-        v-else-if="submitting"
-        class="text-center mb-6"
-      >
+      <div v-else-if="submitting" class="text-center mb-6">
         <div class="flex items-center justify-center gap-3 text-gray-300">
           <Icon name="mdi:loading" class="w-6 h-6 animate-spin" />
           <span>Submitting to leaderboard...</span>
@@ -138,20 +137,17 @@ const handleSubmitScore = async () => {
     submitting.value = true
     submitError.value = null
 
-    const response = await apiRequest<{ success: boolean; rank?: number }>(
-      '/api/game/submit',
-      {
-        method: 'POST',
-        body: {
-          mode: 'TIME_TRIAL',
-          score: score.value,
-          data: {
-            timeElapsed: timeElapsed.value,
-            averageTime: parseFloat(averageTime.value),
-          },
+    const response = await apiRequest<{ success: boolean; rank?: number }>('/api/game/submit', {
+      method: 'POST',
+      body: {
+        mode: 'TIME_TRIAL',
+        score: score.value,
+        data: {
+          timeElapsed: timeElapsed.value,
+          averageTime: parseFloat(averageTime.value),
         },
-      }
-    )
+      },
+    })
 
     submitted.value = true
     userRank.value = response.rank || null

@@ -145,7 +145,20 @@ export async function getLeaderboard(req: AuthRequest, res: Response) {
     const limit = parseInt(req.query.limit as string) || 100;
 
     // Validate mode if provided
-    if (mode && !['FLAGS', 'CAPITALS', 'MAPS', 'MIXED', 'GUESS_FLAG', 'TIME_TRIAL', 'FIND_CAPITAL', 'HIGHER_LOWER', 'SILHOUETTE'].includes(mode)) {
+    if (
+      mode &&
+      ![
+        'FLAGS',
+        'CAPITALS',
+        'MAPS',
+        'MIXED',
+        'GUESS_FLAG',
+        'TIME_TRIAL',
+        'FIND_CAPITAL',
+        'HIGHER_LOWER',
+        'SILHOUETTE',
+      ].includes(mode)
+    ) {
       return res.status(400).json({ message: 'Invalid game mode' });
     }
 
@@ -170,22 +183,22 @@ export async function getLeaderboard(req: AuthRequest, res: Response) {
         where: {
           user: {
             status: {
-              not: 'BANNED'
-            }
-          }
-        }
+              not: 'BANNED',
+            },
+          },
+        },
       });
     } else {
       // Get top entries for specific mode
       // Exclude banned users from leaderboard
       entries = await prisma.leaderboardEntry.findMany({
-        where: { 
+        where: {
           mode: mode as GameModeType,
           user: {
             status: {
-              not: 'BANNED'
-            }
-          }
+              not: 'BANNED',
+            },
+          },
         },
         take: limit,
         orderBy: { score: 'desc' },

@@ -12,6 +12,6 @@ export const useSidebar = () => {
   return {
     sidebarCollapsed,
     toggleSidebar,
-    setSidebarCollapsed
+    setSidebarCollapsed,
   }
 }

@@ -9,7 +9,12 @@
     <!-- Game Screen -->
     <div v-else class="space-y-6">
       <!-- Score Header -->
-      <div class="card p-6" v-motion :initial="{ opacity: 0, y: -20 }" :visible="{ opacity: 1, y: 0 }">
+      <div
+        class="card p-6"
+        v-motion
+        :initial="{ opacity: 0, y: -20 }"
+        :visible="{ opacity: 1, y: 0 }"
+      >
         <div class="flex items-center justify-between flex-wrap gap-4">
           <div class="flex items-center gap-4">
             <div class="bg-sky-500/20 rounded-xl p-3">
@@ -58,9 +63,14 @@
               class="w-full h-full bg-gray-900 border-4 border-gray-700 rounded-xl"
             ></div>
             <template #fallback>
-              <div class="w-full h-full bg-gray-900 border-4 border-gray-700 rounded-xl flex items-center justify-center">
+              <div
+                class="w-full h-full bg-gray-900 border-4 border-gray-700 rounded-xl flex items-center justify-center"
+              >
                 <div class="text-center">
-                  <Icon name="mdi:loading" class="w-12 h-12 text-primary-500 animate-spin mx-auto mb-4" />
+                  <Icon
+                    name="mdi:loading"
+                    class="w-12 h-12 text-primary-500 animate-spin mx-auto mb-4"
+                  />
                   <p class="text-gray-400">Loading map...</p>
                 </div>
               </div>
@@ -76,10 +86,7 @@
               <div class="text-center max-w-md px-6">
                 <Icon
                   :name="isCorrect ? 'mdi:check-circle' : 'mdi:close-circle'"
-                  :class="[
-                    'w-24 h-24 mx-auto mb-4',
-                    isCorrect ? 'text-green-400' : 'text-red-400'
-                  ]"
+                  :class="['w-24 h-24 mx-auto mb-4', isCorrect ? 'text-green-400' : 'text-red-400']"
                 />
                 <h3 class="text-3xl font-bold text-white mb-2">
                   {{ isCorrect ? 'Correct!' : 'Wrong!' }}
@@ -99,17 +106,11 @@
                   <span>Next Country</span>
                 </button>
                 <div v-else class="flex flex-col sm:flex-row gap-4">
-                  <button
-                    @click="handlePlayAgain"
-                    class="btn-primary px-8 py-3 text-lg"
-                  >
+                  <button @click="handlePlayAgain" class="btn-primary px-8 py-3 text-lg">
                     <Icon name="mdi:refresh" class="w-6 h-6" />
                     <span>Play Again</span>
                   </button>
-                  <button
-                    @click="handleGameOver"
-                    class="btn-secondary px-8 py-3 text-lg"
-                  >
+                  <button @click="handleGameOver" class="btn-secondary px-8 py-3 text-lg">
                     <Icon name="mdi:flag-checkered" class="w-6 h-6" />
                     <span>View Results</span>
                   </button>
@@ -128,11 +129,15 @@
     </div>
 
     <!-- Quit Confirmation Dialog -->
-    <div v-if="showQuitDialog" class="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+    <div
+      v-if="showQuitDialog"
+      class="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4"
+    >
       <div class="card max-w-md w-full p-6">
         <h3 class="text-2xl font-bold text-gray-100 mb-4">Quit Game?</h3>
         <p class="text-gray-300 mb-6">
-          Are you sure you want to quit? Your current score of <strong class="text-sky-400">{{ gameState?.score || 0 }}</strong> will be lost.
+          Are you sure you want to quit? Your current score of
+          <strong class="text-sky-400">{{ gameState?.score || 0 }}</strong> will be lost.
         </p>
         <div class="flex gap-4">
           <button @click="showQuitDialog = false" class="btn-secondary flex-1">
@@ -190,9 +195,7 @@ const handleMapClick = async (e: maplibregl.MapMouseEvent) => {
   if (clickMarker) {
     clickMarker.remove()
   }
-  clickMarker = new maplibregl.Marker({ color: '#0ea5e9' })
-    .setLngLat([lng, lat])
-    .addTo(map!)
+  clickMarker = new maplibregl.Marker({ color: '#0ea5e9' }).setLngLat([lng, lat]).addTo(map!)
 
   // Submit answer
   await submitAnswer(lat, lng)
@@ -215,7 +218,7 @@ const continueToNext = async () => {
   if (capitalMarker) capitalMarker.remove()
   clickMarker = null
   capitalMarker = null
-  
+
   // Load next country
   await continueGame()
 }
@@ -269,14 +272,14 @@ const initMap = async () => {
       style: {
         version: 8,
         sources: {
-          'satellite': {
+          satellite: {
             type: 'raster',
             tiles: [
-              'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
+              'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
             ],
             tileSize: 256,
-            attribution: '© Esri'
-          }
+            attribution: '© Esri',
+          },
         },
         layers: [
           {
@@ -284,21 +287,21 @@ const initMap = async () => {
             type: 'raster',
             source: 'satellite',
             minzoom: 0,
-            maxzoom: 22
-          }
+            maxzoom: 22,
+          },
         ],
         projection: {
-          type: 'globe'
-        }
+          type: 'globe',
+        },
       },
       center: [0, 20],
       zoom: 1.2,
       pitch: 0,
-      bearing: 0
+      bearing: 0,
     })
 
     map.addControl(new maplibregl.NavigationControl(), 'top-right')
-    
+
     map.on('click', handleMapClick)
 
     map.on('load', () => {

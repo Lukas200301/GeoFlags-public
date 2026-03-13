@@ -21,10 +21,7 @@
 
     <!-- Trend Indicator -->
     <div v-if="trend" class="flex items-center gap-2 text-sm">
-      <div
-        class="flex items-center gap-1 px-2 py-1 rounded-md glass-badge"
-        :class="trendClasses"
-      >
+      <div class="flex items-center gap-1 px-2 py-1 rounded-md glass-badge" :class="trendClasses">
         <Icon
           :name="trend.direction === 'up' ? 'mdi:trending-up' : 'mdi:trending-down'"
           class="w-4 h-4"
@@ -82,29 +79,33 @@ const props = withDefaults(defineProps<Props>(), {
 // Animated counter for numeric values
 const animatedValue = ref(props.value)
 
-watch(() => props.value, (newValue) => {
-  if (typeof newValue === 'number' && typeof animatedValue.value === 'number') {
-    const start = animatedValue.value
-    const end = newValue
-    const duration = 1000 // ms
-    const startTime = Date.now()
+watch(
+  () => props.value,
+  (newValue) => {
+    if (typeof newValue === 'number' && typeof animatedValue.value === 'number') {
+      const start = animatedValue.value
+      const end = newValue
+      const duration = 1000 // ms
+      const startTime = Date.now()
 
-    const animate = () => {
-      const now = Date.now()
-      const progress = Math.min((now - startTime) / duration, 1)
-      const easeOutQuart = 1 - Math.pow(1 - progress, 4)
-      animatedValue.value = Math.round(start + (end - start) * easeOutQuart)
+      const animate = () => {
+        const now = Date.now()
+        const progress = Math.min((now - startTime) / duration, 1)
+        const easeOutQuart = 1 - Math.pow(1 - progress, 4)
+        animatedValue.value = Math.round(start + (end - start) * easeOutQuart)
 
-      if (progress < 1) {
-        requestAnimationFrame(animate)
+        if (progress < 1) {
+          requestAnimationFrame(animate)
+        }
       }
-    }
 
-    requestAnimationFrame(animate)
-  } else {
-    animatedValue.value = newValue
-  }
-}, { immediate: true })
+      requestAnimationFrame(animate)
+    } else {
+      animatedValue.value = newValue
+    }
+  },
+  { immediate: true }
+)
 
 // Icon styling
 const iconBgClass = computed(() => {
@@ -175,5 +176,3 @@ const sparklineColor = computed(() => {
   return colors[props.iconColor] || '#3b82f6'
 })
 </script>
-
-

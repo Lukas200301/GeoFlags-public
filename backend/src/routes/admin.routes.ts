@@ -26,7 +26,11 @@ router.get('/users', adminController.getUsers);
 router.get('/users/:id', adminController.getUserById);
 router.put('/users/:id/role', auditLogger('ROLE_CHANGE'), adminController.changeUserRole);
 router.delete('/users/:id', auditLogger('USER_DELETE'), adminController.deleteUser);
-router.delete('/users/:id/avatar', auditLogger('USER_AVATAR_DELETE'), adminController.deleteUserAvatar);
+router.delete(
+  '/users/:id/avatar',
+  auditLogger('USER_AVATAR_DELETE'),
+  adminController.deleteUserAvatar
+);
 
 /**
  * Game Mode Management
@@ -38,8 +42,16 @@ router.put('/game-modes/:id', auditLogger('GAME_MODE_UPDATE'), adminController.u
  * Leaderboard Management
  */
 router.get('/leaderboard', adminController.getLeaderboardAdmin);
-router.post('/leaderboard/bulk-delete', auditLogger('LEADERBOARD_BULK_DELETE'), adminController.bulkDeleteLeaderboardEntries);
-router.delete('/leaderboard/:id', auditLogger('LEADERBOARD_DELETE'), adminController.deleteLeaderboardEntry);
+router.post(
+  '/leaderboard/bulk-delete',
+  auditLogger('LEADERBOARD_BULK_DELETE'),
+  adminController.bulkDeleteLeaderboardEntries
+);
+router.delete(
+  '/leaderboard/:id',
+  auditLogger('LEADERBOARD_DELETE'),
+  adminController.deleteLeaderboardEntry
+);
 
 /**
  * Statistics & Audit
@@ -58,7 +70,11 @@ router.get('/system/health', adminController.getSystemHealth);
 /**
  * User Status Management (Ban/Suspend)
  */
-router.patch('/users/:userId/status', auditLogger('USER_STATUS_CHANGE'), adminController.updateUserStatus);
+router.patch(
+  '/users/:userId/status',
+  auditLogger('USER_STATUS_CHANGE'),
+  adminController.updateUserStatus
+);
 
 /**
  * User Role Management (separate endpoint for consistency with frontend)
@@ -75,6 +91,10 @@ router.get('/database', adminController.getDatabaseTable);
  * System Settings
  */
 router.get('/system/settings', adminController.getSystemSettings);
-router.put('/system/settings', auditLogger('SYSTEM_SETTINGS_UPDATE'), adminController.updateSystemSettings);
+router.put(
+  '/system/settings',
+  auditLogger('SYSTEM_SETTINGS_UPDATE'),
+  adminController.updateSystemSettings
+);
 
 export default router;

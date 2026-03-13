@@ -45,9 +45,7 @@ function generateFlagQuestions(count: number): BattleQuestion[] {
 
   for (const country of selectedCountries) {
     // Get 3 random wrong answers
-    const wrongAnswers = shuffleArray(
-      countriesWithFlags.filter((c) => c.cca2 !== country.cca2)
-    )
+    const wrongAnswers = shuffleArray(countriesWithFlags.filter((c) => c.cca2 !== country.cca2))
       .slice(0, 3)
       .map((c) => c.name.common);
 
@@ -72,7 +70,9 @@ function generateFlagQuestions(count: number): BattleQuestion[] {
  */
 function generateCapitalQuestions(count: number): BattleQuestion[] {
   const questions: BattleQuestion[] = [];
-  const selectedCountries = getRandomCountries(count).filter((c) => c.capital && c.capital.length > 0);
+  const selectedCountries = getRandomCountries(count).filter(
+    (c) => c.capital && c.capital.length > 0
+  );
 
   for (let i = 0; i < Math.min(count, selectedCountries.length); i++) {
     const country = selectedCountries[i];

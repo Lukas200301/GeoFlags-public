@@ -3,7 +3,9 @@ import type { H3Event } from 'h3'
 /**
  * Get CSRF token from backend and forward cookies properly
  */
-export async function getCsrfToken(event: H3Event): Promise<{ token: string; cookieHeader: string }> {
+export async function getCsrfToken(
+  event: H3Event
+): Promise<{ token: string; cookieHeader: string }> {
   const config = useRuntimeConfig()
   const apiBase = config.public.apiBase
 
@@ -32,7 +34,7 @@ export async function getCsrfToken(event: H3Event): Promise<{ token: string; coo
 
     // Build cookie header for subsequent requests (includes the _csrf cookie from backend)
     const backendCookies = setCookieHeaders
-      .map(header => {
+      .map((header) => {
         const match = header.match(/^([^=]+)=([^;]+)/)
         return match ? `${match[1]}=${match[2]}` : ''
       })

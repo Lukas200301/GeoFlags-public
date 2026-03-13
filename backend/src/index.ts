@@ -4,7 +4,7 @@ dotenv.config();
 
 // Validate critical environment variables
 const requiredEnvVars = ['JWT_ACCESS_SECRET', 'JWT_REFRESH_SECRET', 'DATABASE_URL'];
-const missingEnvVars = requiredEnvVars.filter(varName => !process.env[varName]);
+const missingEnvVars = requiredEnvVars.filter((varName) => !process.env[varName]);
 if (missingEnvVars.length > 0) {
   console.error('ERROR: Missing required environment variables:', missingEnvVars);
   console.error('Please check your .env file in the backend directory');
@@ -155,9 +155,9 @@ app.get('/api/stats', async (_req: Request, res: Response) => {
     const totalUsers = await prisma.user.count();
     const totalGames = await prisma.gameSession.count();
     const gameModes = await prisma.gameMode.count({
-      where: { enabled: true }
+      where: { enabled: true },
     });
-    
+
     res.json({
       totalUsers,
       totalGames,

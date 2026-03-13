@@ -10,14 +10,14 @@ import prisma from '../utils/prisma';
 /**
  * Get public user profile
  * GET /api/users/:userId
- * 
+ *
  * Returns only public information:
  * - Username
  * - Avatar
  * - Join date
  * - Game statistics
  * - Recent game history
- * 
+ *
  * Does NOT expose:
  * - Email
  * - Password hash
@@ -66,7 +66,7 @@ export async function getPublicUserProfile(req: Request, res: Response) {
 
     // High scores per mode
     const highScores: Record<string, number> = {};
-    gameSessions.forEach(session => {
+    gameSessions.forEach((session) => {
       const mode = session.mode;
       if (!highScores[mode] || session.score > highScores[mode]) {
         highScores[mode] = session.score;
@@ -75,7 +75,7 @@ export async function getPublicUserProfile(req: Request, res: Response) {
 
     // Games per mode
     const gamesPerMode: Record<string, number> = {};
-    gameSessions.forEach(session => {
+    gameSessions.forEach((session) => {
       const mode = session.mode;
       gamesPerMode[mode] = (gamesPerMode[mode] || 0) + 1;
     });
@@ -83,23 +83,23 @@ export async function getPublicUserProfile(req: Request, res: Response) {
     // Average scores per mode
     const averageScoresByMode: Record<string, number> = {};
     const scoresByMode: Record<string, number[]> = {};
-    gameSessions.forEach(session => {
+    gameSessions.forEach((session) => {
       const mode = session.mode;
       if (!scoresByMode[mode]) {
         scoresByMode[mode] = [];
       }
       scoresByMode[mode].push(session.score);
     });
-    Object.keys(scoresByMode).forEach(mode => {
+    Object.keys(scoresByMode).forEach((mode) => {
       const scores = scoresByMode[mode];
       const sum = scores.reduce((a, b) => a + b, 0);
       averageScoresByMode[mode] = Math.round(sum / scores.length);
     });
 
     // Get recent game history (last 20 games)
-    const gameHistory = gameSessions.slice(0, 20).map(session => {
-      const data = session.data as any || {};
-      
+    const gameHistory = gameSessions.slice(0, 20).map((session) => {
+      const data = (session.data as any) || {};
+
       return {
         id: `${session.createdAt.getTime()}`, // Use timestamp as ID for privacy
         mode: session.mode,
@@ -134,7 +134,7 @@ export async function getPublicUserProfile(req: Request, res: Response) {
 /**
  * Search users by username
  * GET /api/users/search?q=username
- * 
+ *
  * Returns only public information for search results
  */
 export async function searchUsers(req: Request, res: Response) {
@@ -206,11 +206,14 @@ export async function getPublicStats(_req: Request, res: Response) {
     const now = Date.now();
 
     // Check if cache is still valid
-    if (publicStatsCache.data && (now - publicStatsCache.timestamp) < CACHE_DURATION) {
+    if (publicStatsCache.data && now - publicStatsCache.timestamp < CACHE_DURATION) {
       // Return cached data with cache headers
       return res
         .set('X-Cache', 'HIT')
-        .set('Cache-Control', `public, max-age=${Math.floor((CACHE_DURATION - (now - publicStatsCache.timestamp)) / 1000)}`)
+        .set(
+          'Cache-Control',
+          `public, max-age=${Math.floor((CACHE_DURATION - (now - publicStatsCache.timestamp)) / 1000)}`
+        )
         .json(publicStatsCache.data);
     }
 
@@ -245,9 +248,7 @@ export async function getPublicStats(_req: Request, res: Response) {
 
     // If we have cached data, return it even if expired during an error
     if (publicStatsCache.data) {
-      return res
-        .set('X-Cache', 'STALE')
-        .json(publicStatsCache.data);
+      return res.set('X-Cache', 'STALE').json(publicStatsCache.data);
     }
 
     return res.status(500).json({ message: 'Internal server error' });

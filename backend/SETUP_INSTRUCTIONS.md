@@ -62,6 +62,7 @@ ADMIN_PASSWORD=ChangeThisPassword123!
 ```
 
 > **IMPORTANT**: Generate strong random secrets for production:
+>
 > ```bash
 > node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 > ```
@@ -90,6 +91,7 @@ npm run dev
 The backend will start on **http://localhost:3001**
 
 You should see:
+
 ```
 ╔════════════════════════════════════════╗
 ║        GeoFlags Backend Server         ║
@@ -124,6 +126,7 @@ npm run format           # Format code with Prettier
 Test that the API is running correctly:
 
 ### Health Check
+
 ```bash
 curl http://localhost:3001/api/health
 ```
@@ -131,6 +134,7 @@ curl http://localhost:3001/api/health
 Expected response: `{"status":"ok","timestamp":"..."}`
 
 ### Register a User
+
 ```bash
 curl -X POST http://localhost:3001/api/auth/register \
   -H "Content-Type: application/json" \
@@ -141,6 +145,7 @@ curl -X POST http://localhost:3001/api/auth/register \
 ```
 
 ### Login
+
 ```bash
 curl -X POST http://localhost:3001/api/auth/login \
   -H "Content-Type: application/json" \
@@ -183,6 +188,7 @@ npx prisma migrate reset
 ### When You Need to Update the Database
 
 You need to update the database when:
+
 - Adding new tables or models
 - Adding/removing fields from existing models
 - Changing field types or constraints
@@ -224,11 +230,13 @@ npx prisma migrate dev --name add_last_login_field
 ```
 
 This will:
+
 - Create a new migration file in `prisma/migrations/`
 - Apply the migration to your development database
 - Regenerate the Prisma Client
 
 **Migration naming convention**:
+
 - `add_<field_name>` - Adding new field
 - `remove_<field_name>` - Removing field
 - `update_<table_name>` - Modifying existing table
@@ -274,6 +282,7 @@ This applies all pending migrations without prompting.
 #### Adding a New Table
 
 1. Add the model to `schema.prisma`:
+
 ```prisma
 model Notification {
   id        String   @id @default(uuid())
@@ -289,6 +298,7 @@ model Notification {
 ```
 
 2. Update User model with relation:
+
 ```prisma
 model User {
   // ... existing fields
@@ -297,6 +307,7 @@ model User {
 ```
 
 3. Create migration:
+
 ```bash
 npx prisma migrate dev --name create_notifications_table
 ```
@@ -355,16 +366,19 @@ npm run prisma:seed
 #### Resolve Conflicts Manually
 
 1. Check migration status:
+
 ```bash
 npx prisma migrate status
 ```
 
 2. If migrations are unapplied:
+
 ```bash
 npx prisma migrate resolve --applied <migration_name>
 ```
 
 3. If migration failed:
+
 ```bash
 npx prisma migrate resolve --rolled-back <migration_name>
 ```
@@ -381,6 +395,7 @@ npx prisma migrate dev --name revert_last_login_field
 ```
 
 Manually edit the migration SQL to reverse changes:
+
 ```sql
 -- AlterTable
 ALTER TABLE "User" DROP COLUMN "lastLoginAt";
@@ -397,24 +412,28 @@ npx prisma migrate reset
 #### Safe Production Update Process
 
 1. **Backup your database first!**
+
 ```bash
 # PostgreSQL backup
 pg_dump -U postgres -d geoflags > backup_$(date +%Y%m%d_%H%M%S).sql
 ```
 
 2. **Test migrations on staging**:
+
 ```bash
 # On staging environment
 npx prisma migrate deploy
 ```
 
 3. **Apply to production**:
+
 ```bash
 # On production environment
 npx prisma migrate deploy
 ```
 
 4. **Verify the update**:
+
 ```bash
 # Check if migrations applied
 npx prisma migrate status
@@ -428,21 +447,25 @@ pm2 restart geoflags-backend
 After any database update:
 
 1. **Regenerate Prisma Client**:
+
 ```bash
 npm run prisma:generate
 ```
 
 2. **Restart development server**:
+
 ```bash
 npm run dev
 ```
 
 3. **Update TypeScript types** (if needed):
+
 ```bash
 npm run build
 ```
 
 4. **Test the changes**:
+
 - Verify new fields appear in Prisma Studio
 - Test API endpoints that use updated models
 - Check that existing data is preserved
@@ -450,6 +473,7 @@ npm run build
 ### Best Practices
 
 ✅ **DO**:
+
 - Always backup production database before migrations
 - Test migrations on staging first
 - Use descriptive migration names
@@ -458,6 +482,7 @@ npm run build
 - Commit migration files to version control
 
 ❌ **DON'T**:
+
 - Don't edit applied migration files
 - Don't delete migration files
 - Don't use `migrate reset` in production
@@ -482,6 +507,7 @@ cat prisma/migrations/<timestamp>_<name>/migration.sql
 After seeding, you can login with:
 
 **Admin User:**
+
 - Username: `admin` (or your ADMIN_USERNAME)
 - Password: `ChangeThisPassword123!` (or your ADMIN_PASSWORD)
 
@@ -494,6 +520,7 @@ After seeding, you can login with:
 **Symptoms**: Cannot connect to PostgreSQL
 
 **Solutions**:
+
 - Check PostgreSQL is running: `pg_isready`
 - Verify `DATABASE_URL` in `.env`
 - Confirm database exists: `psql -U postgres -l`
@@ -504,6 +531,7 @@ After seeding, you can login with:
 **Symptoms**: Error: Port 3001 is already in use
 
 **Solutions**:
+
 - Change `PORT` in `.env` to a different port
 - Or kill the process using port 3001:
 
@@ -522,6 +550,7 @@ kill -9 <pid>
 **Symptoms**: Prisma client errors, migration failures
 
 **Solutions**:
+
 ```bash
 # Delete and regenerate
 rm -rf node_modules
@@ -536,6 +565,7 @@ npm run prisma:migrate
 **Symptoms**: Build or compilation errors
 
 **Solutions**:
+
 - Ensure `npm install` completed successfully
 - Run `npm run build` to check for errors
 - Check TypeScript version compatibility
@@ -679,7 +709,7 @@ const io = require('socket.io-client');
 
 const socket = io('http://localhost:3001', {
   auth: { token: 'your-jwt-token' },
-  withCredentials: true
+  withCredentials: true,
 });
 
 socket.on('connect', () => {
@@ -697,6 +727,7 @@ socket.on('leaderboard:update', (data) => {
 ### Logging
 
 Development logs appear in terminal. For production, consider:
+
 - **Winston** - File logging
 - **ELK Stack** - Centralized logging
 - **Sentry** - Error tracking
@@ -734,6 +765,7 @@ If you encounter issues:
 ### When Creating an Issue
 
 Include:
+
 - Node.js version (`node --version`)
 - PostgreSQL version
 - npm/yarn version

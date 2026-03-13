@@ -2,7 +2,6 @@ import { Response } from 'express';
 import { AuthRequest } from '../types';
 import prisma from '../utils/prisma';
 
-
 /**
  * Friends Controller
  *
@@ -422,10 +421,7 @@ export async function getFriendSuggestions(req: AuthRequest, res: Response) {
     // Get user's existing friend IDs and pending/blocked users
     const existingRelations = await prisma.friendship.findMany({
       where: {
-        OR: [
-          { userId: userId },
-          { friendId: userId },
-        ],
+        OR: [{ userId: userId }, { friendId: userId }],
       },
       select: {
         userId: true,
@@ -482,10 +478,7 @@ export async function searchFriends(req: AuthRequest, res: Response) {
     // Get user's existing friend IDs
     const existingRelations = await prisma.friendship.findMany({
       where: {
-        OR: [
-          { userId: userId },
-          { friendId: userId },
-        ],
+        OR: [{ userId: userId }, { friendId: userId }],
       },
       select: {
         userId: true,

@@ -3,7 +3,9 @@
     <div class="container mx-auto px-4 max-w-6xl">
       <!-- Header -->
       <div class="flex items-center justify-between mb-8">
-        <h1 class="text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">
+        <h1
+          class="text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent"
+        >
           Battle Rooms
         </h1>
         <button
@@ -23,9 +25,7 @@
           @click="activeTab = tab.id"
           :class="[
             'px-6 py-3 font-semibold transition-all duration-300 relative',
-            activeTab === tab.id
-              ? 'text-purple-400'
-              : 'text-gray-400 hover:text-gray-200'
+            activeTab === tab.id ? 'text-purple-400' : 'text-gray-400 hover:text-gray-200',
           ]"
         >
           {{ tab.label }}
@@ -39,7 +39,9 @@
       <!-- Available Rooms -->
       <div v-if="activeTab === 'rooms'" class="space-y-4">
         <div v-if="loading" class="text-center py-12">
-          <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500"></div>
+          <div
+            class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500"
+          ></div>
         </div>
 
         <div v-else-if="availableRooms.length === 0" class="text-center py-12 glass-card">
@@ -60,51 +62,59 @@
               :key="room.id"
               class="glass-card p-6 hover:scale-[1.02] transition-transform duration-300"
             >
-            <div class="flex items-center justify-between">
-              <div class="flex-1">
-                <div class="flex items-center gap-6 mb-4">
-                  <!-- Host -->
-                  <div class="flex items-center gap-3">
-                    <div class="w-16 h-16 rounded-full bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center text-2xl font-bold animate-pulse">
-                      {{ room.challenger.username[0].toUpperCase() }}
+              <div class="flex items-center justify-between">
+                <div class="flex-1">
+                  <div class="flex items-center gap-6 mb-4">
+                    <!-- Host -->
+                    <div class="flex items-center gap-3">
+                      <div
+                        class="w-16 h-16 rounded-full bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center text-2xl font-bold animate-pulse"
+                      >
+                        {{ room.challenger.username[0].toUpperCase() }}
+                      </div>
+                      <div>
+                        <div class="text-sm text-gray-400">Host</div>
+                        <div class="font-semibold text-lg">{{ room.challenger.username }}</div>
+                      </div>
                     </div>
-                    <div>
-                      <div class="text-sm text-gray-400">Host</div>
-                      <div class="font-semibold text-lg">{{ room.challenger.username }}</div>
+
+                    <Icon name="mdi:sword-cross" class="text-3xl text-purple-400" />
+
+                    <!-- Waiting for opponent -->
+                    <div class="flex items-center gap-3">
+                      <div
+                        class="w-16 h-16 rounded-full bg-gray-700 flex items-center justify-center"
+                      >
+                        <Icon name="mdi:account-question" class="text-3xl text-gray-500" />
+                      </div>
+                      <div>
+                        <div class="text-sm text-gray-400">Waiting for</div>
+                        <div class="font-semibold text-lg text-gray-500">Opponent</div>
+                      </div>
                     </div>
                   </div>
 
-                  <Icon name="mdi:sword-cross" class="text-3xl text-purple-400" />
-
-                  <!-- Waiting for opponent -->
-                  <div class="flex items-center gap-3">
-                    <div class="w-16 h-16 rounded-full bg-gray-700 flex items-center justify-center">
-                      <Icon name="mdi:account-question" class="text-3xl text-gray-500" />
-                    </div>
-                    <div>
-                      <div class="text-sm text-gray-400">Waiting for</div>
-                      <div class="font-semibold text-lg text-gray-500">Opponent</div>
-                    </div>
+                  <div class="flex items-center gap-4 text-sm">
+                    <span
+                      class="px-3 py-1 bg-purple-500/20 rounded-full text-purple-300 font-semibold"
+                    >
+                      {{ getModeName(room.mode) }}
+                    </span>
+                    <span class="text-gray-400"
+                      >Created {{ formatRelativeTime(room.createdAt) }}</span
+                    >
                   </div>
                 </div>
 
-                <div class="flex items-center gap-4 text-sm">
-                  <span class="px-3 py-1 bg-purple-500/20 rounded-full text-purple-300 font-semibold">
-                    {{ getModeName(room.mode) }}
-                  </span>
-                  <span class="text-gray-400">Created {{ formatRelativeTime(room.createdAt) }}</span>
-                </div>
+                <button
+                  @click="joinRoom(room.id)"
+                  :disabled="room.challenger.id === currentUserId"
+                  class="px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg font-bold text-lg hover:from-green-600 hover:to-emerald-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <Icon name="mdi:login" class="inline-block mr-2" />
+                  Join Room
+                </button>
               </div>
-
-              <button
-                @click="joinRoom(room.id)"
-                :disabled="room.challenger.id === currentUserId"
-                class="px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg font-bold text-lg hover:from-green-600 hover:to-emerald-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <Icon name="mdi:login" class="inline-block mr-2" />
-                Join Room
-              </button>
-            </div>
             </div>
           </div>
 
@@ -134,7 +144,9 @@
       <!-- My Active Battles -->
       <div v-if="activeTab === 'active'" class="space-y-4">
         <div v-if="loading" class="text-center py-12">
-          <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500"></div>
+          <div
+            class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500"
+          ></div>
         </div>
 
         <div v-else-if="activeBattles.length === 0" class="text-center py-12 glass-card">
@@ -150,45 +162,60 @@
               class="glass-card p-6 hover:scale-[1.02] transition-transform duration-300 cursor-pointer"
               @click="joinBattle(battle.id)"
             >
-            <div class="flex items-center justify-between">
-              <div class="flex-1">
-                <div class="flex items-center gap-6 mb-4">
-                  <!-- Player 1 -->
-                  <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center font-bold">
-                      {{ battle.challenger.username[0].toUpperCase() }}
+              <div class="flex items-center justify-between">
+                <div class="flex-1">
+                  <div class="flex items-center gap-6 mb-4">
+                    <!-- Player 1 -->
+                    <div class="flex items-center gap-3">
+                      <div
+                        class="w-12 h-12 rounded-full bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center font-bold"
+                      >
+                        {{ battle.challenger.username[0].toUpperCase() }}
+                      </div>
+                      <span class="font-semibold">{{ battle.challenger.username }}</span>
                     </div>
-                    <span class="font-semibold">{{ battle.challenger.username }}</span>
+
+                    <Icon name="mdi:sword-cross" class="text-2xl text-purple-400" />
+
+                    <!-- Player 2 -->
+                    <div class="flex items-center gap-3">
+                      <div
+                        v-if="battle.opponent"
+                        class="w-12 h-12 rounded-full bg-gradient-to-br from-pink-500 to-red-600 flex items-center justify-center font-bold"
+                      >
+                        {{ battle.opponent.username[0].toUpperCase() }}
+                      </div>
+                      <div
+                        v-else
+                        class="w-12 h-12 rounded-full bg-gray-600 flex items-center justify-center"
+                      >
+                        <Icon name="mdi:help" />
+                      </div>
+                      <span class="font-semibold">{{
+                        battle.opponent?.username || 'Waiting...'
+                      }}</span>
+                    </div>
                   </div>
 
-                  <Icon name="mdi:sword-cross" class="text-2xl text-purple-400" />
-
-                  <!-- Player 2 -->
-                  <div class="flex items-center gap-3">
-                    <div v-if="battle.opponent" class="w-12 h-12 rounded-full bg-gradient-to-br from-pink-500 to-red-600 flex items-center justify-center font-bold">
-                      {{ battle.opponent.username[0].toUpperCase() }}
-                    </div>
-                    <div v-else class="w-12 h-12 rounded-full bg-gray-600 flex items-center justify-center">
-                      <Icon name="mdi:help" />
-                    </div>
-                    <span class="font-semibold">{{ battle.opponent?.username || 'Waiting...' }}</span>
+                  <div class="flex items-center gap-4 text-sm text-gray-400">
+                    <span class="px-3 py-1 bg-purple-500/20 rounded-full">
+                      {{ getModeName(battle.mode) }}
+                    </span>
+                    <span
+                      >Status:
+                      {{
+                        battle.status === 'WAITING' ? 'Waiting for opponent' : 'In Progress'
+                      }}</span
+                    >
                   </div>
                 </div>
 
-                <div class="flex items-center gap-4 text-sm text-gray-400">
-                  <span class="px-3 py-1 bg-purple-500/20 rounded-full">
-                    {{ getModeName(battle.mode) }}
-                  </span>
-                  <span>Status: {{ battle.status === 'WAITING' ? 'Waiting for opponent' : 'In Progress' }}</span>
-                </div>
+                <button
+                  class="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-600 rounded-lg font-semibold hover:from-purple-600 hover:to-pink-700 transition-all"
+                >
+                  {{ battle.status === 'WAITING' ? 'Cancel' : 'Continue Battle' }}
+                </button>
               </div>
-
-              <button
-                class="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-600 rounded-lg font-semibold hover:from-purple-600 hover:to-pink-700 transition-all"
-              >
-                {{ battle.status === 'WAITING' ? 'Cancel' : 'Continue Battle' }}
-              </button>
-            </div>
             </div>
           </div>
 
@@ -218,7 +245,9 @@
       <!-- Battle History -->
       <div v-if="activeTab === 'history'" class="space-y-4">
         <div v-if="loading" class="text-center py-12">
-          <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500"></div>
+          <div
+            class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500"
+          ></div>
         </div>
 
         <div v-else-if="battleHistory.length === 0" class="text-center py-12 glass-card">
@@ -227,57 +256,63 @@
 
         <div v-else>
           <div class="grid gap-4">
-            <div
-              v-for="battle in paginatedHistory"
-              :key="battle.id"
-              class="glass-card p-6"
-            >
-            <div class="flex items-center justify-between">
-              <div class="flex-1">
-                <div class="flex items-center gap-6 mb-4">
-                  <!-- Player 1 -->
-                  <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center font-bold relative">
-                      {{ battle.challenger.username[0].toUpperCase() }}
-                      <div v-if="battle.winnerId === battle.challenger.id" class="absolute -top-1 -right-1 w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center">
-                        <Icon name="mdi:crown" class="text-sm" />
+            <div v-for="battle in paginatedHistory" :key="battle.id" class="glass-card p-6">
+              <div class="flex items-center justify-between">
+                <div class="flex-1">
+                  <div class="flex items-center gap-6 mb-4">
+                    <!-- Player 1 -->
+                    <div class="flex items-center gap-3">
+                      <div
+                        class="w-12 h-12 rounded-full bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center font-bold relative"
+                      >
+                        {{ battle.challenger.username[0].toUpperCase() }}
+                        <div
+                          v-if="battle.winnerId === battle.challenger.id"
+                          class="absolute -top-1 -right-1 w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center"
+                        >
+                          <Icon name="mdi:crown" class="text-sm" />
+                        </div>
+                      </div>
+                      <div>
+                        <div class="font-semibold">{{ battle.challenger.username }}</div>
+                        <div class="text-sm text-gray-400">
+                          {{ getChallengerScore(battle) }} points
+                        </div>
                       </div>
                     </div>
-                    <div>
-                      <div class="font-semibold">{{ battle.challenger.username }}</div>
-                      <div class="text-sm text-gray-400">
-                        {{ getChallengerScore(battle) }} points
+
+                    <Icon name="mdi:sword-cross" class="text-2xl text-gray-500" />
+
+                    <!-- Player 2 -->
+                    <div class="flex items-center gap-3">
+                      <div
+                        class="w-12 h-12 rounded-full bg-gradient-to-br from-pink-500 to-red-600 flex items-center justify-center font-bold relative"
+                      >
+                        {{ battle.opponent.username[0].toUpperCase() }}
+                        <div
+                          v-if="battle.winnerId === battle.opponent.id"
+                          class="absolute -top-1 -right-1 w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center"
+                        >
+                          <Icon name="mdi:crown" class="text-sm" />
+                        </div>
+                      </div>
+                      <div>
+                        <div class="font-semibold">{{ battle.opponent.username }}</div>
+                        <div class="text-sm text-gray-400">
+                          {{ getOpponentScore(battle) }} points
+                        </div>
                       </div>
                     </div>
                   </div>
 
-                  <Icon name="mdi:sword-cross" class="text-2xl text-gray-500" />
-
-                  <!-- Player 2 -->
-                  <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-pink-500 to-red-600 flex items-center justify-center font-bold relative">
-                      {{ battle.opponent.username[0].toUpperCase() }}
-                      <div v-if="battle.winnerId === battle.opponent.id" class="absolute -top-1 -right-1 w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center">
-                        <Icon name="mdi:crown" class="text-sm" />
-                      </div>
-                    </div>
-                    <div>
-                      <div class="font-semibold">{{ battle.opponent.username }}</div>
-                      <div class="text-sm text-gray-400">
-                        {{ getOpponentScore(battle) }} points
-                      </div>
-                    </div>
+                  <div class="flex items-center gap-4 text-sm text-gray-400">
+                    <span class="px-3 py-1 bg-purple-500/20 rounded-full">
+                      {{ getModeName(battle.mode) }}
+                    </span>
+                    <span>{{ formatDate(battle.completedAt) }}</span>
                   </div>
-                </div>
-
-                <div class="flex items-center gap-4 text-sm text-gray-400">
-                  <span class="px-3 py-1 bg-purple-500/20 rounded-full">
-                    {{ getModeName(battle.mode) }}
-                  </span>
-                  <span>{{ formatDate(battle.completedAt) }}</span>
                 </div>
               </div>
-            </div>
             </div>
           </div>
 
@@ -342,7 +377,7 @@
 import type { User } from '~/types'
 
 definePageMeta({
-  middleware: 'auth'
+  middleware: 'auth',
 })
 
 interface BattlesResponse {
@@ -393,9 +428,17 @@ const totalActivePages = computed(() => Math.ceil(activeBattles.value.length / i
 const totalHistoryPages = computed(() => Math.ceil(battleHistory.value.length / itemsPerPage))
 
 const tabs = computed(() => [
-  { id: 'rooms' as 'rooms' | 'active' | 'history', label: 'Available Rooms', badge: availableRooms.value.length || null },
-  { id: 'active' as 'rooms' | 'active' | 'history', label: 'My Battles', badge: activeBattles.value.length || null },
-  { id: 'history' as 'rooms' | 'active' | 'history', label: 'History' }
+  {
+    id: 'rooms' as 'rooms' | 'active' | 'history',
+    label: 'Available Rooms',
+    badge: availableRooms.value.length || null,
+  },
+  {
+    id: 'active' as 'rooms' | 'active' | 'history',
+    label: 'My Battles',
+    badge: activeBattles.value.length || null,
+  },
+  { id: 'history' as 'rooms' | 'active' | 'history', label: 'History' },
 ])
 
 let refreshInterval: NodeJS.Timeout | null = null
@@ -405,7 +448,7 @@ onMounted(async () => {
     loadAvailableRooms(),
     loadActiveBattles(),
     loadBattleHistory(),
-    loadGameModes()
+    loadGameModes(),
   ])
 
   // Auto-refresh rooms every 5 seconds when on rooms tab
@@ -439,7 +482,7 @@ async function loadAvailableRooms() {
       loading.value = true
     }
     const data = await $fetch<BattlesResponse>(`${apiBase}/api/battles/rooms`, {
-      credentials: 'include'
+      credentials: 'include',
     })
     availableRooms.value = data.battles
   } catch (error) {
@@ -453,7 +496,7 @@ async function loadActiveBattles() {
   try {
     loading.value = true
     const data = await $fetch<BattlesResponse>(`${apiBase}/api/battles/active`, {
-      credentials: 'include'
+      credentials: 'include',
     })
     activeBattles.value = data.battles
   } catch (error) {
@@ -467,7 +510,7 @@ async function loadBattleHistory() {
   try {
     loading.value = true
     const data = await $fetch<BattlesResponse>(`${apiBase}/api/battles/history`, {
-      credentials: 'include'
+      credentials: 'include',
     })
     battleHistory.value = data.battles
   } catch (error) {
@@ -481,9 +524,7 @@ async function loadGameModes() {
   try {
     const data = await $fetch(`${apiBase}/api/game/modes`)
     // Filter for battle modes only (modes starting with BATTLE_)
-    gameModes.value = data.modes.filter((mode: any) => 
-      mode.id.startsWith('BATTLE_')
-    )
+    gameModes.value = data.modes.filter((mode: any) => mode.id.startsWith('BATTLE_'))
   } catch (error) {
     console.error('Failed to load game modes:', error)
     gameModes.value = []
@@ -497,9 +538,9 @@ async function createRoom(mode: string) {
       method: 'POST',
       credentials: 'include',
       headers: {
-        'X-CSRF-Token': csrfToken
+        'X-CSRF-Token': csrfToken,
       },
-      body: { mode }
+      body: { mode },
     })
     showCreateModal.value = false
     // Navigate to the created room
@@ -516,8 +557,8 @@ async function joinRoom(battleId: string) {
       method: 'POST',
       credentials: 'include',
       headers: {
-        'X-CSRF-Token': csrfToken
-      }
+        'X-CSRF-Token': csrfToken,
+      },
     })
     // Navigate to the battle
     navigateTo(`/battles/${battleId}`)
@@ -533,7 +574,7 @@ function joinBattle(battleId: string) {
 }
 
 function getModeName(modeId: string) {
-  const mode = gameModes.value.find(m => m.id === modeId)
+  const mode = gameModes.value.find((m) => m.id === modeId)
   return mode?.name || modeId
 }
 

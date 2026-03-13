@@ -1,6 +1,8 @@
 <template>
   <div class="card p-6">
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
+    <div
+      class="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0"
+    >
       <!-- Mode & Difficulty -->
       <div class="flex items-center space-x-4">
         <div

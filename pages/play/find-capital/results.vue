@@ -2,22 +2,40 @@
   <div class="max-w-4xl mx-auto">
     <div class="card p-8 md:p-12">
       <!-- Game Over Header -->
-      <div class="text-center mb-8" v-motion :initial="{ opacity: 0, scale: 0.8 }" :visible="{ opacity: 1, scale: 1 }">
+      <div
+        class="text-center mb-8"
+        v-motion
+        :initial="{ opacity: 0, scale: 0.8 }"
+        :visible="{ opacity: 1, scale: 1 }"
+      >
         <Icon
           name="mdi:map-marker-check"
           class="w-24 h-24 mx-auto mb-4"
-          :class="finalScore >= 50 ? 'text-amber-500' : finalScore >= 20 ? 'text-sky-500' : 'text-gray-500'"
+          :class="
+            finalScore >= 50
+              ? 'text-amber-500'
+              : finalScore >= 20
+                ? 'text-sky-500'
+                : 'text-gray-500'
+          "
         />
         <h1 class="text-4xl md:text-5xl font-bold text-gray-100 mb-2">Game Over!</h1>
         <p v-if="correctAnswerName" class="text-gray-400">
-          The correct answer was: <span class="text-sky-400 font-semibold">{{ correctAnswerName }}</span>
+          The correct answer was:
+          <span class="text-sky-400 font-semibold">{{ correctAnswerName }}</span>
         </p>
       </div>
 
       <!-- Score Display -->
       <div
         class="bg-gradient-to-br from-sky-500/20 to-purple-500/20 rounded-2xl p-8 mb-8 border-2"
-        :class="finalScore >= 50 ? 'border-amber-500' : finalScore >= 20 ? 'border-sky-500' : 'border-gray-600'"
+        :class="
+          finalScore >= 50
+            ? 'border-amber-500'
+            : finalScore >= 20
+              ? 'border-sky-500'
+              : 'border-gray-600'
+        "
         v-motion
         :initial="{ opacity: 0, y: 20 }"
         :visible="{ opacity: 1, y: 0, transition: { delay: 100 } }"
@@ -39,7 +57,9 @@
         :initial="{ opacity: 0, scale: 0.9 }"
         :visible="{ opacity: 1, scale: 1 }"
       >
-        <div class="bg-gradient-to-br from-sky-500/20 to-purple-500/20 border border-sky-500/50 rounded-xl p-6">
+        <div
+          class="bg-gradient-to-br from-sky-500/20 to-purple-500/20 border border-sky-500/50 rounded-xl p-6"
+        >
           <Icon name="mdi:trophy" class="w-12 h-12 text-sky-400 mx-auto mb-3" />
           <p class="text-gray-300 text-lg mb-1">Leaderboard Rank</p>
           <p class="text-4xl font-bold text-sky-400">#{{ userRank }}</p>
@@ -167,7 +187,7 @@ const handleSubmitScore = async () => {
     submitting.value = true
     submitError.value = null
 
-    const response = await submitScore(finalScore.value) as any
+    const response = (await submitScore(finalScore.value)) as any
 
     submitted.value = true
     userRank.value = response?.rank || null

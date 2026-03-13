@@ -14,6 +14,7 @@ export interface User {
   avatar?: string
   avatarUrl?: string
   role: UserRole
+  emailVerified?: boolean
   status?: 'ACTIVE' | 'BANNED' | 'SUSPENDED'
   bannedUntil?: string
   banReason?: string

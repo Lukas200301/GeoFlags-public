@@ -22,5 +22,4 @@ export default defineNuxtRouteMiddleware(async (to) => {
       query: { redirect: to.fullPath },
     })
   }
-
 })

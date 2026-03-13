@@ -2,10 +2,7 @@
  * Composable for Guess the Flag game logic
  * Handles game state, API calls, and game flow
  */
-import type {
-  GuessTheFlagGameState,
-  GuessTheFlagAnswerResponse,
-} from '~/types'
+import type { GuessTheFlagGameState, GuessTheFlagAnswerResponse } from '~/types'
 
 export const useGuessTheFlag = () => {
   const { apiRequest } = useApi()
@@ -56,13 +53,16 @@ export const useGuessTheFlag = () => {
       loading.value = true
       selectedAnswer.value = answer
 
-      const response = await apiRequest<GuessTheFlagAnswerResponse>('/api/game/guess-the-flag/answer', {
-        method: 'POST',
-        body: {
-          sessionId: gameState.value.sessionId,
-          answer,
-        },
-      })
+      const response = await apiRequest<GuessTheFlagAnswerResponse>(
+        '/api/game/guess-the-flag/answer',
+        {
+          method: 'POST',
+          body: {
+            sessionId: gameState.value.sessionId,
+            answer,
+          },
+        }
+      )
 
       // Show feedback
       showFeedback.value = true

@@ -3,7 +3,9 @@
     <div class="max-w-md w-full text-center">
       <!-- Icon -->
       <div class="mb-8">
-        <div class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-red-500/20 mb-4">
+        <div
+          class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-red-500/20 mb-4"
+        >
           <Icon name="mdi:shield-lock" class="w-12 h-12 text-red-500" />
         </div>
         <h1 class="text-4xl font-bold text-gray-100 mb-2">Access Denied</h1>
@@ -14,7 +16,8 @@
       <div class="card p-6 mb-8 text-left">
         <h2 class="text-lg font-semibold text-gray-100 mb-3">Administrator Access Required</h2>
         <p class="text-gray-400 mb-4">
-          The admin dashboard is restricted to users with administrator privileges. If you believe you should have access, please contact your system administrator.
+          The admin dashboard is restricted to users with administrator privileges. If you believe
+          you should have access, please contact your system administrator.
         </p>
 
         <div class="bg-gray-900/50 border border-gray-800 rounded-lg p-4">
@@ -22,11 +25,16 @@
           <div class="space-y-2 text-sm">
             <div class="flex items-center gap-2">
               <Icon name="mdi:account" class="w-4 h-4 text-gray-500" />
-              <span class="text-gray-400">Logged in as: <span class="text-gray-100">{{ user?.username || 'Guest' }}</span></span>
+              <span class="text-gray-400"
+                >Logged in as:
+                <span class="text-gray-100">{{ user?.username || 'Guest' }}</span></span
+              >
             </div>
             <div class="flex items-center gap-2">
               <Icon name="mdi:shield" class="w-4 h-4 text-gray-500" />
-              <span class="text-gray-400">Role: <span class="text-gray-100">{{ user?.role || 'User' }}</span></span>
+              <span class="text-gray-400"
+                >Role: <span class="text-gray-100">{{ user?.role || 'User' }}</span></span
+              >
             </div>
           </div>
         </div>

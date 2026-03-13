@@ -19,7 +19,9 @@
         <div class="flex items-center justify-between p-4 glass-card-dark rounded-xl">
           <div class="flex-1">
             <h3 class="text-lg font-semibold text-gray-100 mb-1">Require Registration</h3>
-            <p class="text-sm text-gray-400">When enabled, users must create an account to play games. Disable to allow guest play.</p>
+            <p class="text-sm text-gray-400">
+              When enabled, users must create an account to play games. Disable to allow guest play.
+            </p>
           </div>
           <label class="relative inline-flex items-center cursor-pointer ml-4">
             <input
@@ -53,7 +55,9 @@
           <div class="flex items-center space-x-4">
             <div
               class="w-16 h-16 rounded-xl flex items-center justify-center"
-              :class="mode.enabled ? 'bg-gradient-to-br from-primary-400 to-primary-600' : 'bg-gray-300'"
+              :class="
+                mode.enabled ? 'bg-gradient-to-br from-primary-400 to-primary-600' : 'bg-gray-300'
+              "
             >
               <Icon :name="mode.icon" class="w-10 h-10 text-white" />
             </div>
@@ -138,11 +142,7 @@
         <div class="flex items-center justify-between">
           <label class="text-sm font-medium text-gray-300">Enabled</label>
           <label class="relative inline-flex items-center cursor-pointer">
-            <input
-              v-model="editModal.data.enabled"
-              type="checkbox"
-              class="sr-only peer"
-            />
+            <input v-model="editModal.data.enabled" type="checkbox" class="sr-only peer" />
             <div
               class="w-11 h-6 bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-gray-900 after:border-gray-700 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600"
             ></div>
@@ -213,9 +213,12 @@ const fetchGameModes = async () => {
 
 const fetchSystemSettings = async () => {
   try {
-    const response = await apiRequest<{ requireRegistration: boolean }>('/api/admin/system/settings', {
-      requiresAuth: true,
-    })
+    const response = await apiRequest<{ requireRegistration: boolean }>(
+      '/api/admin/system/settings',
+      {
+        requiresAuth: true,
+      }
+    )
     requireRegistration.value = response.requireRegistration
   } catch (err: any) {
     const errorMessage = err.message || 'Failed to load system settings'

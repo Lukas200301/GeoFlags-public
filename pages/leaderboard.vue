@@ -10,7 +10,10 @@
       <h2 class="text-xl font-semibold text-gray-100 mb-4">Find a Player</h2>
       <div class="flex gap-4">
         <div class="flex-1 relative">
-          <Icon name="mdi:magnify" class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+          <Icon
+            name="mdi:magnify"
+            class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
+          />
           <input
             v-model="searchQuery"
             type="text"
@@ -20,7 +23,7 @@
           />
         </div>
       </div>
-      
+
       <!-- Search Results -->
       <div v-if="searchResults.length > 0" class="mt-4 space-y-2">
         <NuxtLink
@@ -29,8 +32,15 @@
           :to="`/users/${user.id}`"
           class="flex items-center gap-3 p-3 bg-gray-800/50 rounded-lg hover:bg-gray-800 transition-colors"
         >
-          <div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center text-white font-semibold overflow-hidden">
-            <img v-if="user.avatarUrl" :src="getAvatarUrl(user.avatarUrl)" alt="Avatar" class="w-full h-full object-cover">
+          <div
+            class="w-10 h-10 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center text-white font-semibold overflow-hidden"
+          >
+            <img
+              v-if="user.avatarUrl"
+              :src="getAvatarUrl(user.avatarUrl)"
+              alt="Avatar"
+              class="w-full h-full object-cover"
+            />
             <span v-else>{{ user.username.charAt(0).toUpperCase() }}</span>
           </div>
           <div>
@@ -39,7 +49,10 @@
           </div>
         </NuxtLink>
       </div>
-      <div v-else-if="searchQuery && searchQuery.length >= 2" class="mt-4 text-center text-gray-400 text-sm">
+      <div
+        v-else-if="searchQuery && searchQuery.length >= 2"
+        class="mt-4 text-center text-gray-400 text-sm"
+      >
         No users found
       </div>
     </div>
@@ -51,7 +64,7 @@
           <label class="block text-sm font-medium text-gray-300 mb-2">Game Mode</label>
           <select v-model="filters.mode" class="input-field">
             <option :value="undefined">All Modes</option>
-            <option value="GUESS_FLAG">Guess the Flag </option>
+            <option value="GUESS_FLAG">Guess the Flag</option>
             <option value="TIME_TRIAL">Time Trial</option>
             <option value="FIND_CAPITAL">Find the Capital</option>
             <option value="HIGHER_LOWER">Higher/Lower</option>
@@ -62,11 +75,21 @@
     </div>
 
     <!-- Current User Stats (shown when mode is selected and user is logged in) -->
-    <div v-if="filters.mode && user && userStats" class="card p-6 mb-8 bg-gradient-to-br from-primary-900/20 to-primary-800/20 border-2 border-primary-500/30">
+    <div
+      v-if="filters.mode && user && userStats"
+      class="card p-6 mb-8 bg-gradient-to-br from-primary-900/20 to-primary-800/20 border-2 border-primary-500/30"
+    >
       <div class="flex items-center justify-between flex-wrap gap-4">
         <div class="flex items-center gap-4">
-          <div class="w-16 h-16 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center text-white font-bold text-2xl overflow-hidden border-4 border-primary-500/50">
-            <img v-if="user.avatarUrl" :src="getAvatarUrl(user.avatarUrl)" alt="Your Avatar" class="w-full h-full object-cover">
+          <div
+            class="w-16 h-16 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center text-white font-bold text-2xl overflow-hidden border-4 border-primary-500/50"
+          >
+            <img
+              v-if="user.avatarUrl"
+              :src="getAvatarUrl(user.avatarUrl)"
+              alt="Your Avatar"
+              class="w-full h-full object-cover"
+            />
             <span v-else>{{ user.username.charAt(0).toUpperCase() }}</span>
           </div>
           <div>
@@ -93,7 +116,9 @@
 
     <!-- Loading State -->
     <div v-if="loading" class="card p-8 text-center">
-      <div class="animate-spin w-12 h-12 border-4 border-primary-600 border-t-transparent rounded-full mx-auto"></div>
+      <div
+        class="animate-spin w-12 h-12 border-4 border-primary-600 border-t-transparent rounded-full mx-auto"
+      ></div>
       <p class="text-gray-400 mt-4">Loading leaderboard...</p>
     </div>
 
@@ -133,9 +158,9 @@
               :key="entry.id"
               class="transition-colors"
               :class="[
-                entry.user.id === user?.id 
-                  ? 'bg-primary-900/20 hover:bg-primary-900/30 border-l-4 border-primary-500' 
-                  : 'hover:bg-gray-950'
+                entry.user.id === user?.id
+                  ? 'bg-primary-900/20 hover:bg-primary-900/30 border-l-4 border-primary-500'
+                  : 'hover:bg-gray-950',
               ]"
             >
               <td class="px-6 py-4">
@@ -151,18 +176,31 @@
                   >
                     {{ entry.rank }}
                   </div>
-                  <span v-else class="text-gray-300 font-medium text-center block">{{ entry.rank }}</span>
+                  <span v-else class="text-gray-300 font-medium text-center block">{{
+                    entry.rank
+                  }}</span>
                 </div>
               </td>
               <td class="px-6 py-4">
-                <NuxtLink :to="`/users/${entry.user.id}`" class="flex items-center space-x-3 hover:opacity-80 transition-opacity">
+                <NuxtLink
+                  :to="`/users/${entry.user.id}`"
+                  class="flex items-center space-x-3 hover:opacity-80 transition-opacity"
+                >
                   <div
                     class="w-10 h-10 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center text-white font-semibold overflow-hidden"
                   >
-                    <img v-if="entry.user.avatarUrl" :src="getAvatarUrl(entry.user.avatarUrl)" alt="Avatar" class="w-full h-full object-cover">
+                    <img
+                      v-if="entry.user.avatarUrl"
+                      :src="getAvatarUrl(entry.user.avatarUrl)"
+                      alt="Avatar"
+                      class="w-full h-full object-cover"
+                    />
                     <span v-else>{{ entry.user.username.charAt(0).toUpperCase() }}</span>
                   </div>
-                  <span class="font-medium text-gray-100 hover:text-primary-400 transition-colors">{{ entry.user.username }}</span>
+                  <span
+                    class="font-medium text-gray-100 hover:text-primary-400 transition-colors"
+                    >{{ entry.user.username }}</span
+                  >
                 </NuxtLink>
               </td>
               <td class="px-6 py-4">
@@ -186,7 +224,10 @@
       </div>
 
       <!-- Pagination -->
-      <div v-if="totalPages > 1" class="p-6 border-t border-gray-800 flex items-center justify-between">
+      <div
+        v-if="totalPages > 1"
+        class="p-6 border-t border-gray-800 flex items-center justify-between"
+      >
         <button
           @click="currentPage--"
           :disabled="currentPage === 1"
@@ -205,7 +246,7 @@
             :class="[
               page === currentPage
                 ? 'bg-primary-600 text-white'
-                : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                : 'bg-gray-800 text-gray-300 hover:bg-gray-700',
             ]"
           >
             {{ page }}
@@ -267,11 +308,11 @@ const visiblePages = computed(() => {
   const maxVisible = 5
   let start = Math.max(1, currentPage.value - Math.floor(maxVisible / 2))
   let end = Math.min(totalPages.value, start + maxVisible - 1)
-  
+
   if (end - start < maxVisible - 1) {
     start = Math.max(1, end - maxVisible + 1)
   }
-  
+
   for (let i = start; i <= end; i++) {
     pages.push(i)
   }
@@ -280,12 +321,14 @@ const visiblePages = computed(() => {
 
 // User search
 const searchQuery = ref('')
-const searchResults = ref<Array<{
-  id: string
-  username: string
-  avatarUrl: string | null
-  createdAt: string
-}>>([])
+const searchResults = ref<
+  Array<{
+    id: string
+    username: string
+    avatarUrl: string | null
+    createdAt: string
+  }>
+>([])
 let searchTimeout: NodeJS.Timeout | null = null
 
 const handleSearch = () => {
@@ -319,7 +362,7 @@ const fetchLeaderboard = async () => {
 
     const entries = await getLeaderboard(filters)
     leaderboard.value = entries
-    
+
     // Reset to first page when filters change
     currentPage.value = 1
 
@@ -341,8 +384,8 @@ const fetchUserStats = async () => {
 
   try {
     // Find user's rank in leaderboard
-    const userEntry = leaderboard.value.find(entry => entry.user.id === user.value?.id)
-    
+    const userEntry = leaderboard.value.find((entry) => entry.user.id === user.value?.id)
+
     // Get user's game sessions for this mode
     const sessions = await apiRequest<{ sessions: any[] }>(
       `/api/game/history?mode=${filters.mode}`,
@@ -371,15 +414,15 @@ const formatDate = (dateString: string) => {
 
 const formatModeName = (mode: string) => {
   const modeNames: Record<string, string> = {
-    'FLAGS': 'Flags',
-    'CAPITALS': 'Capitals',
-    'MAPS': 'Maps',
-    'MIXED': 'Mixed',
-    'GUESS_FLAG': 'Guess the Flag',
-    'TIME_TRIAL': 'Time Trial',
-    'FIND_CAPITAL': 'Find the Capital',
-    'HIGHER_LOWER': 'Higher/Lower',
-    'SILHOUETTE': 'Country Silhouette',
+    FLAGS: 'Flags',
+    CAPITALS: 'Capitals',
+    MAPS: 'Maps',
+    MIXED: 'Mixed',
+    GUESS_FLAG: 'Guess the Flag',
+    TIME_TRIAL: 'Time Trial',
+    FIND_CAPITAL: 'Find the Capital',
+    HIGHER_LOWER: 'Higher/Lower',
+    SILHOUETTE: 'Country Silhouette',
   }
   return modeNames[mode] || mode
 }

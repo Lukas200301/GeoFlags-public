@@ -22,7 +22,12 @@ router.use(requireAuth);
 router.get('/', profileController.getProfile);
 router.patch('/', profileController.updateProfile);
 router.delete('/', profileController.deleteAccount);
-router.post('/avatar', upload.single('avatar'), validateAvatarUpload, profileController.updateAvatar);
+router.post(
+  '/avatar',
+  upload.single('avatar'),
+  validateAvatarUpload,
+  profileController.updateAvatar
+);
 router.patch('/password', profileController.changePassword);
 
 /**

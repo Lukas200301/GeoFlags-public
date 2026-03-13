@@ -103,9 +103,7 @@
     <div class="glass-card p-6">
       <div class="flex items-center justify-between mb-6">
         <h2 class="text-xl font-semibold gradient-text">Leaderboard Entries</h2>
-        <div class="text-sm text-gray-400">
-          Page {{ currentPage }} of {{ totalPages }}
-        </div>
+        <div class="text-sm text-gray-400">Page {{ currentPage }} of {{ totalPages }}</div>
       </div>
 
       <div v-if="loading" class="text-center py-12">
@@ -131,11 +129,7 @@
         </div>
 
         <!-- Entry Rows -->
-        <div
-          v-for="entry in entries"
-          :key="entry.id"
-          class="glass-card-dark p-4 hover-lift group"
-        >
+        <div v-for="entry in entries" :key="entry.id" class="glass-card-dark p-4 hover-lift group">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-4 flex-1">
               <!-- Checkbox -->
@@ -201,7 +195,10 @@
       </div>
 
       <!-- Pagination -->
-      <div v-if="totalPages > 1" class="flex items-center justify-between mt-6 pt-6 border-t border-white/5">
+      <div
+        v-if="totalPages > 1"
+        class="flex items-center justify-between mt-6 pt-6 border-t border-white/5"
+      >
         <button
           @click="prevPage"
           :disabled="currentPage === 1"
@@ -220,7 +217,7 @@
               'px-4 py-2 rounded-xl transition-all',
               page === currentPage
                 ? 'bg-blue-500 text-white'
-                : 'bg-black/30 border border-white/10 text-gray-300 hover:bg-black/40'
+                : 'bg-black/30 border border-white/10 text-gray-300 hover:bg-black/40',
             ]"
           >
             {{ page }}
@@ -250,20 +247,18 @@
       <div class="space-y-4">
         <div class="flex items-center space-x-3 p-4 bg-red-900/20 rounded-lg">
           <Icon name="mdi:alert" class="w-6 h-6 text-red-400" />
-          <p class="text-sm text-red-300">
-            This action cannot be undone.
-          </p>
+          <p class="text-sm text-red-300">This action cannot be undone.</p>
         </div>
-        <p class="text-gray-300">
-          Are you sure you want to delete this leaderboard entry?
-        </p>
+        <p class="text-gray-300">Are you sure you want to delete this leaderboard entry?</p>
         <div v-if="deleteModal.entry" class="glass-card-dark p-4">
           <div class="flex items-center justify-between">
             <div>
               <p class="text-gray-100 font-medium">{{ deleteModal.entry.user.username }}</p>
               <p class="text-sm text-gray-400">{{ formatGameMode(deleteModal.entry.mode) }}</p>
             </div>
-            <p class="text-xl font-bold gradient-text">{{ deleteModal.entry.score.toLocaleString() }}</p>
+            <p class="text-xl font-bold gradient-text">
+              {{ deleteModal.entry.score.toLocaleString() }}
+            </p>
           </div>
         </div>
       </div>
@@ -282,7 +277,8 @@
         <div class="flex items-center space-x-3 p-4 bg-red-900/20 rounded-lg">
           <Icon name="mdi:alert" class="w-6 h-6 text-red-400" />
           <p class="text-sm text-red-300">
-            This action cannot be undone. {{ selectedEntries.length }} entries will be permanently deleted.
+            This action cannot be undone. {{ selectedEntries.length }} entries will be permanently
+            deleted.
           </p>
         </div>
         <p class="text-gray-300">
@@ -405,9 +401,12 @@ async function loadEntries() {
       params.append('mode', filters.mode)
     }
 
-    const response = await $fetch<LeaderboardResponse>(`${apiBase}/api/admin/leaderboard?${params}`, {
-      credentials: 'include',
-    })
+    const response = await $fetch<LeaderboardResponse>(
+      `${apiBase}/api/admin/leaderboard?${params}`,
+      {
+        credentials: 'include',
+      }
+    )
 
     entries.value = response.entries.map((entry, index: number) => ({
       ...entry,
@@ -431,9 +430,12 @@ async function loadStats() {
     const config = useRuntimeConfig()
     const apiBase = config.public.apiBase
 
-    const allEntries = await $fetch<LeaderboardResponse>(`${apiBase}/api/admin/leaderboard?limit=1000`, {
-      credentials: 'include',
-    })
+    const allEntries = await $fetch<LeaderboardResponse>(
+      `${apiBase}/api/admin/leaderboard?limit=1000`,
+      {
+        credentials: 'include',
+      }
+    )
 
     stats.value.total = allEntries.pagination.total
 
@@ -444,9 +446,8 @@ async function loadStats() {
       return new Date(entry.createdAt) >= oneWeekAgo
     }).length
 
-    stats.value.topScore = allEntries.entries.length > 0
-      ? Math.max(...allEntries.entries.map((e) => e.score))
-      : 0
+    stats.value.topScore =
+      allEntries.entries.length > 0 ? Math.max(...allEntries.entries.map((e) => e.score)) : 0
   } catch (error) {
     console.error('Failed to load stats:', error)
   }
@@ -465,7 +466,7 @@ function toggleSelectAll() {
   if (allSelected.value) {
     selectedEntries.value = []
   } else {
-    selectedEntries.value = entries.value.map(e => e.id)
+    selectedEntries.value = entries.value.map((e) => e.id)
   }
 }
 

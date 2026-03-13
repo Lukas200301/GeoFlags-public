@@ -45,6 +45,7 @@ Closes #(issue number)
 - [ ] Manual testing completed
 
 **Test Configuration:**
+
 - Node.js version:
 - Browser (if frontend):
 - PostgreSQL version (if backend):
@@ -89,4 +90,5 @@ None
 ---
 
 **For Reviewers:**
+
 <!-- Highlight specific areas you'd like reviewers to focus on -->

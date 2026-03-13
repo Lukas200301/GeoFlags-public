@@ -31,10 +31,7 @@ export function useSystemSettings() {
         requireRegistration: boolean
         maintenanceMode: boolean
         maintenanceMessage: string | null
-      }>(
-        '/api/game/settings',
-        { requiresAuth: false }
-      )
+      }>('/api/game/settings', { requiresAuth: false })
       requireRegistration.value = response.requireRegistration
       maintenanceMode.value = response.maintenanceMode
       maintenanceMessage.value = response.maintenanceMessage

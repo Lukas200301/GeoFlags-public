@@ -2,7 +2,12 @@
   <div class="max-w-4xl mx-auto">
     <div class="card p-8 md:p-12">
       <!-- Header -->
-      <div class="text-center mb-8" v-motion :initial="{ opacity: 0, y: -20 }" :visible="{ opacity: 1, y: 0 }">
+      <div
+        class="text-center mb-8"
+        v-motion
+        :initial="{ opacity: 0, y: -20 }"
+        :visible="{ opacity: 1, y: 0 }"
+      >
         <Icon name="mdi:map-marker" class="w-20 h-20 text-sky-500 mx-auto mb-4" />
         <h1 class="text-4xl md:text-5xl font-bold text-gray-100 mb-3">Find the Capital</h1>
         <p class="text-xl text-gray-400">Infinite Mode</p>
@@ -92,7 +97,10 @@
 
       <!-- Back Button -->
       <div class="mt-8 text-center">
-        <NuxtLink to="/play" class="text-gray-400 hover:text-gray-300 transition-colors inline-flex items-center gap-2">
+        <NuxtLink
+          to="/play"
+          class="text-gray-400 hover:text-gray-300 transition-colors inline-flex items-center gap-2"
+        >
           <Icon name="mdi:arrow-left" class="w-5 h-5" />
           <span>Back to Game Modes</span>
         </NuxtLink>

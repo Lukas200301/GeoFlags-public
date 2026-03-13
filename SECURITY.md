@@ -34,6 +34,7 @@ GeoFlags implements defense-in-depth security with multiple layers of protection
 **Implementation**: Session authentication uses HttpOnly, Secure cookies set by the backend.
 
 **Cookie Configuration**:
+
 ```javascript
 {
   httpOnly: true,      // Prevents JavaScript access (XSS protection)
@@ -44,6 +45,7 @@ GeoFlags implements defense-in-depth security with multiple layers of protection
 ```
 
 **Security Benefits**:
+
 - ✅ Cookies inaccessible to JavaScript - prevents XSS token theft
 - ✅ `Secure` flag ensures transmission only over HTTPS
 - ✅ `SameSite` attribute prevents CSRF attacks
@@ -53,12 +55,12 @@ GeoFlags implements defense-in-depth security with multiple layers of protection
 
 **Token Types**:
 
-| Token | Lifespan | Storage | Purpose |
-|-------|----------|---------|---------|
-| Access Token | 15 minutes | HttpOnly Cookie | API authentication |
-| Refresh Token | 7 days | HttpOnly Cookie | Access token renewal |
-| CSRF Token | Session | Client memory | Mutation protection |
-| Re-auth Token | 5 minutes | Client memory | Sensitive operations |
+| Token         | Lifespan   | Storage         | Purpose              |
+| ------------- | ---------- | --------------- | -------------------- |
+| Access Token  | 15 minutes | HttpOnly Cookie | API authentication   |
+| Refresh Token | 7 days     | HttpOnly Cookie | Access token renewal |
+| CSRF Token    | Session    | Client memory   | Mutation protection  |
+| Re-auth Token | 5 minutes  | Client memory   | Sensitive operations |
 
 **Token Versioning**: Global invalidation capability via `tokenVersion` field in user table.
 
@@ -67,11 +69,13 @@ GeoFlags implements defense-in-depth security with multiple layers of protection
 Every authenticated request is verified server-side:
 
 **Frontend** ([app.vue:13](app.vue#L13)):
+
 ```typescript
 credentials: 'include' // Sends HttpOnly cookies
 ```
 
 **Backend**:
+
 - Validates JWT signature
 - Checks token expiration
 - Verifies user exists
@@ -79,6 +83,7 @@ credentials: 'include' // Sends HttpOnly cookies
 - Returns user with role
 
 **Endpoints**:
+
 - `POST /api/auth/login` - Create session
 - `POST /api/auth/refresh` - Renew access token
 - `POST /api/auth/logout` - Destroy session
@@ -91,6 +96,7 @@ credentials: 'include' // Sends HttpOnly cookies
 All mutating requests (POST, PUT, DELETE, PATCH) require a CSRF token.
 
 **Flow**:
+
 1. Client requests CSRF token: `GET /api/auth/csrf-token`
 2. Token cached in composable: [composables/useApi.ts:21](composables/useApi.ts#L21)
 3. Token included in headers: `X-CSRF-Token`
@@ -98,6 +104,7 @@ All mutating requests (POST, PUT, DELETE, PATCH) require a CSRF token.
 5. Invalid tokens return 403 Forbidden
 
 **Example** ([composables/useAuth.ts:64](composables/useAuth.ts#L64)):
+
 ```typescript
 const csrfToken = await useApi().getCsrfToken()
 
@@ -114,6 +121,7 @@ await $fetch('/api/auth/login', {
 ### Automatic Token Management
 
 The `useApi()` composable automatically:
+
 - Fetches CSRF token on first mutating request
 - Caches token for subsequent requests
 - Includes token in all POST/PUT/DELETE/PATCH requests
@@ -128,6 +136,7 @@ The `useApi()` composable automatically:
 Admin routes (`/admin/*`) are protected by the `admin` middleware.
 
 **Middleware Flow** ([middleware/admin.ts](middleware/admin.ts)):
+
 1. Fetch user from backend (if not already loaded)
 2. Check if user is authenticated → redirect to `/auth/login` if not
 3. Check if user has `role === 'admin'` → redirect to `/` if not
@@ -140,6 +149,7 @@ Admin routes (`/admin/*`) are protected by the `admin` middleware.
 Admin menu items only render if backend confirms admin role:
 
 **Example** ([layouts/default.vue:44](layouts/default.vue#L44)):
+
 ```vue
 <div v-if="isAdmin" class="pt-4 mt-4 border-t border-gray-200">
   <!-- Admin links -->
@@ -153,11 +163,13 @@ Admin menu items only render if backend confirms admin role:
 Destructive operations require explicit confirmation:
 
 **Examples**:
+
 - **Delete user**: Requires clicking "Delete User" button
 - **Clear leaderboard**: Requires typing "DELETE" to confirm
 - **Change roles**: Requires re-authentication token
 
 **Implementation** ([components/AdminModal.vue](components/AdminModal.vue)):
+
 ```vue
 <AdminModal
   v-model="deleteModal.open"
@@ -179,6 +191,7 @@ Destructive operations require explicit confirmation:
 All API calls go through `useApi()` composable ([composables/useApi.ts](composables/useApi.ts)).
 
 **Benefits**:
+
 - ✅ Centralized security logic
 - ✅ Automatic CSRF token inclusion
 - ✅ Consistent error handling
@@ -186,6 +199,7 @@ All API calls go through `useApi()` composable ([composables/useApi.ts](composab
 - ✅ Credential management
 
 **Request Flow**:
+
 ```typescript
 const { submitScore } = useApi()
 
@@ -202,9 +216,14 @@ await submitScore({ mode: 'flags', score: 100 })
 **Backend**: Server-side validation with Zod schemas (source of truth)
 
 **Example** (backend):
+
 ```typescript
 const registerSchema = z.object({
-  username: z.string().min(3).max(30).regex(/^[a-zA-Z0-9_]+$/),
+  username: z
+    .string()
+    .min(3)
+    .max(30)
+    .regex(/^[a-zA-Z0-9_]+$/),
   password: z.string().min(8).max(100),
 })
 ```
@@ -228,11 +247,11 @@ X-XSS-Protection: 1; mode=block
 
 Different limits for different endpoints:
 
-| Endpoint Type | Limit | Window |
-|---------------|-------|--------|
-| Authentication | 5 requests | 15 minutes |
-| Admin | 100 requests | 15 minutes |
-| General API | 200 requests | 15 minutes |
+| Endpoint Type  | Limit        | Window     |
+| -------------- | ------------ | ---------- |
+| Authentication | 5 requests   | 15 minutes |
+| Admin          | 100 requests | 15 minutes |
+| General API    | 200 requests | 15 minutes |
 
 ### Password Security
 
@@ -249,7 +268,7 @@ Different limits for different endpoints:
 ```typescript
 // ✅ Safe - parameterized
 const user = await prisma.user.findUnique({
-  where: { id: userId }
+  where: { id: userId },
 })
 
 // ❌ Never do this - vulnerable to SQL injection
@@ -261,6 +280,7 @@ const user = await prisma.user.findUnique({
 All admin actions are logged:
 
 **Logged Information**:
+
 - Admin user ID and username
 - Action type (USER_DELETE, ROLE_CHANGE, etc.)
 - Target user/resource ID
@@ -275,6 +295,7 @@ All admin actions are logged:
 ### TypeScript Strict Mode
 
 **Configuration** ([tsconfig.json:3](tsconfig.json#L3)):
+
 ```json
 {
   "compilerOptions": {
@@ -288,6 +309,7 @@ All admin actions are logged:
 ```
 
 **Benefits**:
+
 - Compile-time type checking
 - Prevents null/undefined errors
 - Catches type mismatches
@@ -314,6 +336,7 @@ export interface AuthResponse {
 ## Security Checklist
 
 ### Frontend
+
 - [x] HttpOnly, Secure cookies for session management
 - [x] No JWT tokens in localStorage
 - [x] CSRF protection for all mutating requests
@@ -326,6 +349,7 @@ export interface AuthResponse {
 - [x] Error handling without exposing sensitive data
 
 ### Backend
+
 - [x] JWT access tokens (15 min) + refresh tokens (7 days)
 - [x] HttpOnly, Secure cookies for token storage
 - [x] CSRF token validation on mutations
@@ -339,6 +363,7 @@ export interface AuthResponse {
 - [x] Token versioning for global invalidation
 
 ### Production
+
 - [ ] Change all default passwords
 - [ ] Use strong JWT secrets (64+ random chars)
 - [ ] Enable HTTPS (SSL/TLS certificates)
@@ -434,6 +459,7 @@ Please do not report:
 **Last Updated**: 2025-01-13
 
 For additional security information, see:
+
 - [Frontend Setup](SETUP_INSTRUCTIONS.md)
 - [Backend Setup](backend/SETUP_INSTRUCTIONS.md)
 - [Backend API Documentation](backend/README.md)

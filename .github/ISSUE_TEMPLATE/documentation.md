@@ -9,6 +9,7 @@ assignees: ''
 ## 📚 Documentation Issue
 
 **Type:**
+
 - [ ] Missing documentation
 - [ ] Unclear documentation
 - [ ] Outdated documentation
@@ -18,6 +19,7 @@ assignees: ''
 ## 📍 Location
 
 Where is the documentation issue?
+
 - File: [e.g., README.md, CONTRIBUTING.md]
 - Section: [e.g., Installation, API Documentation]
 - URL (if applicable): [link]
@@ -33,6 +35,7 @@ Describe what you think the documentation should say or include.
 ## 🎯 Why This Matters
 
 Explain why this documentation change would be helpful:
+
 - Does it affect new contributors?
 - Is it blocking development?
 - Does it improve clarity?

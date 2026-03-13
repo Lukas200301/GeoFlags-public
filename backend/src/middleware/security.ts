@@ -64,12 +64,7 @@ export function auditLogger(action: string) {
  * Error handler middleware
  * Ensures errors don't leak sensitive information
  */
-export function errorHandler(
-  err: Error,
-  _req: Request,
-  res: Response,
-  _next: NextFunction
-) {
+export function errorHandler(err: Error, _req: Request, res: Response, _next: NextFunction) {
   console.error('Error:', err);
 
   // Don't expose internal errors in production

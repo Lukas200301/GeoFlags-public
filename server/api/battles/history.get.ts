@@ -11,7 +11,7 @@ export default defineEventHandler(async (event): Promise<any> => {
   // Forward all headers from the client request, especially cookies
   const headers: Record<string, string> = {}
   const requestHeaders = getRequestHeaders(event)
-  
+
   // Forward important headers
   if (requestHeaders.cookie) headers.cookie = requestHeaders.cookie
   if (requestHeaders.authorization) headers.authorization = requestHeaders.authorization

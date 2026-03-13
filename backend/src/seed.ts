@@ -12,12 +12,10 @@ import prisma from './utils/prisma';
 
 dotenv.config();
 
-
 async function main() {
   console.log('Starting database seed...');
 
   try {
-    
     /**
      * 3. Create Game Modes
      */
@@ -31,19 +29,22 @@ async function main() {
       {
         id: 'TIME_TRIAL',
         name: 'Time Trial',
-        description: '60 seconds to guess as many flags as possible. Correct answers give +1 point, wrong answers deduct 5 seconds.',
+        description:
+          '60 seconds to guess as many flags as possible. Correct answers give +1 point, wrong answers deduct 5 seconds.',
         enabled: true,
       },
       {
         id: 'FIND_CAPITAL',
         name: 'Find the Capital',
-        description: 'Click on the correct capital city location on the map. Get within 100km to score!',
+        description:
+          'Click on the correct capital city location on the map. Get within 100km to score!',
         enabled: true,
       },
       {
         id: 'HIGHER_LOWER',
         name: 'Higher/Lower',
-        description: 'Compare country sizes and guess if the next country is larger or smaller. Build your streak!',
+        description:
+          'Compare country sizes and guess if the next country is larger or smaller. Build your streak!',
         enabled: true,
       },
       {
@@ -103,8 +104,7 @@ async function main() {
   }
 }
 
-main()
-  .catch((error) => {
-    console.error('Fatal error during seed:', error);
-    process.exit(1);
-  });
+main().catch((error) => {
+  console.error('Fatal error during seed:', error);
+  process.exit(1);
+});

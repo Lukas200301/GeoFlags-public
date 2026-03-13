@@ -3,7 +3,9 @@
     <div class="container mx-auto px-4 max-w-4xl">
       <!-- Loading State -->
       <div v-if="loading" class="text-center py-24">
-        <div class="inline-block animate-spin rounded-full h-16 w-16 border-b-2 border-purple-500"></div>
+        <div
+          class="inline-block animate-spin rounded-full h-16 w-16 border-b-2 border-purple-500"
+        ></div>
         <p class="mt-4 text-gray-400">Loading battle...</p>
       </div>
 
@@ -11,7 +13,10 @@
       <div v-else-if="!battle" class="text-center py-24">
         <Icon name="mdi:alert-circle" class="text-6xl text-red-500 mb-4" />
         <p class="text-xl text-gray-400">Battle not found</p>
-        <NuxtLink to="/battles" class="inline-block mt-4 px-6 py-3 bg-purple-500 rounded-lg hover:bg-purple-600 transition-all">
+        <NuxtLink
+          to="/battles"
+          class="inline-block mt-4 px-6 py-3 bg-purple-500 rounded-lg hover:bg-purple-600 transition-all"
+        >
           Back to Battles
         </NuxtLink>
       </div>
@@ -41,7 +46,9 @@
           <!-- Players -->
           <div class="flex items-center justify-center gap-12 mb-8">
             <div class="text-center">
-              <div class="w-24 h-24 rounded-full bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center text-3xl font-bold mb-3 mx-auto">
+              <div
+                class="w-24 h-24 rounded-full bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center text-3xl font-bold mb-3 mx-auto"
+              >
                 {{ battle.challenger.username[0].toUpperCase() }}
               </div>
               <div class="font-semibold text-lg">{{ battle.challenger.username }}</div>
@@ -53,7 +60,9 @@
             <Icon name="mdi:sword-cross" class="text-4xl text-purple-400" />
 
             <div class="text-center">
-              <div class="w-24 h-24 rounded-full bg-gradient-to-br from-pink-500 to-red-600 flex items-center justify-center text-3xl font-bold mb-3 mx-auto">
+              <div
+                class="w-24 h-24 rounded-full bg-gradient-to-br from-pink-500 to-red-600 flex items-center justify-center text-3xl font-bold mb-3 mx-auto"
+              >
                 {{ battle.opponent.username[0].toUpperCase() }}
               </div>
               <div class="font-semibold text-lg">{{ battle.opponent.username }}</div>
@@ -64,8 +73,13 @@
           </div>
 
           <div class="mb-8">
-            <div class="text-lg text-gray-300 mb-2">Game Mode: <span class="text-purple-400 font-bold">{{ getModeName(battle.mode) }}</span></div>
-            <div class="text-lg text-gray-300">Questions: <span class="text-purple-400 font-bold">{{ battle.totalRounds }}</span></div>
+            <div class="text-lg text-gray-300 mb-2">
+              Game Mode:
+              <span class="text-purple-400 font-bold">{{ getModeName(battle.mode) }}</span>
+            </div>
+            <div class="text-lg text-gray-300">
+              Questions: <span class="text-purple-400 font-bold">{{ battle.totalRounds }}</span>
+            </div>
           </div>
 
           <button
@@ -125,8 +139,8 @@
 
             <!-- Flag Question -->
             <div v-if="currentQuestion.type === 'flag'" class="text-center mb-8">
-              <img 
-                :src="`${$config.public.apiBase}/api/flags/${currentQuestion.countryCode.toLowerCase()}`" 
+              <img
+                :src="`${$config.public.apiBase}/api/flags/${currentQuestion.countryCode.toLowerCase()}`"
                 :alt="currentQuestion.countryCode"
                 class="w-64 h-auto mx-auto mb-6 rounded-lg shadow-lg"
               />
@@ -135,7 +149,9 @@
 
             <!-- Text Question -->
             <div v-else class="text-center mb-8">
-              <h3 class="text-2xl font-bold mb-4 whitespace-pre-line">{{ currentQuestion.question }}</h3>
+              <h3 class="text-2xl font-bold mb-4 whitespace-pre-line">
+                {{ currentQuestion.question }}
+              </h3>
             </div>
 
             <!-- Answer Options -->
@@ -150,12 +166,12 @@
                   answered && option === selectedAnswer && option === currentQuestion.correctAnswer
                     ? 'bg-green-500 ring-4 ring-green-400'
                     : answered && option === selectedAnswer
-                    ? 'bg-red-500 ring-4 ring-red-400'
-                    : answered && option === currentQuestion.correctAnswer
-                    ? 'bg-green-500/50'
-                    : answered
-                    ? 'bg-white/5 opacity-50'
-                    : 'bg-white/10 hover:bg-white/20 hover:scale-105'
+                      ? 'bg-red-500 ring-4 ring-red-400'
+                      : answered && option === currentQuestion.correctAnswer
+                        ? 'bg-green-500/50'
+                        : answered
+                          ? 'bg-white/5 opacity-50'
+                          : 'bg-white/10 hover:bg-white/20 hover:scale-105',
                 ]"
               >
                 {{ option }}
@@ -211,9 +227,14 @@
           <!-- Final Scores -->
           <div class="flex items-center justify-center gap-12 mb-8">
             <div class="text-center">
-              <div class="w-24 h-24 rounded-full bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center text-3xl font-bold mb-3 mx-auto relative">
+              <div
+                class="w-24 h-24 rounded-full bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center text-3xl font-bold mb-3 mx-auto relative"
+              >
                 {{ battle.challenger.username[0].toUpperCase() }}
-                <div v-if="battle.winnerId === battle.challengerId" class="absolute -top-2 -right-2 w-12 h-12 bg-yellow-500 rounded-full flex items-center justify-center">
+                <div
+                  v-if="battle.winnerId === battle.challengerId"
+                  class="absolute -top-2 -right-2 w-12 h-12 bg-yellow-500 rounded-full flex items-center justify-center"
+                >
                   <Icon name="mdi:crown" class="text-2xl" />
                 </div>
               </div>
@@ -224,9 +245,14 @@
             <Icon name="mdi:sword-cross" class="text-4xl text-gray-500" />
 
             <div class="text-center">
-              <div class="w-24 h-24 rounded-full bg-gradient-to-br from-pink-500 to-red-600 flex items-center justify-center text-3xl font-bold mb-3 mx-auto relative">
+              <div
+                class="w-24 h-24 rounded-full bg-gradient-to-br from-pink-500 to-red-600 flex items-center justify-center text-3xl font-bold mb-3 mx-auto relative"
+              >
                 {{ battle.opponent.username[0].toUpperCase() }}
-                <div v-if="battle.winnerId === battle.opponentId" class="absolute -top-2 -right-2 w-12 h-12 bg-yellow-500 rounded-full flex items-center justify-center">
+                <div
+                  v-if="battle.winnerId === battle.opponentId"
+                  class="absolute -top-2 -right-2 w-12 h-12 bg-yellow-500 rounded-full flex items-center justify-center"
+                >
                   <Icon name="mdi:crown" class="text-2xl" />
                 </div>
               </div>
@@ -263,10 +289,7 @@
           class="fixed inset-0 md:left-64 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
           @click="showSurrenderConfirm = false"
         >
-          <div
-            class="glass-card p-8 max-w-md w-full"
-            @click.stop
-          >
+          <div class="glass-card p-8 max-w-md w-full" @click.stop>
             <h3 class="text-2xl font-bold mb-4 text-center">Surrender Battle?</h3>
             <p class="text-gray-300 text-center mb-6">
               Are you sure you want to surrender? Your opponent will automatically win the battle.
@@ -294,7 +317,7 @@
 
 <script setup lang="ts">
 definePageMeta({
-  middleware: 'auth'
+  middleware: 'auth',
 })
 
 interface BattleAnswerResponse {
@@ -352,17 +375,17 @@ const opponentFinalScore = ref(0)
 // Computed properties for cleaner username logic
 const opponentUsername = computed(() => {
   if (!battle.value || !user.value) return ''
-  
+
   // If I'm the challenger, the opponent is the opponent user
   if (user.value.id === battle.value.challengerId) {
     return battle.value.opponent?.username || 'Opponent'
   }
-  
+
   // If I'm the opponent, the challenger is my opponent
   if (user.value.id === battle.value.opponentId) {
     return battle.value.challenger?.username || 'Opponent'
   }
-  
+
   return 'Opponent'
 })
 
@@ -402,14 +425,18 @@ onUnmounted(() => {
 async function loadBattle() {
   try {
     const data = await $fetch<BattleDetailsResponse>(`${apiBase}/api/battles/${battleId}`, {
-      credentials: 'include'
+      credentials: 'include',
     })
     battle.value = data.battle
 
     // Load ready states from participants
     if (battle.value.participants && battle.value.participants.length > 0) {
-      const challengerParticipant = battle.value.participants.find((p: any) => p.userId === battle.value.challengerId)
-      const opponentParticipant = battle.value.participants.find((p: any) => p.userId === battle.value.opponentId)
+      const challengerParticipant = battle.value.participants.find(
+        (p: any) => p.userId === battle.value.challengerId
+      )
+      const opponentParticipant = battle.value.participants.find(
+        (p: any) => p.userId === battle.value.opponentId
+      )
 
       challengerReady.value = challengerParticipant?.isReady || false
       opponentReady.value = opponentParticipant?.isReady || false
@@ -429,8 +456,11 @@ async function loadBattle() {
 
     if (battle.value.status === 'COMPLETED') {
       battleCompleted.value = true
-      challengerFinalScore.value = battle.value.participants.find((p: any) => p.userId === battle.value.challengerId)?.score || 0
-      opponentFinalScore.value = battle.value.participants.find((p: any) => p.userId === battle.value.opponentId)?.score || 0
+      challengerFinalScore.value =
+        battle.value.participants.find((p: any) => p.userId === battle.value.challengerId)?.score ||
+        0
+      opponentFinalScore.value =
+        battle.value.participants.find((p: any) => p.userId === battle.value.opponentId)?.score || 0
     }
   } catch (error) {
     console.error('Failed to load battle:', error)
@@ -492,8 +522,10 @@ function setupSocketListeners() {
   socketInstance.on('battle:complete', (data: any) => {
     battleCompleted.value = true
     battle.value.winnerId = data.winnerId
-    challengerFinalScore.value = data.participants.find((p: any) => p.userId === battle.value.challengerId)?.score || 0
-    opponentFinalScore.value = data.participants.find((p: any) => p.userId === battle.value.opponentId)?.score || 0
+    challengerFinalScore.value =
+      data.participants.find((p: any) => p.userId === battle.value.challengerId)?.score || 0
+    opponentFinalScore.value =
+      data.participants.find((p: any) => p.userId === battle.value.opponentId)?.score || 0
   })
 
   // Listen for opponent forfeit
@@ -502,8 +534,10 @@ function setupSocketListeners() {
     battle.value.winnerId = data.winnerId
     // Update scores from participants if available
     if (data.participants && data.participants.length > 0) {
-      challengerFinalScore.value = data.participants.find((p: any) => p.userId === battle.value.challengerId)?.score || 0
-      opponentFinalScore.value = data.participants.find((p: any) => p.userId === battle.value.opponentId)?.score || 0
+      challengerFinalScore.value =
+        data.participants.find((p: any) => p.userId === battle.value.challengerId)?.score || 0
+      opponentFinalScore.value =
+        data.participants.find((p: any) => p.userId === battle.value.opponentId)?.score || 0
     } else {
       // Reload battle to get final state
       loadBattle()
@@ -518,8 +552,8 @@ async function markReady() {
       method: 'POST',
       credentials: 'include',
       headers: {
-        'X-CSRF-Token': csrfToken
-      }
+        'X-CSRF-Token': csrfToken,
+      },
     })
     isReady.value = true
 
@@ -546,18 +580,21 @@ async function submitAnswer(answer: string) {
   // Submit answer to server
   try {
     const csrfToken = await getCsrfToken()
-    const response = await $fetch<BattleAnswerResponse>(`${apiBase}/api/battles/${battleId}/answer`, {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'X-CSRF-Token': csrfToken
-      },
-      body: {
-        questionIndex: currentQuestionIndex.value,
-        answer,
-        timeSpent
+    const response = await $fetch<BattleAnswerResponse>(
+      `${apiBase}/api/battles/${battleId}/answer`,
+      {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'X-CSRF-Token': csrfToken,
+        },
+        body: {
+          questionIndex: currentQuestionIndex.value,
+          answer,
+          timeSpent,
+        },
       }
-    })
+    )
 
     lastAnswerCorrect.value = response.isCorrect
     lastPoints.value = response.points
@@ -571,7 +608,7 @@ async function submitAnswer(answer: string) {
         answer,
         isCorrect: response.isCorrect,
         points: response.points,
-        totalScore: response.totalScore
+        totalScore: response.totalScore,
       })
     }
 
@@ -611,28 +648,29 @@ function startQuestionTimer() {
 
 async function confirmSurrender() {
   showSurrenderConfirm.value = false
-  
+
   try {
     // Determine winner (the other player)
-    const winnerId = battle.value.challengerId === user.value?.id 
-      ? battle.value.opponentId 
-      : battle.value.challengerId
+    const winnerId =
+      battle.value.challengerId === user.value?.id
+        ? battle.value.opponentId
+        : battle.value.challengerId
 
     const csrfToken = await getCsrfToken()
     const response = await $fetch<any>(`${apiBase}/api/battles/${battleId}/forfeit`, {
       method: 'POST',
       credentials: 'include',
       headers: {
-        'X-CSRF-Token': csrfToken
-      }
+        'X-CSRF-Token': csrfToken,
+      },
     })
 
     // Emit socket event with participant data
     if (socket.value && connected.value) {
-      socket.value.emit('battle:forfeit', { 
-        battleId, 
+      socket.value.emit('battle:forfeit', {
+        battleId,
         winnerId,
-        participants: response.participants
+        participants: response.participants,
       })
     }
 
@@ -650,8 +688,8 @@ async function cancelBattle() {
       method: 'POST',
       credentials: 'include',
       headers: {
-        'X-CSRF-Token': csrfToken
-      }
+        'X-CSRF-Token': csrfToken,
+      },
     })
     navigateTo('/battles')
   } catch (error) {
@@ -665,8 +703,7 @@ function getModeName(modeId: string) {
     .replace(/^BATTLE_/, '')
     .replace(/_/g, ' ')
     .split(' ')
-    .map(word => word.charAt(0) + word.slice(1).toLowerCase())
+    .map((word) => word.charAt(0) + word.slice(1).toLowerCase())
     .join(' ')
 }
-
 </script>

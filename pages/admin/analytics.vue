@@ -41,9 +41,7 @@
             <div>
               <p class="text-gray-400 text-sm">Total Users</p>
               <p class="text-3xl font-bold gradient-text mt-1">{{ analytics.totalUsers }}</p>
-              <p class="text-xs text-green-400 mt-1">
-                +{{ analytics.newUsers }} this period
-              </p>
+              <p class="text-xs text-green-400 mt-1">+{{ analytics.newUsers }} this period</p>
             </div>
             <div class="w-12 h-12 rounded-lg bg-blue-500/20 flex items-center justify-center">
               <Icon name="mdi:account-group" class="w-6 h-6 text-blue-400" />
@@ -56,9 +54,7 @@
             <div>
               <p class="text-gray-400 text-sm">Games Played</p>
               <p class="text-3xl font-bold gradient-text mt-1">{{ analytics.totalGames }}</p>
-              <p class="text-xs text-green-400 mt-1">
-                +{{ analytics.newGames }} this period
-              </p>
+              <p class="text-xs text-green-400 mt-1">+{{ analytics.newGames }} this period</p>
             </div>
             <div class="w-12 h-12 rounded-lg bg-purple-500/20 flex items-center justify-center">
               <Icon name="mdi:gamepad-variant" class="w-6 h-6 text-purple-400" />
@@ -71,9 +67,7 @@
             <div>
               <p class="text-gray-400 text-sm">Active Users</p>
               <p class="text-3xl font-bold gradient-text mt-1">{{ analytics.activeUsers }}</p>
-              <p class="text-xs text-gray-400 mt-1">
-                Last 24 hours
-              </p>
+              <p class="text-xs text-gray-400 mt-1">Last 24 hours</p>
             </div>
             <div class="w-12 h-12 rounded-lg bg-green-500/20 flex items-center justify-center">
               <Icon name="mdi:account-check" class="w-6 h-6 text-green-400" />
@@ -86,9 +80,7 @@
             <div>
               <p class="text-gray-400 text-sm">Avg. Session</p>
               <p class="text-3xl font-bold gradient-text mt-1">{{ analytics.avgSessionTime }}m</p>
-              <p class="text-xs text-gray-400 mt-1">
-                Per user
-              </p>
+              <p class="text-xs text-gray-400 mt-1">Per user</p>
             </div>
             <div class="w-12 h-12 rounded-lg bg-orange-500/20 flex items-center justify-center">
               <Icon name="mdi:clock-outline" class="w-6 h-6 text-orange-400" />
@@ -270,11 +262,15 @@ function loadMockData() {
     topScoreToday: 9850,
     userGrowthData: {
       labels,
-      data: Array.from({ length: labels.length }, (_, i) => Math.floor(100 + i * 10 + Math.random() * 50)),
+      data: Array.from({ length: labels.length }, (_, i) =>
+        Math.floor(100 + i * 10 + Math.random() * 50)
+      ),
     },
     gameActivityData: {
       labels,
-      data: Array.from({ length: labels.length }, (_, i) => Math.floor(50 + i * 5 + Math.random() * 30)),
+      data: Array.from({ length: labels.length }, (_, i) =>
+        Math.floor(50 + i * 5 + Math.random() * 30)
+      ),
     },
     gameModeData: {
       labels: ['Guess the Flag'],
@@ -310,14 +306,16 @@ function renderUserGrowthChart() {
     type: 'line',
     data: {
       labels: analytics.value.userGrowthData.labels,
-      datasets: [{
-        label: 'New Users',
-        data: analytics.value.userGrowthData.data,
-        borderColor: 'rgb(59, 130, 246)',
-        backgroundColor: 'rgba(59, 130, 246, 0.1)',
-        fill: true,
-        tension: 0.4,
-      }],
+      datasets: [
+        {
+          label: 'New Users',
+          data: analytics.value.userGrowthData.data,
+          borderColor: 'rgb(59, 130, 246)',
+          backgroundColor: 'rgba(59, 130, 246, 0.1)',
+          fill: true,
+          tension: 0.4,
+        },
+      ],
     },
     options: {
       responsive: true,
@@ -365,13 +363,15 @@ function renderGameActivityChart() {
     type: 'bar',
     data: {
       labels: analytics.value.gameActivityData.labels,
-      datasets: [{
-        label: 'Games Played',
-        data: analytics.value.gameActivityData.data,
-        backgroundColor: 'rgba(168, 85, 247, 0.6)',
-        borderColor: 'rgb(168, 85, 247)',
-        borderWidth: 1,
-      }],
+      datasets: [
+        {
+          label: 'Games Played',
+          data: analytics.value.gameActivityData.data,
+          backgroundColor: 'rgba(168, 85, 247, 0.6)',
+          borderColor: 'rgb(168, 85, 247)',
+          borderWidth: 1,
+        },
+      ],
     },
     options: {
       responsive: true,
@@ -419,22 +419,24 @@ function renderGameModeChart() {
     type: 'doughnut',
     data: {
       labels: analytics.value.gameModeData.labels,
-      datasets: [{
-        data: analytics.value.gameModeData.data,
-        backgroundColor: [
-          'rgba(59, 130, 246, 0.8)',
-          'rgba(168, 85, 247, 0.8)',
-          'rgba(34, 197, 94, 0.8)',
-          'rgba(251, 146, 60, 0.8)',
-        ],
-        borderColor: [
-          'rgb(59, 130, 246)',
-          'rgb(168, 85, 247)',
-          'rgb(34, 197, 94)',
-          'rgb(251, 146, 60)',
-        ],
-        borderWidth: 2,
-      }],
+      datasets: [
+        {
+          data: analytics.value.gameModeData.data,
+          backgroundColor: [
+            'rgba(59, 130, 246, 0.8)',
+            'rgba(168, 85, 247, 0.8)',
+            'rgba(34, 197, 94, 0.8)',
+            'rgba(251, 146, 60, 0.8)',
+          ],
+          borderColor: [
+            'rgb(59, 130, 246)',
+            'rgb(168, 85, 247)',
+            'rgb(34, 197, 94)',
+            'rgb(251, 146, 60)',
+          ],
+          borderWidth: 2,
+        },
+      ],
     },
     options: {
       responsive: true,
@@ -467,16 +469,18 @@ function renderPeakHoursChart() {
     type: 'radar',
     data: {
       labels: analytics.value.peakHoursData.labels,
-      datasets: [{
-        label: 'Active Users',
-        data: analytics.value.peakHoursData.data,
-        backgroundColor: 'rgba(34, 197, 94, 0.2)',
-        borderColor: 'rgb(34, 197, 94)',
-        pointBackgroundColor: 'rgb(34, 197, 94)',
-        pointBorderColor: '#fff',
-        pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: 'rgb(34, 197, 94)',
-      }],
+      datasets: [
+        {
+          label: 'Active Users',
+          data: analytics.value.peakHoursData.data,
+          backgroundColor: 'rgba(34, 197, 94, 0.2)',
+          borderColor: 'rgb(34, 197, 94)',
+          pointBackgroundColor: 'rgb(34, 197, 94)',
+          pointBorderColor: '#fff',
+          pointHoverBackgroundColor: '#fff',
+          pointHoverBorderColor: 'rgb(34, 197, 94)',
+        },
+      ],
     },
     options: {
       responsive: true,

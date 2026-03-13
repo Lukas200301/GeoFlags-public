@@ -7,7 +7,10 @@
     </div>
 
     <!-- Tables Grid -->
-    <div v-if="!selectedTable && !loadingTables" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+    <div
+      v-if="!selectedTable && !loadingTables"
+      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8"
+    >
       <div
         v-for="table in tables"
         :key="table.name"
@@ -15,15 +18,21 @@
         class="group relative glass-card p-6 cursor-pointer hover:scale-[1.02] transition-all duration-300 overflow-hidden"
       >
         <!-- Background gradient glow -->
-        <div class="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        <div
+          class="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+        ></div>
 
         <!-- Content -->
         <div class="relative flex items-start gap-4">
-          <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center flex-shrink-0 shadow-lg group-hover:shadow-purple-500/50 transition-shadow duration-300">
+          <div
+            class="w-16 h-16 rounded-xl bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center flex-shrink-0 shadow-lg group-hover:shadow-purple-500/50 transition-shadow duration-300"
+          >
             <Icon :name="table.icon" class="w-9 h-9 text-white" />
           </div>
           <div class="flex-1 min-w-0">
-            <h3 class="text-xl font-bold text-gray-100 mb-2 group-hover:text-purple-300 transition-colors">
+            <h3
+              class="text-xl font-bold text-gray-100 mb-2 group-hover:text-purple-300 transition-colors"
+            >
               {{ table.label }}
             </h3>
             <div class="flex items-center gap-2 mb-2">
@@ -33,11 +42,16 @@
             </div>
             <div class="text-xs text-gray-500 font-mono">{{ table.name }}</div>
           </div>
-          <Icon name="mdi:chevron-right" class="w-6 h-6 text-gray-600 group-hover:text-purple-400 group-hover:translate-x-1 transition-all flex-shrink-0" />
+          <Icon
+            name="mdi:chevron-right"
+            class="w-6 h-6 text-gray-600 group-hover:text-purple-400 group-hover:translate-x-1 transition-all flex-shrink-0"
+          />
         </div>
 
         <!-- Border glow on hover -->
-        <div class="absolute inset-0 rounded-xl border border-purple-500/0 group-hover:border-purple-500/30 transition-colors duration-300 pointer-events-none"></div>
+        <div
+          class="absolute inset-0 rounded-xl border border-purple-500/0 group-hover:border-purple-500/30 transition-colors duration-300 pointer-events-none"
+        ></div>
       </div>
     </div>
 
@@ -58,23 +72,30 @@
     <!-- Table Data View -->
     <div v-if="selectedTable" class="glass-card overflow-hidden">
       <!-- Table Header -->
-      <div class="p-6 bg-gradient-to-r from-purple-900/20 to-pink-900/20 border-b border-gray-700/50">
+      <div
+        class="p-6 bg-gradient-to-r from-purple-900/20 to-pink-900/20 border-b border-gray-700/50"
+      >
         <div class="flex items-center justify-between mb-6">
           <div class="flex items-center gap-4">
             <button
               @click="selectedTable = null"
               class="p-3 hover:bg-gray-700/50 rounded-xl transition-all hover:scale-105 group"
             >
-              <Icon name="mdi:arrow-left" class="w-6 h-6 text-gray-300 group-hover:text-purple-400 transition-colors" />
+              <Icon
+                name="mdi:arrow-left"
+                class="w-6 h-6 text-gray-300 group-hover:text-purple-400 transition-colors"
+              />
             </button>
             <div>
               <h2 class="text-3xl font-bold text-gray-100 mb-1">
-                {{ tables.find(t => t.name === selectedTable)?.label }}
+                {{ tables.find((t) => t.name === selectedTable)?.label }}
               </h2>
               <div class="flex items-center gap-3">
                 <p class="text-sm text-gray-400 font-mono">{{ selectedTable }}</p>
                 <div class="px-2 py-1 rounded bg-purple-500/20 border border-purple-500/30">
-                  <span class="text-xs font-semibold text-purple-300">{{ totalRows }} total rows</span>
+                  <span class="text-xs font-semibold text-purple-300"
+                    >{{ totalRows }} total rows</span
+                  >
                 </div>
               </div>
             </div>
@@ -83,7 +104,10 @@
             <!-- Page Size Selector -->
             <select
               v-model="pageSize"
-              @change="currentPage = 1; fetchTableData()"
+              @change="
+                currentPage = 1;
+                fetchTableData()
+              "
               class="px-3 py-2 bg-gray-800/70 border border-gray-600/50 rounded-lg text-gray-100 text-sm focus:outline-none focus:border-purple-500 transition-all"
             >
               <option :value="10">10 rows</option>
@@ -107,7 +131,10 @@
 
         <!-- Search -->
         <div class="relative">
-          <Icon name="mdi:magnify" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+          <Icon
+            name="mdi:magnify"
+            class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
+          />
           <input
             v-model="searchQuery"
             @input="debouncedSearch"
@@ -121,56 +148,64 @@
       <!-- Table Content -->
       <div class="relative">
         <div class="overflow-x-auto custom-scrollbar relative">
-            <table class="border-collapse">
-              <thead class="bg-gray-800/70 backdrop-blur-sm sticky top-0">
-                <tr>
-                  <th
-                    v-for="column in displayColumns"
-                    :key="column"
-                    class="px-3 py-3 text-left text-xs font-bold text-purple-300 uppercase tracking-wider border-b border-gray-700/50"
-                    style="min-width: 150px; max-width: 200px;"
-                  >
-                    <div class="truncate">
-                      {{ formatColumnName(column) }}
-                    </div>
-                  </th>
-                  <th class="px-3 py-3 text-left text-xs font-bold text-purple-300 uppercase tracking-wider border-b border-gray-700/50" style="min-width: 80px;">
-                    Details
-                  </th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-gray-700/30">
-                <tr
-                  v-for="(row, index) in tableData"
-                  :key="index"
-                  class="hover:bg-gradient-to-r hover:from-purple-900/10 hover:to-transparent transition-all duration-200 cursor-pointer"
-                  @click="openDetailModal(row)"
+          <table class="border-collapse">
+            <thead class="bg-gray-800/70 backdrop-blur-sm sticky top-0">
+              <tr>
+                <th
+                  v-for="column in displayColumns"
+                  :key="column"
+                  class="px-3 py-3 text-left text-xs font-bold text-purple-300 uppercase tracking-wider border-b border-gray-700/50"
+                  style="min-width: 150px; max-width: 200px"
                 >
-                  <td
-                    v-for="column in displayColumns"
-                    :key="column"
-                    class="px-3 py-3 text-sm"
-                    style="min-width: 150px; max-width: 200px;"
+                  <div class="truncate">
+                    {{ formatColumnName(column) }}
+                  </div>
+                </th>
+                <th
+                  class="px-3 py-3 text-left text-xs font-bold text-purple-300 uppercase tracking-wider border-b border-gray-700/50"
+                  style="min-width: 80px"
+                >
+                  Details
+                </th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-700/30">
+              <tr
+                v-for="(row, index) in tableData"
+                :key="index"
+                class="hover:bg-gradient-to-r hover:from-purple-900/10 hover:to-transparent transition-all duration-200 cursor-pointer"
+                @click="openDetailModal(row)"
+              >
+                <td
+                  v-for="column in displayColumns"
+                  :key="column"
+                  class="px-3 py-3 text-sm"
+                  style="min-width: 150px; max-width: 200px"
+                >
+                  <div class="truncate" :title="String(formatValue(row[column]))">
+                    <span :class="getCellClass(column, row[column])">
+                      {{ formatValue(row[column]) }}
+                    </span>
+                  </div>
+                </td>
+                <td class="px-3 py-3 text-sm">
+                  <button
+                    class="p-1.5 hover:bg-purple-500/20 rounded-lg transition-all"
+                    @click.stop="openDetailModal(row)"
                   >
-                    <div class="truncate" :title="String(formatValue(row[column]))">
-                      <span :class="getCellClass(column, row[column])">
-                        {{ formatValue(row[column]) }}
-                      </span>
-                    </div>
-                  </td>
-                  <td class="px-3 py-3 text-sm">
-                    <button class="p-1.5 hover:bg-purple-500/20 rounded-lg transition-all" @click.stop="openDetailModal(row)">
-                      <Icon name="mdi:eye" class="w-4 h-4 text-purple-400" />
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+                    <Icon name="mdi:eye" class="w-4 h-4 text-purple-400" />
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
         <!-- Loading State -->
         <div v-if="loadingData" class="p-16 text-center">
-          <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-purple-500/10 mb-4">
+          <div
+            class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-purple-500/10 mb-4"
+          >
             <Icon name="mdi:loading" class="w-10 h-10 text-purple-500 animate-spin" />
           </div>
           <p class="text-gray-400 text-lg">Loading data...</p>
@@ -178,20 +213,33 @@
 
         <!-- Empty State -->
         <div v-else-if="tableData.length === 0" class="p-16 text-center">
-          <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gray-800/50 mb-4">
+          <div
+            class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gray-800/50 mb-4"
+          >
             <Icon name="mdi:database-off-outline" class="w-12 h-12 text-gray-600" />
           </div>
           <h3 class="text-xl font-bold text-gray-300 mb-2">No data found</h3>
-          <p class="text-gray-500">{{ searchQuery ? 'Try a different search term' : 'This table is empty' }}</p>
+          <p class="text-gray-500">
+            {{ searchQuery ? 'Try a different search term' : 'This table is empty' }}
+          </p>
         </div>
       </div>
 
       <!-- Pagination -->
-      <div v-if="totalRows > 0" class="p-6 bg-gradient-to-r from-gray-900/20 to-transparent border-t border-gray-700/50">
+      <div
+        v-if="totalRows > 0"
+        class="p-6 bg-gradient-to-r from-gray-900/20 to-transparent border-t border-gray-700/50"
+      >
         <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
           <div class="text-sm text-gray-400">
-            Showing <span class="font-semibold text-purple-300">{{ (currentPage - 1) * pageSize + 1 }}</span>
-            to <span class="font-semibold text-purple-300">{{ Math.min(currentPage * pageSize, totalRows) }}</span>
+            Showing
+            <span class="font-semibold text-purple-300">{{
+              (currentPage - 1) * pageSize + 1
+            }}</span>
+            to
+            <span class="font-semibold text-purple-300">{{
+              Math.min(currentPage * pageSize, totalRows)
+            }}</span>
             of <span class="font-semibold text-purple-300">{{ totalRows }}</span> rows
           </div>
           <div class="flex items-center gap-2">
@@ -240,7 +288,9 @@
     <!-- Error Display -->
     <div v-if="error" class="glass-card p-6 border-l-4 border-red-500 mb-6 animate-slideDown">
       <div class="flex items-start gap-4">
-        <div class="w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center flex-shrink-0">
+        <div
+          class="w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center flex-shrink-0"
+        >
           <Icon name="mdi:alert-circle" class="w-6 h-6 text-red-500" />
         </div>
         <div class="flex-1">
@@ -269,7 +319,9 @@
             class="glass-card max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col animate-modalIn"
           >
             <!-- Modal Header -->
-            <div class="p-6 bg-gradient-to-r from-purple-900/20 to-pink-900/20 border-b border-gray-700/50 flex items-center justify-between">
+            <div
+              class="p-6 bg-gradient-to-r from-purple-900/20 to-pink-900/20 border-b border-gray-700/50 flex items-center justify-between"
+            >
               <div>
                 <h3 class="text-2xl font-bold text-gray-100">Entry Details</h3>
                 <p class="text-sm text-gray-400 mt-1">Full view of selected database entry</p>
@@ -301,12 +353,20 @@
                   class="glass-card p-4 hover:border-purple-500/30 transition-colors"
                 >
                   <div class="flex items-start gap-3">
-                    <Icon :name="getColumnIcon(column)" class="w-5 h-5 text-purple-400 flex-shrink-0 mt-0.5" />
+                    <Icon
+                      :name="getColumnIcon(column)"
+                      class="w-5 h-5 text-purple-400 flex-shrink-0 mt-0.5"
+                    />
                     <div class="flex-1 min-w-0">
-                      <div class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
+                      <div
+                        class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2"
+                      >
                         {{ formatColumnName(column) }}
                       </div>
-                      <div class="text-sm break-words" :class="getCellClass(column, selectedEntry?.[column])">
+                      <div
+                        class="text-sm break-words"
+                        :class="getCellClass(column, selectedEntry?.[column])"
+                      >
                         {{ formatValue(selectedEntry?.[column]) }}
                       </div>
                     </div>
@@ -376,10 +436,9 @@ const fetchTables = async () => {
     loadingTables.value = true
     error.value = null
 
-    const response = await apiRequest<{ tables: any[] }>(
-      '/api/admin/database/tables',
-      { requiresAuth: true }
-    )
+    const response = await apiRequest<{ tables: any[] }>('/api/admin/database/tables', {
+      requiresAuth: true,
+    })
 
     tables.value = response.tables
   } catch (err: any) {
@@ -513,11 +572,17 @@ const getDisplayColumns = (columns: string[]): string[] => {
   const priorityColumns: string[] = []
   const regularColumns: string[] = []
 
-  columns.forEach(col => {
+  columns.forEach((col) => {
     const lowerCol = col.toLowerCase()
     // Prioritize important columns
-    if (lowerCol.includes('id') || lowerCol.includes('name') || lowerCol.includes('email') ||
-        lowerCol.includes('title') || lowerCol.includes('status') || lowerCol.includes('created')) {
+    if (
+      lowerCol.includes('id') ||
+      lowerCol.includes('name') ||
+      lowerCol.includes('email') ||
+      lowerCol.includes('title') ||
+      lowerCol.includes('status') ||
+      lowerCol.includes('created')
+    ) {
       priorityColumns.push(col)
     } else {
       regularColumns.push(col)
@@ -537,12 +602,20 @@ const getColumnIcon = (column: string): string => {
   if (lowerCol.includes('id')) return 'mdi:key'
   if (lowerCol.includes('email')) return 'mdi:email'
   if (lowerCol.includes('name')) return 'mdi:account'
-  if (lowerCol.includes('date') || lowerCol.includes('time') || lowerCol.includes('created') || lowerCol.includes('updated')) return 'mdi:calendar-clock'
+  if (
+    lowerCol.includes('date') ||
+    lowerCol.includes('time') ||
+    lowerCol.includes('created') ||
+    lowerCol.includes('updated')
+  )
+    return 'mdi:calendar-clock'
   if (lowerCol.includes('status')) return 'mdi:check-circle'
   if (lowerCol.includes('role')) return 'mdi:shield-account'
-  if (lowerCol.includes('count') || lowerCol.includes('number') || lowerCol.includes('amount')) return 'mdi:numeric'
+  if (lowerCol.includes('count') || lowerCol.includes('number') || lowerCol.includes('amount'))
+    return 'mdi:numeric'
   if (lowerCol.includes('url') || lowerCol.includes('link')) return 'mdi:link'
-  if (lowerCol.includes('image') || lowerCol.includes('avatar') || lowerCol.includes('photo')) return 'mdi:image'
+  if (lowerCol.includes('image') || lowerCol.includes('avatar') || lowerCol.includes('photo'))
+    return 'mdi:image'
   if (lowerCol.includes('description') || lowerCol.includes('content')) return 'mdi:text'
   if (lowerCol.includes('flag') || lowerCol.includes('is')) return 'mdi:flag'
   if (lowerCol.includes('code')) return 'mdi:code-tags'
@@ -595,7 +668,10 @@ const formatValue = (value: any): string => {
   if (typeof value === 'boolean') {
     return value ? '✓ True' : '✗ False'
   }
-  if (value instanceof Date || (typeof value === 'string' && !isNaN(Date.parse(value)) && value.includes('T'))) {
+  if (
+    value instanceof Date ||
+    (typeof value === 'string' && !isNaN(Date.parse(value)) && value.includes('T'))
+  ) {
     try {
       const date = new Date(value)
       return date.toLocaleString('en-US', {
@@ -603,7 +679,7 @@ const formatValue = (value: any): string => {
         month: 'short',
         day: 'numeric',
         hour: '2-digit',
-        minute: '2-digit'
+        minute: '2-digit',
       })
     } catch {
       return String(value)

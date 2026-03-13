@@ -72,4 +72,3 @@ export async function isMaintenanceMode(): Promise<boolean> {
 export function clearSettingsCache() {
   settingsCache = null;
 }
-

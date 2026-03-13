@@ -9,7 +9,7 @@ import prisma from '../utils/prisma';
 export async function getStatusPage(req: Request, res: Response) {
   let dbStatus = 'Operational';
   let headerText = 'All services are online';
-  
+
   // Use frontend logo, assuming it's hosted identically to the API logic or accessible via FRONTEND_URL
   const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
   const headerIcon = `<img src="${FRONTEND_URL}/favicon.png" alt="GeoFlags Logo" style="width: 48px; height: 48px; border-radius: 8px;">`;
@@ -25,7 +25,7 @@ export async function getStatusPage(req: Request, res: Response) {
   const dateQuery = req.query.date as string | undefined;
 
   let htmlBodyContent = '';
-  
+
   if (dateQuery) {
     // ---- 1-DAY DRILLDOWN VIEW ----
     const targetDate = new Date(dateQuery);
@@ -36,36 +36,39 @@ export async function getStatusPage(req: Request, res: Response) {
       where: {
         timestamp: {
           gte: targetDate,
-          lt: nextDate
-        }
+          lt: nextDate,
+        },
       },
       orderBy: {
-        timestamp: 'asc'
-      }
+        timestamp: 'asc',
+      },
     });
 
     // Create 24 hourly blocks (we'll just show what we have)
     let hourlyGrid = '';
     let avgMs = 0;
-    
+
     if (hourlyData.length > 0) {
-       const totalMs = hourlyData.reduce((acc: number, curr: any) => acc + curr.responseTime, 0);
-       avgMs = Math.round(totalMs / hourlyData.length);
-       
-       hourlyGrid += `<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 1rem; margin-top: 1rem;">`;
-       hourlyData.forEach((ping: any) => {
-          const timeStr = ping.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-          const statusColor = ping.isUp ? 'var(--accent-green-bar)' : 'var(--accent-red)';
-          hourlyGrid += `
+      const totalMs = hourlyData.reduce((acc: number, curr: any) => acc + curr.responseTime, 0);
+      avgMs = Math.round(totalMs / hourlyData.length);
+
+      hourlyGrid += `<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 1rem; margin-top: 1rem;">`;
+      hourlyData.forEach((ping: any) => {
+        const timeStr = ping.timestamp.toLocaleTimeString([], {
+          hour: '2-digit',
+          minute: '2-digit',
+        });
+        const statusColor = ping.isUp ? 'var(--accent-green-bar)' : 'var(--accent-red)';
+        hourlyGrid += `
             <div style="background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center;">
               <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem;">${timeStr}</div>
               <div style="font-weight: bold; color: ${statusColor}; font-size: 1.2rem;">${ping.responseTime} ms</div>
             </div>
           `;
-       });
-       hourlyGrid += `</div>`;
+      });
+      hourlyGrid += `</div>`;
     } else {
-       hourlyGrid = `<p style="color: var(--text-muted); text-align: center; padding: 2rem;">No heartbeat data recorded for this date.</p>`;
+      hourlyGrid = `<p style="color: var(--text-muted); text-align: center; padding: 2rem;">No heartbeat data recorded for this date.</p>`;
     }
 
     htmlBodyContent = `
@@ -86,7 +89,6 @@ export async function getStatusPage(req: Request, res: Response) {
           </div>
         </div>
     `;
-
   } else {
     // ---- 90-DAY AGGREGATE VIEW ----
     const ninetyDaysAgo = new Date();
@@ -95,68 +97,68 @@ export async function getStatusPage(req: Request, res: Response) {
     const uptimeData = await prisma.uptimePing.findMany({
       where: {
         timestamp: {
-          gte: ninetyDaysAgo
-        }
+          gte: ninetyDaysAgo,
+        },
       },
       orderBy: {
-        timestamp: 'asc'
-      }
+        timestamp: 'asc',
+      },
     });
 
     // Group by Day String
     const uptimeMap = new Map<string, { totalPings: number; upPings: number }>();
     uptimeData.forEach((r: any) => {
-       const dStr = r.timestamp.toDateString();
-       if (!uptimeMap.has(dStr)) uptimeMap.set(dStr, { totalPings: 0, upPings: 0 });
-       const entry = uptimeMap.get(dStr)!;
-       entry.totalPings++;
-       if (r.isUp) entry.upPings++;
+      const dStr = r.timestamp.toDateString();
+      if (!uptimeMap.has(dStr)) uptimeMap.set(dStr, { totalPings: 0, upPings: 0 });
+      const entry = uptimeMap.get(dStr)!;
+      entry.totalPings++;
+      if (r.isUp) entry.upPings++;
     });
 
     // Generate 90 bars of real uptime data
     const generateBars = () => {
       let bars = '';
       let totalUptimePercentage = 0;
-      
-      for (let i = 0; i < 90; i++) {
-          const date = new Date(Date.now() - (89 - i) * 86400000);
-          const dateStr = date.toDateString();
-          // We will use the explicit YYYY-MM-DD for the url query
-          const isoDate = date.toISOString().split('T')[0];
-          
-          const stats = uptimeMap.get(dateStr);
-          
-          let percent = 0;
-          let barClass = 'bar-nodata';
-          
-          if (stats && stats.totalPings > 0) {
-             percent = (stats.upPings / stats.totalPings) * 100;
-             if (percent === 100) barClass = 'bar-good';
-             else barClass = 'bar-bad';
-             
-             totalUptimePercentage += percent;
-          } else {
-             // For missing days entirely (if the system was down 24 hours, or before system existed)
-             percent = 0;
-          }
 
-          const title = `${dateStr} - ${!stats ? 'No Data' : percent.toFixed(2) + '% Uptime'}`;
-          // Make the bar a clickable anchor link to the drilldown view
-          bars += `<a href="/?date=${isoDate}" class="bar ${barClass}" title="${title}"></a>`;
+      for (let i = 0; i < 90; i++) {
+        const date = new Date(Date.now() - (89 - i) * 86400000);
+        const dateStr = date.toDateString();
+        // We will use the explicit YYYY-MM-DD for the url query
+        const isoDate = date.toISOString().split('T')[0];
+
+        const stats = uptimeMap.get(dateStr);
+
+        let percent = 0;
+        let barClass = 'bar-nodata';
+
+        if (stats && stats.totalPings > 0) {
+          percent = (stats.upPings / stats.totalPings) * 100;
+          if (percent === 100) barClass = 'bar-good';
+          else barClass = 'bar-bad';
+
+          totalUptimePercentage += percent;
+        } else {
+          // For missing days entirely (if the system was down 24 hours, or before system existed)
+          percent = 0;
+        }
+
+        const title = `${dateStr} - ${!stats ? 'No Data' : percent.toFixed(2) + '% Uptime'}`;
+        // Make the bar a clickable anchor link to the drilldown view
+        bars += `<a href="/?date=${isoDate}" class="bar ${barClass}" title="${title}"></a>`;
       }
-      
+
       // Calculate Average (only across days that had > 0 pings to avoid diluting 90 days if system is 1 day old)
-      const daysWithData = Array.from(uptimeMap.values()).filter(s => s.totalPings > 0).length;
+      const daysWithData = Array.from(uptimeMap.values()).filter((s) => s.totalPings > 0).length;
       let avg = 100;
       if (daysWithData > 0) {
-         avg = totalUptimePercentage / daysWithData;
+        avg = totalUptimePercentage / daysWithData;
       }
-      
+
       return { bars, avg: avg.toFixed(2) };
     };
 
     const dbBars = generateBars();
-    const apiBars = dbBars; 
+    const apiBars = dbBars;
     const wsBars = dbBars;
 
     htmlBodyContent = `

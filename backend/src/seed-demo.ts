@@ -17,24 +17,109 @@ dotenv.config();
 
 // Realistic gamertag components
 const adjectives = [
-  'Swift', 'Silent', 'Cosmic', 'Shadow', 'Crimson', 'Golden', 'Azure', 'Mystic',
-  'Epic', 'Legendary', 'Thunder', 'Viper', 'Ninja', 'Phantom', 'Arctic', 'Blaze',
-  'Frost', 'Storm', 'Titan', 'Stealth', 'Rogue', 'Neon', 'Cyber', 'Dark',
-  'Iron', 'Steel', 'Diamond', 'Quantum', 'Dragon', 'Wolf', 'Ghost', 'Raven',
-  'Crystal', 'Omega', 'Alpha', 'Nova', 'Void', 'Prism', 'Echo', 'Zen'
+  'Swift',
+  'Silent',
+  'Cosmic',
+  'Shadow',
+  'Crimson',
+  'Golden',
+  'Azure',
+  'Mystic',
+  'Epic',
+  'Legendary',
+  'Thunder',
+  'Viper',
+  'Ninja',
+  'Phantom',
+  'Arctic',
+  'Blaze',
+  'Frost',
+  'Storm',
+  'Titan',
+  'Stealth',
+  'Rogue',
+  'Neon',
+  'Cyber',
+  'Dark',
+  'Iron',
+  'Steel',
+  'Diamond',
+  'Quantum',
+  'Dragon',
+  'Wolf',
+  'Ghost',
+  'Raven',
+  'Crystal',
+  'Omega',
+  'Alpha',
+  'Nova',
+  'Void',
+  'Prism',
+  'Echo',
+  'Zen',
 ];
 
 const nouns = [
-  'Hunter', 'Warrior', 'Striker', 'Reaper', 'Phoenix', 'Eagle', 'Lion', 'Tiger',
-  'Falcon', 'Vortex', 'Blade', 'Fang', 'Claw', 'Knight', 'Ranger', 'Sniper',
-  'Ace', 'Champion', 'Legend', 'Master', 'King', 'Emperor', 'Overlord', 'Slayer',
-  'Destroyer', 'Conqueror', 'Berserker', 'Assassin', 'Tempest', 'Sentinel', 'Guardian',
-  'Sorcerer', 'Wizard', 'Demon', 'Angel', 'Titan', 'Golem', 'Wraith', 'Specter', 'Shade'
+  'Hunter',
+  'Warrior',
+  'Striker',
+  'Reaper',
+  'Phoenix',
+  'Eagle',
+  'Lion',
+  'Tiger',
+  'Falcon',
+  'Vortex',
+  'Blade',
+  'Fang',
+  'Claw',
+  'Knight',
+  'Ranger',
+  'Sniper',
+  'Ace',
+  'Champion',
+  'Legend',
+  'Master',
+  'King',
+  'Emperor',
+  'Overlord',
+  'Slayer',
+  'Destroyer',
+  'Conqueror',
+  'Berserker',
+  'Assassin',
+  'Tempest',
+  'Sentinel',
+  'Guardian',
+  'Sorcerer',
+  'Wizard',
+  'Demon',
+  'Angel',
+  'Titan',
+  'Golem',
+  'Wraith',
+  'Specter',
+  'Shade',
 ];
 
 const gamerWords = [
-  'xXx', 'Pro', 'GG', 'TTV', 'YT', 'Twitch', 'Gaming', 'Plays', 'FTW',
-  'MVP', 'Clutch', 'Toxic', 'Noob', 'Elite', 'Savage', 'Beast', 'Insane'
+  'xXx',
+  'Pro',
+  'GG',
+  'TTV',
+  'YT',
+  'Twitch',
+  'Gaming',
+  'Plays',
+  'FTW',
+  'MVP',
+  'Clutch',
+  'Toxic',
+  'Noob',
+  'Elite',
+  'Savage',
+  'Beast',
+  'Insane',
 ];
 
 // Modern gamer suffixes
@@ -50,7 +135,7 @@ const getAvatarUrl = (seed: string) => {
 // Generate realistic gamer username
 const generateUsername = (): string => {
   const rand = Math.random();
-  
+
   if (rand > 0.7) {
     // Style 1: AdjectiveNoun + Number (e.g., ShadowHunter420)
     const adj = adjectives[Math.floor(Math.random() * adjectives.length)];
@@ -78,7 +163,8 @@ const generateUsername = (): string => {
 
 // Generate cryptographically secure random password
 const generateSecurePassword = (): string => {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?';
+  const chars =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?';
   let password = '';
   for (let i = 0; i < 24; i++) {
     password += chars.charAt(Math.floor(Math.random() * chars.length));
@@ -92,7 +178,7 @@ const randomInt = (min: number, max: number) => Math.floor(Math.random() * (max 
 // Random date in the past 90 days
 const randomPastDate = (daysBack: number = 90): Date => {
   const now = Date.now();
-  const pastTime = now - (Math.random() * daysBack * 24 * 60 * 60 * 1000);
+  const pastTime = now - Math.random() * daysBack * 24 * 60 * 60 * 1000;
   return new Date(pastTime);
 };
 
@@ -145,7 +231,9 @@ async function main() {
           },
         });
         users.push(user);
-        console.log(`✓ Created user ${i}/50: ${username} ${hasAvatar ? '(with avatar)' : '(no avatar)'}`);
+        console.log(
+          `✓ Created user ${i}/50: ${username} ${hasAvatar ? '(with avatar)' : '(no avatar)'}`
+        );
       } catch (error: any) {
         if (error.code === 'P2002') {
           console.log(`⚠️  User ${username} already exists, skipping...`);
@@ -182,36 +270,28 @@ async function main() {
         for (let i = 0; i < numGames; i++) {
           // Generate score based on game mode
           let score: number;
-          
+
           switch (gameMode.id) {
             case 'GUESS_FLAG':
               // Infinite mode: 0-50 range, with some high scorers
-              score = Math.random() > 0.9 
-                ? randomInt(30, 100) 
-                : randomInt(0, 30);
+              score = Math.random() > 0.9 ? randomInt(30, 100) : randomInt(0, 30);
               break;
-            
+
             case 'TIME_TRIAL':
               // Time trial: 0-40 range
-              score = Math.random() > 0.85 
-                ? randomInt(25, 50) 
-                : randomInt(5, 25);
+              score = Math.random() > 0.85 ? randomInt(25, 50) : randomInt(5, 25);
               break;
-            
+
             case 'FIND_CAPITAL':
               // Find capital: 0-30 range
-              score = Math.random() > 0.9 
-                ? randomInt(20, 40) 
-                : randomInt(0, 20);
+              score = Math.random() > 0.9 ? randomInt(20, 40) : randomInt(0, 20);
               break;
-            
+
             case 'HIGHER_LOWER':
               // Higher or Lower: 0-30 range
-              score = Math.random() > 0.9
-                ? randomInt(20, 40)
-                : randomInt(0, 20);
+              score = Math.random() > 0.9 ? randomInt(20, 40) : randomInt(0, 20);
               break;
-            
+
             default:
               score = randomInt(0, 50);
           }
@@ -267,8 +347,13 @@ async function main() {
     console.log(`   - Realistic scores and timestamps`);
     console.log(`   - All users have cryptographically secure random passwords`);
     console.log('\nNote: Passwords are randomly generated and secure (24 characters).');
-    console.log('Example usernames:', users.slice(0, 5).map(u => u.username).join(', '));
-
+    console.log(
+      'Example usernames:',
+      users
+        .slice(0, 5)
+        .map((u) => u.username)
+        .join(', ')
+    );
   } catch (error) {
     console.error('Seed error:', error);
     throw error;
@@ -277,8 +362,7 @@ async function main() {
   }
 }
 
-main()
-  .catch((error) => {
-    console.error('Fatal error during seed:', error);
-    process.exit(1);
-  });
+main().catch((error) => {
+  console.error('Fatal error during seed:', error);
+  process.exit(1);
+});

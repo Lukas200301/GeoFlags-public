@@ -36,7 +36,9 @@ export function setupSocketIO(httpServer: HTTPServer): SocketIOServer {
     try {
       // Extract token from cookies, handshake auth, or authorization header
       const cookies = socket.handshake.headers.cookie;
-      let token = socket.handshake.auth.token || socket.handshake.headers.authorization?.replace('Bearer ', '');
+      let token =
+        socket.handshake.auth.token ||
+        socket.handshake.headers.authorization?.replace('Bearer ', '');
 
       // Parse accessToken from cookies if not provided in auth
       if (!token && cookies) {
@@ -178,18 +180,21 @@ export function setupSocketIO(httpServer: HTTPServer): SocketIOServer {
     /**
      * Battle events
      */
-    socket.on('battle:challenge:send', (data: { opponentId: string; battleId: string; mode: string }) => {
-      // Notify opponent about the challenge
-      io.to(`user:${data.opponentId}`).emit('battle:challenge:received', {
-        battleId: data.battleId,
-        challenger: {
-          id: socket.userId,
-          username: socket.username,
-        },
-        mode: data.mode,
-        timestamp: new Date(),
-      });
-    });
+    socket.on(
+      'battle:challenge:send',
+      (data: { opponentId: string; battleId: string; mode: string }) => {
+        // Notify opponent about the challenge
+        io.to(`user:${data.opponentId}`).emit('battle:challenge:received', {
+          battleId: data.battleId,
+          challenger: {
+            id: socket.userId,
+            username: socket.username,
+          },
+          mode: data.mode,
+          timestamp: new Date(),
+        });
+      }
+    );
 
     socket.on('battle:challenge:accepted', (data: { challengerId: string; battleId: string }) => {
       // Notify challenger that their challenge was accepted
@@ -267,89 +272,102 @@ export function setupSocketIO(httpServer: HTTPServer): SocketIOServer {
       }
     });
 
-    socket.on('battle:answer:submit', async (data: { battleId: string; questionIndex: number; answer: string; isCorrect: boolean; points: number; totalScore?: number }) => {
-      // Broadcast answer to other participant (without revealing the answer itself)
-      socket.to(`battle:${data.battleId}`).emit('battle:opponent:answered', {
-        userId: socket.userId,
-        username: socket.username,
-        questionIndex: data.questionIndex,
-        totalScore: data.totalScore,
-      });
+    socket.on(
+      'battle:answer:submit',
+      async (data: {
+        battleId: string;
+        questionIndex: number;
+        answer: string;
+        isCorrect: boolean;
+        points: number;
+        totalScore?: number;
+      }) => {
+        // Broadcast answer to other participant (without revealing the answer itself)
+        socket.to(`battle:${data.battleId}`).emit('battle:opponent:answered', {
+          userId: socket.userId,
+          username: socket.username,
+          questionIndex: data.questionIndex,
+          totalScore: data.totalScore,
+        });
 
-      // Check if battle is complete
-      const battle = await prisma.battle.findUnique({
-        where: { id: data.battleId },
-        include: {
-          participants: {
-            include: {
-              user: {
-                select: {
-                  id: true,
-                  username: true,
-                  avatarUrl: true,
+        // Check if battle is complete
+        const battle = await prisma.battle.findUnique({
+          where: { id: data.battleId },
+          include: {
+            participants: {
+              include: {
+                user: {
+                  select: {
+                    id: true,
+                    username: true,
+                    avatarUrl: true,
+                  },
                 },
               },
             },
           },
-        },
-      });
-
-      if (battle) {
-        const allParticipantsFinished = battle.participants.every((p) => {
-          const answers = (p.answers as any[]) || [];
-          return answers.length >= battle.totalRounds;
         });
 
-        if (allParticipantsFinished) {
-          // Determine winner
-          const [participant1, participant2] = battle.participants;
-          let winnerId = null;
-          if (participant1.score > participant2.score) {
-            winnerId = participant1.userId;
-          } else if (participant2.score > participant1.score) {
-            winnerId = participant2.userId;
-          }
-          // If scores are equal, winnerId stays null (tie)
+        if (battle) {
+          const allParticipantsFinished = battle.participants.every((p) => {
+            const answers = (p.answers as any[]) || [];
+            return answers.length >= battle.totalRounds;
+          });
 
-          // Update battle
-          await prisma.battle.update({
-            where: { id: data.battleId },
-            data: {
-              status: 'COMPLETED',
+          if (allParticipantsFinished) {
+            // Determine winner
+            const [participant1, participant2] = battle.participants;
+            let winnerId = null;
+            if (participant1.score > participant2.score) {
+              winnerId = participant1.userId;
+            } else if (participant2.score > participant1.score) {
+              winnerId = participant2.userId;
+            }
+            // If scores are equal, winnerId stays null (tie)
+
+            // Update battle
+            await prisma.battle.update({
+              where: { id: data.battleId },
+              data: {
+                status: 'COMPLETED',
+                winnerId: winnerId,
+                completedAt: new Date(),
+              },
+            });
+
+            // Mark participants as completed
+            await Promise.all(
+              battle.participants.map((p) =>
+                prisma.battleParticipant.update({
+                  where: { id: p.id },
+                  data: { completedAt: new Date() },
+                })
+              )
+            );
+
+            // Broadcast battle complete
+            io.to(`battle:${data.battleId}`).emit('battle:complete', {
+              battleId: data.battleId,
               winnerId: winnerId,
-              completedAt: new Date(),
-            },
-          });
-
-          // Mark participants as completed
-          await Promise.all(
-            battle.participants.map((p) =>
-              prisma.battleParticipant.update({
-                where: { id: p.id },
-                data: { completedAt: new Date() },
-              })
-            )
-          );
-
-          // Broadcast battle complete
-          io.to(`battle:${data.battleId}`).emit('battle:complete', {
-            battleId: data.battleId,
-            winnerId: winnerId,
-            participants: battle.participants,
-          });
+              participants: battle.participants,
+            });
+          }
         }
       }
-    });
+    );
 
-    socket.on('battle:forfeit', (data: { battleId: string; winnerId: string; participants?: any[] }) => {
-      // Notify other participant
-      socket.to(`battle:${data.battleId}`).emit('battle:opponent:forfeited', {
-        userId: socket.userId,
-        username: socket.username,
-        winnerId: data.winnerId,
-        participants: data.participants,
-      });
-    });
+    socket.on(
+      'battle:forfeit',
+      (data: { battleId: string; winnerId: string; participants?: any[] }) => {
+        // Notify other participant
+        socket.to(`battle:${data.battleId}`).emit('battle:opponent:forfeited', {
+          userId: socket.userId,
+          username: socket.username,
+          winnerId: data.winnerId,
+          participants: data.participants,
+        });
+      }
+    );
 
     /**
      * Disconnect handler

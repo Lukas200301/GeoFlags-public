@@ -12,9 +12,7 @@
     <!-- Game Content -->
     <div class="card p-8 my-8">
       <div class="text-center">
-        <h2 class="text-2xl font-bold text-gray-100 mb-8">
-          This is a gameplay placeholder
-        </h2>
+        <h2 class="text-2xl font-bold text-gray-100 mb-8">This is a gameplay placeholder</h2>
 
         <div class="bg-gray-800 rounded-xl p-12 mb-8">
           <Icon name="mdi:flag-variant" class="w-32 h-32 text-gray-400 mx-auto mb-4" />

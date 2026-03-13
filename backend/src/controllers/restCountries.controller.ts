@@ -83,25 +83,29 @@ async function fetchCountryData(countryCode: string): Promise<RestCountryData> {
   return new Promise((resolve, reject) => {
     const url = `${REST_COUNTRIES_BASE_URL}/${countryCode.toLowerCase()}`;
 
-    https.get(url, (response) => {
-      if (response.statusCode !== 200) {
-        reject(new Error(`Failed to fetch country data: ${response.statusCode}`));
-        return;
-      }
-
-      let data = '';
-      response.on('data', (chunk) => { data += chunk; });
-      response.on('end', () => {
-        try {
-          const jsonData = JSON.parse(data);
-          // REST Countries API returns an array with one country
-          resolve(Array.isArray(jsonData) ? jsonData[0] : jsonData);
-        } catch (parseError) {
-          reject(new Error('Failed to parse REST Countries API response'));
+    https
+      .get(url, (response) => {
+        if (response.statusCode !== 200) {
+          reject(new Error(`Failed to fetch country data: ${response.statusCode}`));
+          return;
         }
-      });
-      response.on('error', reject);
-    }).on('error', reject);
+
+        let data = '';
+        response.on('data', (chunk) => {
+          data += chunk;
+        });
+        response.on('end', () => {
+          try {
+            const jsonData = JSON.parse(data);
+            // REST Countries API returns an array with one country
+            resolve(Array.isArray(jsonData) ? jsonData[0] : jsonData);
+          } catch (parseError) {
+            reject(new Error('Failed to parse REST Countries API response'));
+          }
+        });
+        response.on('error', reject);
+      })
+      .on('error', reject);
   });
 }
 
@@ -215,7 +219,7 @@ export async function getCacheStats(_req: Request, res: Response): Promise<void>
   try {
     await ensureCacheDir();
     const files = await fs.readdir(CACHE_DIR);
-    const countryFiles = files.filter(f => f.endsWith('.json'));
+    const countryFiles = files.filter((f) => f.endsWith('.json'));
 
     let totalSize = 0;
     const countryStats = [];

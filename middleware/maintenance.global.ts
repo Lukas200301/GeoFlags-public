@@ -20,7 +20,9 @@ export default defineNuxtRouteMiddleware(async (to) => {
 
   // Always allow access to these routes regardless of maintenance mode
   const allowedPaths = ['/auth/login', '/auth/register', '/maintenance']
-  const isAllowedPath = allowedPaths.some(path => to.path === path || to.path.startsWith(path + '/'))
+  const isAllowedPath = allowedPaths.some(
+    (path) => to.path === path || to.path.startsWith(path + '/')
+  )
 
   if (maintenanceMode.value) {
     // If already going to an allowed path, let them through

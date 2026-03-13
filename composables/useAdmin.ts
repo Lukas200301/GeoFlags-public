@@ -167,7 +167,7 @@ export const useAdmin = () => {
     return new Promise((resolve) => {
       // Trigger a global event that ConfirmReauth component will listen to
       const event = new CustomEvent('admin:reauth-required', {
-        detail: { resolve }
+        detail: { resolve },
       })
       window.dispatchEvent(event)
     })

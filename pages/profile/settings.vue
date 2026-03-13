@@ -2,7 +2,10 @@
   <div class="max-w-3xl mx-auto">
     <!-- Page Header -->
     <div class="mb-8">
-      <NuxtLink to="/profile" class="inline-flex items-center text-primary-400 hover:text-primary-300 mb-4 transition-colors">
+      <NuxtLink
+        to="/profile"
+        class="inline-flex items-center text-primary-400 hover:text-primary-300 mb-4 transition-colors"
+      >
         <Icon name="mdi:arrow-left" class="w-5 h-5 mr-2" />
         Back to Profile
       </NuxtLink>
@@ -11,7 +14,10 @@
     </div>
 
     <!-- Success/Error Messages -->
-    <div v-if="successMessage" class="glass-card bg-green-900/20 border border-green-500/50 p-4 mb-6">
+    <div
+      v-if="successMessage"
+      class="glass-card bg-green-900/20 border border-green-500/50 p-4 mb-6"
+    >
       <div class="flex items-center gap-3">
         <Icon name="mdi:check-circle" class="w-6 h-6 text-green-400" />
         <p class="text-green-400">{{ successMessage }}</p>
@@ -53,9 +59,7 @@
 
         <!-- Email -->
         <div>
-          <label for="email" class="block text-sm font-medium text-gray-300 mb-2">
-            Email
-          </label>
+          <label for="email" class="block text-sm font-medium text-gray-300 mb-2"> Email </label>
           <input
             id="email"
             v-model="profileForm.email"
@@ -92,8 +96,15 @@
 
       <div class="flex flex-col md:flex-row items-center gap-6">
         <!-- Current Avatar -->
-        <div class="w-24 h-24 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-4xl font-bold text-white shadow-2xl overflow-hidden">
-          <img v-if="avatarPreview || user?.avatarUrl" :src="avatarPreview || getAvatarUrl(user?.avatarUrl)" alt="Avatar" class="w-full h-full object-cover">
+        <div
+          class="w-24 h-24 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-4xl font-bold text-white shadow-2xl overflow-hidden"
+        >
+          <img
+            v-if="avatarPreview || user?.avatarUrl"
+            :src="avatarPreview || getAvatarUrl(user?.avatarUrl)"
+            alt="Avatar"
+            class="w-full h-full object-cover"
+          />
           <span v-else>{{ user?.username?.charAt(0).toUpperCase() || '?' }}</span>
         </div>
 
@@ -128,7 +139,9 @@
               <span v-else>Upload</span>
             </button>
           </div>
-          <p v-if="selectedFile" class="text-sm text-gray-400 mt-2">Selected file: {{ selectedFile.name }}</p>
+          <p v-if="selectedFile" class="text-sm text-gray-400 mt-2">
+            Selected file: {{ selectedFile.name }}
+          </p>
           <p v-else class="text-xs text-gray-500 mt-1">
             Only .jpg and .jpeg files are allowed (max 2MB).
           </p>
@@ -265,9 +278,7 @@
               <!-- Warning Message -->
               <div class="bg-red-950/50 border border-red-500/30 rounded-xl p-4 mb-4">
                 <p class="text-red-300 font-semibold mb-2">⚠️ This action cannot be undone!</p>
-                <p class="text-gray-300 text-sm">
-                  Deleting your account will permanently remove:
-                </p>
+                <p class="text-gray-300 text-sm">Deleting your account will permanently remove:</p>
                 <ul class="text-gray-400 text-sm mt-2 space-y-1 ml-4 list-disc">
                   <li>All your game sessions</li>
                   <li>All your leaderboard entries</li>
@@ -294,7 +305,10 @@
                 </div>
 
                 <!-- Error Message -->
-                <div v-if="deleteError" class="bg-red-950/50 border border-red-500/30 rounded-xl p-3">
+                <div
+                  v-if="deleteError"
+                  class="bg-red-950/50 border border-red-500/30 rounded-xl p-3"
+                >
                   <p class="text-red-400 text-sm">{{ deleteError }}</p>
                 </div>
 
@@ -366,7 +380,6 @@ watchEffect(() => {
   if (user.value) {
     profileForm.value.username = user.value.username
     profileForm.value.email = user.value.email
-    
   }
 })
 
@@ -424,7 +437,8 @@ const onFileChange = (e: Event) => {
       showMessage('Only .jpg and .jpeg files are allowed', 'error')
       return
     }
-    if (file.size > 2 * 1024 * 1024) { // 2MB
+    if (file.size > 2 * 1024 * 1024) {
+      // 2MB
       showMessage('File size must be less than 2MB', 'error')
       return
     }

@@ -34,7 +34,7 @@ const storage = multer.diskStorage({
     // 3. Revealing upload timestamp or user info
     const randomName = crypto.randomBytes(16).toString('hex');
     cb(null, randomName + '.jpg'); // Force .jpg extension
-  }
+  },
 });
 
 // Create the multer instance
@@ -48,7 +48,9 @@ const upload = multer({
     const extname = /\.(jpeg|jpg)$/i.test(path.extname(file.originalname).toLowerCase());
 
     if (!mimetype) {
-      return cb(new Error('Invalid file type. Only JPEG images are allowed (MIME type check failed).'));
+      return cb(
+        new Error('Invalid file type. Only JPEG images are allowed (MIME type check failed).')
+      );
     }
 
     if (!extname) {
@@ -62,7 +64,7 @@ const upload = multer({
     fileSize: 2 * 1024 * 1024, // SECURITY: 2MB file size limit
     files: 1, // SECURITY: Only allow one file per request
     fields: 0, // SECURITY: Don't allow additional fields
-  }
+  },
 });
 
 // SECURITY: Add additional validation middleware
@@ -80,12 +82,14 @@ export const validateAvatarUpload = (req: any, res: any, next: any) => {
 
   // SECURITY: Verify file is actually a valid JPEG by checking magic bytes
   const buffer = fs.readFileSync(filePath);
-  const isJPEG = buffer[0] === 0xFF && buffer[1] === 0xD8 && buffer[2] === 0xFF;
+  const isJPEG = buffer[0] === 0xff && buffer[1] === 0xd8 && buffer[2] === 0xff;
 
   if (!isJPEG) {
     // Delete the invalid file
     fs.unlinkSync(filePath);
-    return res.status(400).json({ message: 'Invalid file format. File is not a valid JPEG image.' });
+    return res
+      .status(400)
+      .json({ message: 'Invalid file format. File is not a valid JPEG image.' });
   }
 
   next();

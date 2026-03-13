@@ -1,137 +1,177 @@
 <template>
   <div class="home-page">
-    
-
     <div class="page-content">
       <!-- Hero Section -->
       <section class="hero-section">
         <div class="hero-content">
           <client-only>
-                  <h1
-                    v-motion
-                    :initial="{ opacity: 0, y: 50 }"
-                    :enter="{ opacity: 1, y: 0 }"
-                    :delay="200"
-                    class="text-5xl md:text-7xl font-bold mb-6"
-                  >
-                    Welcome to
-                    <span class="gradient-text">GeoFlags</span>
-                  </h1>
-                  <p
-                    v-motion
-                    :initial="{ opacity: 0, y: 50 }"
-                    :enter="{ opacity: 1, y: 0 }"
-                    :delay="400"
-                    class="text-xl text-gray-300 mb-8 max-w-2xl mx-auto"
-                  >
-                    Master world geography through engaging quizzes and challenges. Learn about countries, flags, and more while competing with players worldwide!
-                  </p>
-                  <div
-                    v-motion
-                    :initial="{ opacity: 0, y: 50 }"
-                    :enter="{ opacity: 1, y: 0 }"
-                    :delay="600"
-                    class="flex flex-col sm:flex-row items-center justify-center gap-4"
-                  >
-                    <NuxtLink to="/play" class="btn-primary text-lg px-8 py-4 inline-flex items-center space-x-2 group">
-                      <Icon name="mdi:play-circle" class="w-6 h-6 group-hover:rotate-90 transition-transform duration-300" />
-                      <span>Play Now</span>
-                    </NuxtLink>
-                    <NuxtLink to="/leaderboard" class="btn-secondary text-lg px-8 py-4 inline-flex items-center space-x-2 group">
-                      <Icon name="mdi:trophy" class="w-6 h-6 group-hover:scale-110 transition-transform duration-300" />
-                      <span>View Leaderboard</span>
-                    </NuxtLink>
-                  </div>
-                  </client-only>        </div>
+            <h1
+              v-motion
+              :initial="{ opacity: 0, y: 50 }"
+              :enter="{ opacity: 1, y: 0 }"
+              :delay="200"
+              class="text-5xl md:text-7xl font-bold mb-6"
+            >
+              Welcome to
+              <span class="gradient-text">GeoFlags</span>
+            </h1>
+            <p
+              v-motion
+              :initial="{ opacity: 0, y: 50 }"
+              :enter="{ opacity: 1, y: 0 }"
+              :delay="400"
+              class="text-xl text-gray-300 mb-8 max-w-2xl mx-auto"
+            >
+              Master world geography through engaging quizzes and challenges. Learn about countries,
+              flags, and more while competing with players worldwide!
+            </p>
+            <div
+              v-motion
+              :initial="{ opacity: 0, y: 50 }"
+              :enter="{ opacity: 1, y: 0 }"
+              :delay="600"
+              class="flex flex-col sm:flex-row items-center justify-center gap-4"
+            >
+              <NuxtLink
+                to="/play"
+                class="btn-primary text-lg px-8 py-4 inline-flex items-center space-x-2 group"
+              >
+                <Icon
+                  name="mdi:play-circle"
+                  class="w-6 h-6 group-hover:rotate-90 transition-transform duration-300"
+                />
+                <span>Play Now</span>
+              </NuxtLink>
+              <NuxtLink
+                to="/leaderboard"
+                class="btn-secondary text-lg px-8 py-4 inline-flex items-center space-x-2 group"
+              >
+                <Icon
+                  name="mdi:trophy"
+                  class="w-6 h-6 group-hover:scale-110 transition-transform duration-300"
+                />
+                <span>View Leaderboard</span>
+              </NuxtLink>
+            </div>
+          </client-only>
+        </div>
       </section>
 
       <div class="max-w-6xl mx-auto px-4">
         <client-only>
-              <!-- Community Stats -->
-              <div v-motion-fade-visible class="glass-card-dark p-8 text-center mb-16">
-                <h2 class="text-3xl font-bold gradient-text mb-8">Community Stats</h2>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
-                  <div v-for="stat in stats" :key="stat.label" class="text-center group">
-                    <div class="w-16 h-16 mx-auto mb-3 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
-                         :class="stat.gradient">
-                      <Icon :name="stat.icon" class="w-8 h-8 text-white" />
-                    </div>
-                    <div class="text-4xl font-bold gradient-text mb-2 group-hover:scale-110 transition-transform duration-300">
-                      {{ stat.value }}
-                    </div>
-                    <div class="text-sm text-gray-300">{{ stat.label }}</div>
-                  </div>
+          <!-- Community Stats -->
+          <div v-motion-fade-visible class="glass-card-dark p-8 text-center mb-16">
+            <h2 class="text-3xl font-bold gradient-text mb-8">Community Stats</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+              <div v-for="stat in stats" :key="stat.label" class="text-center group">
+                <div
+                  class="w-16 h-16 mx-auto mb-3 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
+                  :class="stat.gradient"
+                >
+                  <Icon :name="stat.icon" class="w-8 h-8 text-white" />
                 </div>
+                <div
+                  class="text-4xl font-bold gradient-text mb-2 group-hover:scale-110 transition-transform duration-300"
+                >
+                  {{ stat.value }}
+                </div>
+                <div class="text-sm text-gray-300">{{ stat.label }}</div>
               </div>
-              </client-only>
+            </div>
+          </div>
+        </client-only>
 
         <client-only>
-              <!-- Features Grid -->
-              <div v-motion-fade-visible class="text-center mb-16">
-                <h2 class="text-3xl font-bold gradient-text mb-12">Why GeoFlags?</h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                  <div
-                    v-for="(feature, index) in features"
-                    :key="feature.title"
-                    v-motion-fade-visible
-                    :delay="200 * index"
-                    class="glass-card p-6 text-center group cursor-pointer hover-lift"
-                  >
-                    <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center group-hover:rotate-12 transition-all duration-300 shadow-lg">
-                      <Icon :name="feature.icon" class="w-8 h-8 text-white group-hover:scale-110 transition-transform duration-300" />
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-100 mb-2 group-hover:text-blue-400 transition-colors duration-300">{{ feature.title }}</h3>
-                    <p class="text-gray-300 text-sm">{{ feature.description }}</p>
-                  </div>
+          <!-- Features Grid -->
+          <div v-motion-fade-visible class="text-center mb-16">
+            <h2 class="text-3xl font-bold gradient-text mb-12">Why GeoFlags?</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div
+                v-for="(feature, index) in features"
+                :key="feature.title"
+                v-motion-fade-visible
+                :delay="200 * index"
+                class="glass-card p-6 text-center group cursor-pointer hover-lift"
+              >
+                <div
+                  class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center group-hover:rotate-12 transition-all duration-300 shadow-lg"
+                >
+                  <Icon
+                    :name="feature.icon"
+                    class="w-8 h-8 text-white group-hover:scale-110 transition-transform duration-300"
+                  />
                 </div>
+                <h3
+                  class="text-xl font-bold text-gray-100 mb-2 group-hover:text-blue-400 transition-colors duration-300"
+                >
+                  {{ feature.title }}
+                </h3>
+                <p class="text-gray-300 text-sm">{{ feature.description }}</p>
               </div>
-              </client-only>
+            </div>
+          </div>
+        </client-only>
 
         <client-only>
-              <!-- How It Works -->
-              <div v-motion-fade-visible class="text-center mb-16">
-                <h2 class="text-3xl font-bold gradient-text mb-8">How It Works</h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                  <div
-                    v-for="(step, index) in steps"
-                    :key="step.title"
-                    class="text-center group"
-                  >
-                    <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 text-white flex items-center justify-center text-2xl font-bold group-hover:scale-110 group-hover:rotate-12 transition-all duration-300 shadow-lg">
-                      {{ index + 1 }}
-                    </div>
-                    <h3 class="text-lg font-bold text-gray-100 mb-2 group-hover:text-cyan-400 transition-colors duration-300">{{ step.title }}</h3>
-                    <p class="text-gray-300">{{ step.description }}</p>
-                  </div>
+          <!-- How It Works -->
+          <div v-motion-fade-visible class="text-center mb-16">
+            <h2 class="text-3xl font-bold gradient-text mb-8">How It Works</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div v-for="(step, index) in steps" :key="step.title" class="text-center group">
+                <div
+                  class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 text-white flex items-center justify-center text-2xl font-bold group-hover:scale-110 group-hover:rotate-12 transition-all duration-300 shadow-lg"
+                >
+                  {{ index + 1 }}
                 </div>
+                <h3
+                  class="text-lg font-bold text-gray-100 mb-2 group-hover:text-cyan-400 transition-colors duration-300"
+                >
+                  {{ step.title }}
+                </h3>
+                <p class="text-gray-300">{{ step.description }}</p>
               </div>
-              </client-only>
+            </div>
+          </div>
+        </client-only>
 
         <client-only>
-              <!-- Call to Action -->
-              <div v-motion-fade-visible class="glass-card-dark p-12 text-center mb-16">
-                <h2 class="text-4xl font-bold gradient-text mb-4">Ready to Test Your Knowledge?</h2>
-                <p class="text-gray-300 mb-8 text-lg max-w-2xl mx-auto">
-                  Join thousands of players worldwide and start your geography journey today!
-                </p>
-                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-                  <NuxtLink v-if="!user" to="/auth/register" class="btn-primary text-lg px-8 py-4 inline-flex items-center space-x-2 group">
-                    <Icon name="mdi:account-plus" class="w-6 h-6 group-hover:scale-110 transition-transform duration-300" />
-                    <span>Sign Up Free</span>
-                  </NuxtLink>
-                  <NuxtLink to="/play" class="btn-secondary text-lg px-8 py-4 inline-flex items-center space-x-2 group">
-                    <Icon name="mdi:play-circle" class="w-6 h-6 group-hover:rotate-90 transition-transform duration-300" />
-                    <span>Start Playing</span>
-                  </NuxtLink>
-                </div>
-              </div>
-              </client-only>      </div>
+          <!-- Call to Action -->
+          <div v-motion-fade-visible class="glass-card-dark p-12 text-center mb-16">
+            <h2 class="text-4xl font-bold gradient-text mb-4">Ready to Test Your Knowledge?</h2>
+            <p class="text-gray-300 mb-8 text-lg max-w-2xl mx-auto">
+              Join thousands of players worldwide and start your geography journey today!
+            </p>
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <NuxtLink
+                v-if="!user"
+                to="/auth/register"
+                class="btn-primary text-lg px-8 py-4 inline-flex items-center space-x-2 group"
+              >
+                <Icon
+                  name="mdi:account-plus"
+                  class="w-6 h-6 group-hover:scale-110 transition-transform duration-300"
+                />
+                <span>Sign Up Free</span>
+              </NuxtLink>
+              <NuxtLink
+                to="/play"
+                class="btn-secondary text-lg px-8 py-4 inline-flex items-center space-x-2 group"
+              >
+                <Icon
+                  name="mdi:play-circle"
+                  class="w-6 h-6 group-hover:rotate-90 transition-transform duration-300"
+                />
+                <span>Start Playing</span>
+              </NuxtLink>
+            </div>
+          </div>
+        </client-only>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-
 const { user } = useAuth()
 
 interface Stats {
@@ -249,8 +289,6 @@ onMounted(() => {
   text-align: center;
 }
 
-
-
 .hero-content {
   padding: 2rem;
 }
@@ -265,7 +303,9 @@ onMounted(() => {
 .btn-primary {
   background-color: #3b82f6;
   color: white;
-  transition: background-color 0.3s, transform 0.3s;
+  transition:
+    background-color 0.3s,
+    transform 0.3s;
 }
 
 .btn-primary:hover {
@@ -277,7 +317,10 @@ onMounted(() => {
   background-color: transparent;
   border: 1px solid #3b82f6;
   color: #3b82f6;
-  transition: background-color 0.3s, color 0.3s, transform 0.3s;
+  transition:
+    background-color 0.3s,
+    color 0.3s,
+    transform 0.3s;
 }
 
 .btn-secondary:hover {
@@ -291,7 +334,9 @@ onMounted(() => {
   backdrop-filter: blur(10px);
   border-radius: 1rem;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  transition: transform 0.3s, box-shadow 0.3s;
+  transition:
+    transform 0.3s,
+    box-shadow 0.3s;
 }
 
 .glass-card:hover {

@@ -3,7 +3,15 @@
 </template>
 
 <script setup lang="ts">
-import { Chart, ArcElement, DoughnutController, Title, Tooltip, Legend, type ChartConfiguration } from 'chart.js'
+import {
+  Chart,
+  ArcElement,
+  DoughnutController,
+  Title,
+  Tooltip,
+  Legend,
+  type ChartConfiguration,
+} from 'chart.js'
 
 // Register Chart.js components
 Chart.register(ArcElement, DoughnutController, Title, Tooltip, Legend)
@@ -138,9 +146,13 @@ const createChart = () => {
 }
 
 // Watch for prop changes and recreate chart
-watch(() => [props.labels, props.data], () => {
-  createChart()
-}, { deep: true })
+watch(
+  () => [props.labels, props.data],
+  () => {
+    createChart()
+  },
+  { deep: true }
+)
 
 onMounted(() => {
   createChart()

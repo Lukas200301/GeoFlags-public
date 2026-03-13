@@ -2,7 +2,7 @@
   <div>
     <div class="video-background">
       <video autoplay muted loop playsinline>
-        <source src="/assets/videos/globe.mp4" type="video/mp4">
+        <source src="/assets/videos/globe.mp4" type="video/mp4" />
       </video>
       <div class="video-overlay"></div>
     </div>
@@ -92,7 +92,10 @@ const errorMessage = computed(() => {
   if (is404.value) {
     return "The page you're looking for doesn't exist. It might have been moved or deleted."
   }
-  return props.error?.message || 'An unexpected error occurred. Please try again or return to the home page.'
+  return (
+    props.error?.message ||
+    'An unexpected error occurred. Please try again or return to the home page.'
+  )
 })
 
 const handleError = () => {
